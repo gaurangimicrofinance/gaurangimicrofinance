@@ -29,9 +29,9 @@
                 <div>
                     <h1 class="text-lg font-bold tracking-wide flex items-center gap-2">
                         <span id="appTitleDisplay" contenteditable="true" onblur="updateAppName(this)" class="outline-none border-b border-dashed border-slate-500 hover:border-indigo-400 cursor-pointer px-1 rounded" title="Click to edit business name">SahukarPro</span> 
-                        <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Secure PWA Core</span>
+                        <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">PWA Master Engine</span>
                     </h1>
-                    <p class="text-xs text-slate-400">Offline-First Microfinance & Kandi Engine</p>
+                    <p class="text-xs text-slate-400">Offline-First Microfinance & Kandi System</p>
                 </div>
             </div>
             <div class="flex items-center space-x-3">
@@ -102,7 +102,7 @@
                             <th class="px-6 py-3 font-semibold">Principal / Due</th>
                             <th class="px-6 py-3 font-semibold">Installment Mode</th>
                             <th class="px-6 py-3 font-semibold">Status (Closure Check)</th>
-                            <th class="px-6 py-3 font-semibold text-right">Recovery / Ledger</th>
+                            <th class="px-6 py-3 font-semibold text-right">Actions / Statement</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-700/40 text-slate-300" id="clientTableBody">
@@ -178,12 +178,25 @@
                 <h3 class="font-bold text-slate-100 text-base">Record Recovery Payment</h3>
                 <button onclick="closeRecoveryModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
             </div>
-            <div class="p-6 space-y-4 text-sm" id="recoveryModalBody">
-                <!-- Dynamic client summary -->
-            </div>
+            <div class="p-6 space-y-4 text-sm" id="recoveryModalBody"></div>
             <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
                 <button onclick="processRecovery()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-xl font-medium transition text-xs shadow-lg">Confirm Recovery</button>
                 <button onclick="closeRecoveryModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl font-medium transition text-xs">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATEMENT VIEW MODAL -->
+    <div id="statementModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-slate-100 text-base">Client Statement & Ledger</h3>
+                <button onclick="closeStatementModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-sm" id="statementModalBody"></div>
+            <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-between items-center">
+                <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-medium">Print Statement</button>
+                <button onclick="closeStatementModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl text-xs font-medium">Close</button>
             </div>
         </div>
     </div>
@@ -194,12 +207,10 @@
         let currentSystem = 'daily';
         let activeRecoveryId = null;
 
-        // Initialize IndexedDB with robust error handling
-        const request = indexedDB.open("SahukarProMasterDB", 3);
+        const request = indexedDB.open("SahukarProUltimateDB", 4);
         
         request.onerror = function(event) {
             console.error("Database error: ", event.target.errorCode);
-            alert("Database connection failed! Please allow IndexedDB in browser.");
         };
 
         request.onupgradeneeded = function(event) {
@@ -218,12 +229,12 @@
         function updateAppName(el) {
             const newName = el.innerText.trim();
             if(newName) {
-                localStorage.setItem("sahukar_enterprise_app_name", newName);
+                localStorage.setItem("sahukar_ultimate_app_name", newName);
             }
         }
 
         function loadAppName() {
-            const savedName = localStorage.getItem("sahukar_enterprise_app_name");
+            const savedName = localStorage.getItem("sahukar_ultimate_app_name");
             if(savedName) {
                 document.getElementById('appTitleDisplay').innerText = savedName;
             }
@@ -242,7 +253,7 @@
 
         function saveNewLoan() {
             if (!db) {
-                alert("Database not ready yet. Please wait a second.");
+                alert("Database not ready. Please wait.");
                 return;
             }
 
@@ -266,6 +277,7 @@
                 totalRecovered: 0,
                 principalRecovered: 0,
                 interestRecovered: 0,
+                transactions: [],
                 loanId: "LN-" + Math.floor(1000 + Math.random() * 9000),
                 status: "Active (Principal Pending)",
                 createdAt: new Date().toLocaleDateString()
@@ -328,7 +340,8 @@
                             <td class="px-6 py-4"><span class="${badgeColor} border text-xs px-2.5 py-1 rounded-full font-medium">${item.status}</span></td>
                             <td class="px-6 py-4 text-right space-x-2">
                                 ${item.status.includes('Active') ? `<button onclick="openRecoveryModal(${item.id})" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition">Recovery</button>` : ''}
-                                <button onclick="deleteLoan(${item.id})" class="text-red-400 hover:text-red-300 font-medium bg-red-950/50 border border-red-800/50 px-2.5 py-1.5 rounded-lg transition text-xs">Delete</button>
+                                <button onclick="openStatementModal(${item.id})" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium transition">Statement</button>
+                                <button onclick="deleteLoan(${item.id})" class="text-red-400 hover:text-red-300 font-medium bg-red-950/50 border border-red-800/50 px-2 py-1.5 rounded-lg transition text-xs">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -378,21 +391,36 @@
                 let remainingAmt = amt;
 
                 let principalDue = item.principal - item.principalRecovered;
+                let recoveredPrincipalPart = 0;
+                let recoveredInterestPart = 0;
+
                 if(remainingAmt <= principalDue) {
                     item.principalRecovered += remainingAmt;
+                    recoveredPrincipalPart = remainingAmt;
                     remainingAmt = 0;
                 } else {
                     remainingAmt -= principalDue;
+                    recoveredPrincipalPart = principalDue;
                     item.principalRecovered = item.principal;
+                    
                     let interestDue = item.interest - item.interestRecovered;
                     if(remainingAmt >= interestDue) {
+                        recoveredInterestPart = interestDue;
                         item.interestRecovered = item.interest;
                     } else {
+                        recoveredInterestPart = remainingAmt;
                         item.interestRecovered += remainingAmt;
                     }
                 }
 
                 item.totalRecovered += amt;
+                if(!item.transactions) item.transactions = [];
+                item.transactions.push({
+                    date: new Date().toLocaleDateString(),
+                    amount: amt,
+                    principalPart: recoveredPrincipalPart,
+                    interestPart: recoveredInterestPart
+                });
 
                 if(item.principalRecovered >= item.principal && item.interestRecovered >= item.interest) {
                     item.status = "Closed (Fully Settled)";
@@ -406,6 +434,50 @@
                     alert("Recovery of ₹" + amt.toLocaleString() + " recorded successfully!");
                 };
             };
+        }
+
+        function openStatementModal(id) {
+            const transaction = db.transaction(["loans"], "readonly");
+            const store = transaction.objectStore("loans");
+            store.get(id).onsuccess = function(event) {
+                const item = event.target.result;
+                let txHtml = '';
+                if(item.transactions && item.transactions.length > 0) {
+                    item.transactions.forEach((tx, idx) => {
+                        txHtml += `
+                            <div class="flex justify-between text-xs border-b border-slate-700/50 py-2">
+                                <span>#${idx+1} - ${tx.date}</span>
+                                <span class="text-emerald-400 font-semibold">₹${tx.amount.toLocaleString()}</span>
+                                <span class="text-slate-400">P: ₹${tx.principalPart} | I: ₹${tx.interestPart}</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    txHtml = `<p class="text-xs text-slate-500 text-center py-4">No recovery transactions recorded yet.</p>`;
+                }
+
+                document.getElementById('statementModalBody').innerHTML = `
+                    <div class="space-y-3">
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-1">
+                            <h4 class="font-bold text-slate-100 text-base">${item.name} (${item.loanId})</h4>
+                            <p class="text-xs text-slate-400">Mobile: ${item.mobile || 'N/A'} | Guarantor: ${item.guarantor || 'N/A'}</p>
+                            <p class="text-xs text-slate-400">Principal: ₹${item.principal.toLocaleString()} | Total Interest: ₹${item.interest.toLocaleString()}</p>
+                            <p class="text-xs text-slate-400">Status: <span class="text-amber-400 font-semibold">${item.status}</span></p>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold text-slate-300 text-xs uppercase mb-2">Transaction Ledger History</h5>
+                            <div class="space-y-1 bg-slate-900/50 p-3 rounded-xl border border-slate-700/50 max-h-60 overflow-y-auto">
+                                ${txHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('statementModal').classList.remove('hidden');
+            };
+        }
+
+        function closeStatementModal() {
+            document.getElementById('statementModal').classList.add('hidden');
         }
 
         function deleteLoan(id) {
