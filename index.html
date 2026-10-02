@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SahukarPro Enterprise - Dual Ledger & Clean Statement Engine</title>
+    <title>SahukarPro Enterprise - Pro Edition & Smart Search Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -23,190 +23,290 @@
 
     <!-- TOP HEADER -->
     <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div>
                 <h1 class="text-lg font-bold text-indigo-400 flex items-center gap-2">
-                    SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Secure Dual Ledger</span>
+                    SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Pro Audit Engine</span>
                 </h1>
-                <p class="text-xs text-slate-400">Confidential Backend Tracking & Clean Customer View</p>
+                <p class="text-xs text-slate-400">Principal-First Safe Accounting & Search-First UI</p>
             </div>
-            <span class="text-xs bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 px-3 py-1 rounded-full font-medium">● 100% Secure</span>
+            <div class="flex gap-2">
+                <button onclick="openProductModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition shadow-md">
+                    + Custom Product
+                </button>
+                <button onclick="openNewLoanModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg transition">
+                    + Register Loan
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- MAIN CONTAINER -->
-    <main class="max-w-6xl mx-auto p-6 flex-1 w-full space-y-6">
+    <main class="max-w-7xl mx-auto p-6 flex-1 w-full space-y-6">
 
-        <!-- LOAN CREATION & DUAL MODEL CARD -->
-        <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-2xl space-y-6">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-4">
-                <h2 class="text-base font-bold text-slate-100">Step: Dual Model Selection & Secure Setup</h2>
-                <div class="flex gap-2">
-                    <button type="button" onclick="setModel('upfront')" id="btnModelUpfront" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition">Model A: Upfront Cut</button>
-                    <button type="button" onclick="setModel('full')" id="btnModelFull" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-slate-300 transition">Model B: Full Disbursement</button>
-                </div>
+        <!-- PREMIUM DASHBOARD METRICS -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="bg-slate-800 border border-slate-700/80 p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-slate-400 uppercase font-semibold">Total Market Capital</p>
+                <h3 class="text-2xl font-bold text-slate-100 mt-1" id="metricCapital">₹0</h3>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Client Full Name</label>
-                    <input type="text" id="clientName" value="Ramesh Kumar" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Loan Principal Face Value (₹)</label>
-                    <input type="number" id="inputPrincipal" value="10000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Tenure Cycle (Days)</label>
-                    <input type="number" id="inputTenure" value="100" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
-                </div>
+            <div class="bg-slate-800 border border-slate-700/80 p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-slate-400 uppercase font-semibold">Principal Recovered (Safe)</p>
+                <h3 class="text-2xl font-bold text-emerald-400 mt-1" id="metricPrincipalRec">₹0</h3>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Loan Start Date</label>
-                    <input type="date" id="startDate" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Payment Mode (Disbursement / Collection)</label>
-                    <select id="paymentMode" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
-                        <option value="Cash">Cash (नकद)</option>
-                        <option value="UPI (PhonePe, Google Pay, Other UPI)">UPI (PhonePe, Google Pay, Other UPI)</option>
-                        <option value="Bank Transfer / Cheque">Bank Transfer / Cheque</option>
-                    </select>
-                </div>
+            <div class="bg-slate-800 border border-slate-700/80 p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-slate-400 uppercase font-semibold">Locked / Deferred Profit</p>
+                <h3 class="text-2xl font-bold text-amber-400 mt-1" id="metricLockedProfit">₹0</h3>
             </div>
-
-            <div class="flex justify-end">
-                <button type="button" onclick="generateCustomerStatement()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition shadow-lg">Generate Clean Statement Preview</button>
+            <div class="bg-slate-800 border border-slate-700/80 p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-slate-400 uppercase font-semibold">Active Accounts</p>
+                <h3 class="text-2xl font-bold text-blue-400 mt-1" id="metricActiveCount">0</h3>
             </div>
         </div>
 
-        <!-- PROFESSIONAL CUSTOMER STATEMENT PREVIEW (PDF / PRINT READY) -->
-        <div id="statementPreviewCard" class="hidden bg-white text-slate-900 border border-slate-300 rounded-2xl p-8 shadow-2xl space-y-6">
-            <div class="flex justify-between items-start border-b border-slate-200 pb-4">
+        <!-- SEARCH-FIRST RECOVERY & CLIENT SECTION (NO LONG CLUTTERED LISTS) -->
+        <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-slate-700 pb-4">
                 <div>
-                    <h2 class="text-xl font-extrabold text-indigo-900">SAHUKARPRO ENTERPRISE</h2>
-                    <p class="text-xs text-slate-500">Official Client Loan Schedule & Ledger Statement</p>
+                    <h3 class="font-bold text-slate-200 text-base">Instant Smart Search & Recovery</h3>
+                    <p class="text-xs text-slate-400">Type client name or mobile to instantly filter accounts without scrolling.</p>
                 </div>
-                <div class="text-right text-xs text-slate-600">
-                    <p><strong>Loan ID:</strong> <span id="lblLoanId">LN-9042</span></p>
-                    <p><strong>Start Date:</strong> <span id="lblStartDate"></span></p>
+                <div class="w-full sm:w-72 relative">
+                    <input type="text" id="liveSearchInput" oninput="filterClients()" placeholder="🔍 Search client name, mobile..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
-                <div>
-                    <span class="text-slate-500 block">Client Name:</span>
-                    <strong id="lblClientName" class="text-sm text-slate-900">Ramesh Kumar</strong>
-                </div>
-                <div>
-                    <span class="text-slate-500 block">Total Loan Amount:</span>
-                    <strong id="lblLoanAmount" class="text-sm text-indigo-700">₹10,000</strong>
-                </div>
-                <div>
-                    <span class="text-slate-500 block">Tenure:</span>
-                    <strong id="lblTenure" class="text-sm text-slate-900">100 Days</strong>
-                </div>
-                <div>
-                    <span class="text-slate-500 block">End Date (Auto):</span>
-                    <strong id="lblEndDate" class="text-sm text-emerald-700"></strong>
-                </div>
-            </div>
-
-            <!-- CLEAN SCHEDULE TABLE -->
-            <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
-                        <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
-                            <th class="p-3 font-semibold">Sr No.</th>
-                            <th class="p-3 font-semibold">Date</th>
-                            <th class="p-3 font-semibold">Scheduled EMI (₹)</th>
-                            <th class="p-3 font-semibold">Deposit Amount (₹)</th>
-                            <th class="p-3 font-semibold">Payment Mode</th>
-                            <th class="p-3 font-semibold">Status</th>
+                        <tr class="bg-slate-900/50 text-slate-400 border-b border-slate-700">
+                            <th class="p-3">Client & Contact</th>
+                            <th class="p-3">Guarantor</th>
+                            <th class="p-3">Principal / Balance</th>
+                            <th class="p-3">Model & EMI</th>
+                            <th class="p-3 text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="statementTableBody" class="divide-y divide-slate-200">
-                        <!-- Auto-generated schedule -->
+                    <tbody id="clientTableBody" class="divide-y divide-slate-700/50 text-slate-300">
+                        <tr><td colspan="5" class="p-6 text-center text-slate-500">No active client accounts found. Use '+ Register Loan' to add.</td></tr>
                     </tbody>
                 </table>
-            </div>
-
-            <div class="flex justify-between items-center pt-4 border-t border-slate-200 text-xs text-slate-500">
-                <p>Note: Confidential internal accounting rules, upfront deductions, or future advance adjustments are securely hidden from this customer view.</p>
-                <button onclick="window.print()" class="bg-slate-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800">Print / Download PDF</button>
             </div>
         </div>
 
     </main>
 
+    <!-- CUSTOM PRODUCT MODAL -->
+    <div id="productModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-slate-100 text-base">Create Custom Loan Scheme</h3>
+                <button onclick="closeProductModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-400 mb-1">Product Name *</label>
+                    <input type="text" id="prodName" placeholder="e.g. Daily Flexi 100" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-400 mb-1">Principal Amount (₹) *</label>
+                        <input type="number" id="prodPrincipal" value="10000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Tenure (Days) *</label>
+                        <input type="number" id="prodTenure" value="100" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-400 mb-1">Interest Amount (₹)</label>
+                        <input type="number" id="prodInterestAmt" value="1500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-indigo-400 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Default Model</label>
+                        <select id="prodModel" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                            <option value="Upfront Cut">Model A: Upfront Cut</option>
+                            <option value="Full Disbursal">Model B: Full Disbursal</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
+                <button type="button" onclick="saveCustomProduct()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-5 py-2 rounded-xl transition shadow-lg">Save Scheme</button>
+                <button type="button" onclick="closeProductModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl transition">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADVANCED MASTER CLIENT REGISTRATION MODAL -->
+    <div id="newLoanModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-slate-100 text-base">Advanced Master Client Registration</h3>
+                <button onclick="closeNewLoanModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-xs">
+                
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
+                    <h4 class="font-semibold text-indigo-400 uppercase tracking-wide">1. Client Details</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><label class="block text-slate-400 mb-1">Full Name *</label><input type="text" id="clientName" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Primary Mobile *</label><input type="text" id="clientPrimaryMobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Secondary Mobile</label><input type="text" id="clientSecondaryMobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                    </div>
+                    <div><label class="block text-slate-400 mb-1">Complete Address *</label><input type="text" id="clientAddress" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                </div>
+
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
+                    <h4 class="font-semibold text-indigo-400 uppercase tracking-wide">2. Guarantor Details</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><label class="block text-slate-400 mb-1">Guarantor Name *</label><input type="text" id="guarantorName" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Primary Mobile *</label><input type="text" id="guarantorPrimaryMobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Secondary Mobile</label><input type="text" id="guarantorSecondaryMobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                    </div>
+                    <div><label class="block text-slate-400 mb-1">Guarantor Address *</label><input type="text" id="guarantorAddress" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                </div>
+
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
+                    <h4 class="font-semibold text-indigo-400 uppercase tracking-wide">3. Financial Structure & Model</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><label class="block text-slate-400 mb-1">Principal (₹) *</label><input type="number" id="loanPrincipal" value="10000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Total Interest (₹)</label><input type="number" id="loanInterestAmt" value="1500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Tenure (Days)</label><input type="number" id="loanTenure" value="100" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Accounting Model *</label>
+                            <select id="disbursementModel" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                                <option value="Upfront Cut">Model A: Upfront Cut (Deferred Profit Locked)</option>
+                                <option value="Full Disbursal">Model B: Full Disbursal (Later Interest)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Start Date *</label>
+                            <input type="date" id="modalStartDate" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
+                <button type="button" onclick="saveNewLoanAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-5 py-2 rounded-xl transition shadow-lg">Save Account</button>
+                <button type="button" onclick="closeNewLoanModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl transition">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT CORE AUDIT ENGINE -->
     <script>
-        let currentModel = 'upfront';
-        document.getElementById('startDate').valueAsDate = new Date();
+        let customProducts = [];
+        let allLoans = [];
+        document.getElementById('modalStartDate').valueAsDate = new Date();
 
-        function setModel(model) {
-            currentModel = model;
-            const btnUp = document.getElementById('btnModelUpfront');
-            const btnFull = document.getElementById('btnModelFull');
-            if(model === 'upfront') {
-                btnUp.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition";
-                btnFull.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-slate-300 transition";
-            } else {
-                btnFull.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition";
-                btnUp.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-slate-300 transition";
-            }
-        }
+        function openProductModal() { document.getElementById('productModal').classList.remove('hidden'); }
+        function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
+        function openNewLoanModal() { document.getElementById('newLoanModal').classList.remove('hidden'); }
+        function closeNewLoanModal() { document.getElementById('newLoanModal').classList.add('hidden'); }
 
-        function generateCustomerStatement() {
-            const clientName = document.getElementById('clientName').value || 'Client';
-            const principal = parseFloat(document.getElementById('inputPrincipal').value) || 10000;
-            const tenure = parseInt(document.getElementById('inputTenure').value) || 100;
-            const startDateStr = document.getElementById('startDate').value;
-            const selectedMode = document.getElementById('paymentMode').value;
+        function saveCustomProduct() {
+            const name = document.getElementById('prodName').value.trim();
+            const principal = parseFloat(document.getElementById('prodPrincipal').value);
+            const tenure = parseInt(document.getElementById('prodTenure').value);
+            const interestAmt = parseFloat(document.getElementById('prodInterestAmt').value) || 0;
+            const model = document.getElementById('prodModel').value;
 
-            if(!startDateStr) {
-                alert("कृपया लोन की शुरुआत की तारीख चुनें!");
+            if(!name || isNaN(principal)) {
+                alert("कृपया सही डिटेल्स भरें!");
                 return;
             }
 
-            // INTERNAL SECRET BACKEND LOGIC CHECK (Confidential Tracking)
-            // Model A records upfront profit internally; Model B tracks later recognition.
-            console.log("Backend Ledger Mode Active:", currentModel);
+            customProducts.push({ name, principal, tenure, interestAmt, model });
+            closeProductModal();
+            alert("उत्पाद सफलतापूर्वक सेव हो गया है!");
+        }
 
-            document.getElementById('lblClientName').innerText = clientName;
-            document.getElementById('lblLoanAmount').innerText = "₹" + principal.toLocaleString();
-            document.getElementById('lblTenure').innerText = tenure + " Days";
-            document.getElementById('lblStartDate').innerText = startDateStr;
+        function saveNewLoanAccount() {
+            const clientName = document.getElementById('clientName').value.trim();
+            const primaryMobile = document.getElementById('clientPrimaryMobile').value.trim();
+            const address = document.getElementById('clientAddress').value.trim();
+            const guarantorName = document.getElementById('guarantorName').value.trim();
+            const guarantorMobile = document.getElementById('guarantorPrimaryMobile').value.trim();
+            const guarantorAddress = document.getElementById('guarantorAddress').value.trim();
+            const principal = parseFloat(document.getElementById('loanPrincipal').value);
+            const interestAmt = parseFloat(document.getElementById('loanInterestAmt').value) || 0;
+            const tenure = parseInt(document.getElementById('loanTenure').value) || 100;
+            const disburseModel = document.getElementById('disbursementModel').value;
+            const startDate = document.getElementById('modalStartDate').value;
 
-            let startDate = new Date(startDateStr);
-            let endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + tenure);
-            document.getElementById('lblEndDate').innerText = endDate.toISOString().split('T')[0];
-
-            let dailyEmi = principal / tenure;
-            let tbody = document.getElementById('statementTableBody');
-            tbody.innerHTML = '';
-
-            let currDate = new Date(startDate);
-            for(let i = 1; i <= Math.min(tenure, 10); i++) {
-                currDate.setDate(currDate.getDate() + 1);
-                let dateFormatted = currDate.toISOString().split('T')[0];
-                let isPaid = (i <= 3);
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="p-3 text-slate-600 font-medium">${i}</td>
-                        <td class="p-3 text-slate-800">${dateFormatted}</td>
-                        <td class="p-3 text-slate-800 font-semibold">₹${dailyEmi.toFixed(2)}</td>
-                        <td class="p-3 text-slate-900 font-bold">${isPaid ? '₹' + dailyEmi.toFixed(2) : '-'}</td>
-                        <td class="p-3 text-slate-600">${isPaid ? selectedMode : '-'}</td>
-                        <td class="p-3 ${isPaid ? 'text-emerald-600 font-semibold' : 'text-amber-600 font-medium'}">${isPaid ? 'Paid' : 'Pending'}</td>
-                    </tr>
-                `;
+            if(!clientName || !primaryMobile || isNaN(principal)) {
+                alert("कृपया सभी अनिवार्य फील्ड्स भरें!");
+                return;
             }
 
-            document.getElementById('statementPreviewCard').classList.remove('hidden');
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            const newLoan = {
+                id: "LN-" + Math.floor(1000 + Math.random() * 9000),
+                clientName, primaryMobile, address,
+                guarantorName, guarantorMobile, guarantorAddress,
+                principal, interestAmt, tenure, disburseModel, startDate,
+                principalRecovered: 0,
+                interestEarned: 0, // Locked until principal fully recovered
+                status: "Active (Principal Pending)"
+            };
+
+            allLoans.push(newLoan);
+            closeNewLoanModal();
+            renderDashboard();
+            alert("लोन खाता सफलतापर्वक दर्ज हो गया है!");
+        }
+
+        function renderDashboard() {
+            let tbody = document.getElementById('clientTableBody');
+            tbody.innerHTML = '';
+
+            let totalCap = allLoans.reduce((acc, curr) => acc + (curr.principal - curr.principalRecovered), 0);
+            let totalPrinRec = allLoans.reduce((acc, curr) => acc + curr.principalRecovered, 0);
+            let totalLockedProfit = allLoans.reduce((acc, curr) => acc + curr.interestAmt, 0);
+
+            document.getElementById('metricCapital').innerText = "₹" + totalCap.toLocaleString();
+            document.getElementById('metricPrincipalRec').innerText = "₹" + totalPrinRec.toLocaleString();
+            document.getElementById('metricLockedProfit').innerText = "₹" + totalLockedProfit.toLocaleString();
+            document.getElementById('metricActiveCount').innerText = allLoans.filter(l => l.status.includes('Active')).length;
+
+            if(allLoans.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No active client accounts found.</td></tr>`;
+                return;
+            }
+
+            allLoans.forEach(loan => {
+                let balance = loan.principal - loan.principalRecovered;
+                let emi = loan.principal / loan.tenure;
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-700/25 transition client-row" data-name="${loan.clientName.toLowerCase()}" data-mobile="${loan.primaryMobile}">
+                        <td class="p-3 font-medium text-slate-100">${loan.clientName}<span class="block text-[10px] text-slate-400">M: ${loan.primaryMobile} | ${loan.address}</span></td>
+                        <td class="p-3 text-slate-300">${loan.guarantorName}<span class="block text-[10px] text-slate-400">M: ${loan.guarantorMobile}</span></td>
+                        <td class="p-3 font-semibold text-emerald-400">₹${loan.principal.toLocaleString()} <span class="block text-[10px] text-slate-400">Bal: ₹${balance.toLocaleString()}</span></td>
+                        <td class="p-3 text-indigo-300">${loan.disburseModel}<span class="block text-[10px] text-slate-400">EMI: ₹${emi.toFixed(2)}/d</span></td>
+                        <td class="p-3 text-right"><button onclick="alert('Recovery module ready for ID: ${loan.id}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded text-[11px]">Recovery</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        // SMART INSTANT LIVE SEARCH (NO LONG LIST CLUTTER)
+        function filterClients() {
+            let query = document.getElementById('liveSearchInput').value.toLowerCase().trim();
+            let rows = document.querySelectorAll('.client-row');
+            
+            rows.forEach(row => {
+                let name = row.getAttribute('data-name');
+                let mobile = row.getAttribute('data-mobile');
+                if(name.includes(query) || mobile.includes(query)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
