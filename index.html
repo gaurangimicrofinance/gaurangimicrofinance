@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SahukarPro Enterprise - Pro Edition & Smart Search Engine</title>
+    <title>SahukarPro Enterprise - Master Pro Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,9 +26,9 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div>
                 <h1 class="text-lg font-bold text-indigo-400 flex items-center gap-2">
-                    SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Pro Audit Engine</span>
+                    SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Pro Audit Master</span>
                 </h1>
-                <p class="text-xs text-slate-400">Principal-First Safe Accounting & Search-First UI</p>
+                <p class="text-xs text-slate-400">100% Connected Product & Recovery Engine</p>
             </div>
             <div class="flex gap-2">
                 <button onclick="openProductModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition shadow-md">
@@ -44,7 +44,7 @@
     <!-- MAIN CONTAINER -->
     <main class="max-w-7xl mx-auto p-6 flex-1 w-full space-y-6">
 
-        <!-- PREMIUM DASHBOARD METRICS -->
+        <!-- DASHBOARD METRICS -->
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div class="bg-slate-800 border border-slate-700/80 p-4 rounded-2xl shadow-sm">
                 <p class="text-xs text-slate-400 uppercase font-semibold">Total Market Capital</p>
@@ -64,12 +64,12 @@
             </div>
         </div>
 
-        <!-- SEARCH-FIRST RECOVERY & CLIENT SECTION (NO LONG CLUTTERED LISTS) -->
+        <!-- SEARCH-FIRST RECOVERY & CLIENT SECTION -->
         <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-slate-700 pb-4">
                 <div>
-                    <h3 class="font-bold text-slate-200 text-base">Instant Smart Search & Recovery</h3>
-                    <p class="text-xs text-slate-400">Type client name or mobile to instantly filter accounts without scrolling.</p>
+                    <h3 class="font-bold text-slate-200 text-base">Active Client Accounts & Recovery</h3>
+                    <p class="text-xs text-slate-400">Instant smart search by name or mobile number.</p>
                 </div>
                 <div class="w-full sm:w-72 relative">
                     <input type="text" id="liveSearchInput" oninput="filterClients()" placeholder="🔍 Search client name, mobile..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
@@ -111,7 +111,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-slate-400 mb-1">Principal Amount (₹) *</label>
-                        <input type="number" id="prodPrincipal" value="10000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                        <input type="number" id="prodPrincipal" placeholder="e.g. 10000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
                     </div>
                     <div>
                         <label class="block text-slate-400 mb-1">Tenure (Days) *</label>
@@ -120,8 +120,8 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-400 mb-1">Interest Amount (₹)</label>
-                        <input type="number" id="prodInterestAmt" value="1500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-indigo-400 font-bold">
+                        <label class="block text-slate-400 mb-1">Total Interest Amount (₹)</label>
+                        <input type="number" id="prodInterestAmt" placeholder="e.g. 1500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-indigo-400 font-bold">
                     </div>
                     <div>
                         <label class="block text-slate-400 mb-1">Default Model</label>
@@ -148,31 +148,39 @@
             </div>
             <div class="p-6 overflow-y-auto space-y-4 text-xs">
                 
+                <!-- Product Selector -->
+                <div class="bg-indigo-950/40 p-4 rounded-xl border border-indigo-800/60 space-y-2">
+                    <label class="block text-indigo-300 font-semibold">Select from Created Custom Products (Optional)</label>
+                    <select id="selectCustomProduct" onchange="applySelectedProduct()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                        <option value="">-- Manual Entry / No Product Selected --</option>
+                    </select>
+                </div>
+
                 <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
                     <h4 class="font-semibold text-indigo-400 uppercase tracking-wide">1. Client Details</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div><label class="block text-slate-400 mb-1">Full Name *</label><input type="text" id="clientName" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Primary Mobile *</label><input type="text" id="clientPrimaryMobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Secondary Mobile</label><input type="text" id="clientSecondaryMobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Full Name *</label><input type="text" id="clientName" placeholder="Client name" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Primary Mobile *</label><input type="text" id="clientPrimaryMobile" placeholder="10-digit mobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Secondary Mobile</label><input type="text" id="clientSecondaryMobile" placeholder="Optional" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
                     </div>
-                    <div><label class="block text-slate-400 mb-1">Complete Address *</label><input type="text" id="clientAddress" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                    <div><label class="block text-slate-400 mb-1">Complete Address *</label><input type="text" id="clientAddress" placeholder="Address, City" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
                 </div>
 
                 <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
                     <h4 class="font-semibold text-indigo-400 uppercase tracking-wide">2. Guarantor Details</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div><label class="block text-slate-400 mb-1">Guarantor Name *</label><input type="text" id="guarantorName" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Primary Mobile *</label><input type="text" id="guarantorPrimaryMobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Secondary Mobile</label><input type="text" id="guarantorSecondaryMobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Guarantor Name *</label><input type="text" id="guarantorName" placeholder="Guarantor name" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Primary Mobile *</label><input type="text" id="guarantorPrimaryMobile" placeholder="Mobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Secondary Mobile</label><input type="text" id="guarantorSecondaryMobile" placeholder="Optional" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
                     </div>
-                    <div><label class="block text-slate-400 mb-1">Guarantor Address *</label><input type="text" id="guarantorAddress" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                    <div><label class="block text-slate-400 mb-1">Guarantor Address *</label><input type="text" id="guarantorAddress" placeholder="Guarantor address" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
                 </div>
 
                 <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
                     <h4 class="font-semibold text-indigo-400 uppercase tracking-wide">3. Financial Structure & Model</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div><label class="block text-slate-400 mb-1">Principal (₹) *</label><input type="number" id="loanPrincipal" value="10000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Total Interest (₹)</label><input type="number" id="loanInterestAmt" value="1500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Principal (₹) *</label><input type="number" id="loanPrincipal" placeholder="e.g. 10000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
+                        <div><label class="block text-slate-400 mb-1">Total Interest (₹)</label><input type="number" id="loanInterestAmt" placeholder="e.g. 1500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
                         <div><label class="block text-slate-400 mb-1">Tenure (Days)</label><input type="number" id="loanTenure" value="100" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -198,10 +206,28 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT CORE AUDIT ENGINE -->
+    <!-- RECOVERY MODAL -->
+    <div id="recoveryModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-slate-100 text-base">Record Recovery Payment</h3>
+                <button onclick="closeRecoveryModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="p-6 space-y-4 text-xs" id="recoveryModalBody">
+                <!-- Dynamic Content -->
+            </div>
+            <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
+                <button type="button" onclick="processRecoveryPayment()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-5 py-2 rounded-xl transition shadow-lg">Confirm Recovery</button>
+                <button type="button" onclick="closeRecoveryModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl transition">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT MASTER CORE -->
     <script>
         let customProducts = [];
         let allLoans = [];
+        let activeRecoveryLoanId = null;
         document.getElementById('modalStartDate').valueAsDate = new Date();
 
         function openProductModal() { document.getElementById('productModal').classList.remove('hidden'); }
@@ -212,18 +238,42 @@
         function saveCustomProduct() {
             const name = document.getElementById('prodName').value.trim();
             const principal = parseFloat(document.getElementById('prodPrincipal').value);
-            const tenure = parseInt(document.getElementById('prodTenure').value);
+            const tenure = parseInt(document.getElementById('prodTenure').value) || 100;
             const interestAmt = parseFloat(document.getElementById('prodInterestAmt').value) || 0;
             const model = document.getElementById('prodModel').value;
 
             if(!name || isNaN(principal)) {
-                alert("कृपया सही डिटेल्स भरें!");
+                alert("कृपया प्रोडक्ट का नाम और प्रिंसिपल अमाउंट सही से भरें!");
                 return;
             }
 
             customProducts.push({ name, principal, tenure, interestAmt, model });
             closeProductModal();
-            alert("उत्पाद सफलतापूर्वक सेव हो गया है!");
+            document.getElementById('prodName').value = '';
+            document.getElementById('prodPrincipal').value = '';
+            document.getElementById('prodInterestAmt').value = '';
+            
+            updateProductDropdown();
+            alert("कस्टम प्रोडक्ट सफलतापूर्वक सेव हो गया है और लोन रजिस्ट्रेशन में उपलब्ध है!");
+        }
+
+        function updateProductDropdown() {
+            let select = document.getElementById('selectCustomProduct');
+            select.innerHTML = '<option value="">-- Manual Entry / No Product Selected --</option>';
+            customProducts.forEach((prod, index) => {
+                select.innerHTML += `<option value="${index}">${prod.name} (₹${prod.principal.toLocaleString()} | Interest: ₹${prod.interestAmt})</option>`;
+            });
+        }
+
+        function applySelectedProduct() {
+            let idx = document.getElementById('selectCustomProduct').value;
+            if(idx !== "") {
+                let prod = customProducts[idx];
+                document.getElementById('loanPrincipal').value = prod.principal;
+                document.getElementById('loanInterestAmt').value = prod.interestAmt;
+                document.getElementById('loanTenure').value = prod.tenure;
+                document.getElementById('disbursementModel').value = prod.model;
+            }
         }
 
         function saveNewLoanAccount() {
@@ -239,8 +289,11 @@
             const disburseModel = document.getElementById('disbursementModel').value;
             const startDate = document.getElementById('modalStartDate').value;
 
-            if(!clientName || !primaryMobile || isNaN(principal)) {
-                alert("कृपया सभी अनिवार्य फील्ड्स भरें!");
+            let prodIdx = document.getElementById('selectCustomProduct').value;
+            let productName = prodIdx !== "" ? customProducts[prodIdx].name : "Manual Custom Loan";
+
+            if(!clientName || !primaryMobile || !address || !guarantorName || !guarantorMobile || !guarantorAddress || isNaN(principal)) {
+                alert("कृपया सभी अनिवार्य फील्ड्स (Client, Guarantor, Principal) भरें!");
                 return;
             }
 
@@ -248,16 +301,15 @@
                 id: "LN-" + Math.floor(1000 + Math.random() * 9000),
                 clientName, primaryMobile, address,
                 guarantorName, guarantorMobile, guarantorAddress,
-                principal, interestAmt, tenure, disburseModel, startDate,
+                principal, interestAmt, tenure, disburseModel, startDate, productName,
                 principalRecovered: 0,
-                interestEarned: 0, // Locked until principal fully recovered
                 status: "Active (Principal Pending)"
             };
 
             allLoans.push(newLoan);
             closeNewLoanModal();
             renderDashboard();
-            alert("लोन खाता सफलतापर्वक दर्ज हो गया है!");
+            alert("लोन खाता सफलतापर्वक रजिस्टर कर दिया गया है!");
         }
 
         function renderDashboard() {
@@ -286,14 +338,71 @@
                         <td class="p-3 font-medium text-slate-100">${loan.clientName}<span class="block text-[10px] text-slate-400">M: ${loan.primaryMobile} | ${loan.address}</span></td>
                         <td class="p-3 text-slate-300">${loan.guarantorName}<span class="block text-[10px] text-slate-400">M: ${loan.guarantorMobile}</span></td>
                         <td class="p-3 font-semibold text-emerald-400">₹${loan.principal.toLocaleString()} <span class="block text-[10px] text-slate-400">Bal: ₹${balance.toLocaleString()}</span></td>
-                        <td class="p-3 text-indigo-300">${loan.disburseModel}<span class="block text-[10px] text-slate-400">EMI: ₹${emi.toFixed(2)}/d</span></td>
-                        <td class="p-3 text-right"><button onclick="alert('Recovery module ready for ID: ${loan.id}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded text-[11px]">Recovery</button></td>
+                        <td class="p-3 text-indigo-300">${loan.productName}<span class="block text-[10px] text-slate-400">EMI: ₹${emi.toFixed(2)}/d</span></td>
+                        <td class="p-3 text-right"><button onclick="openRecoveryModal('${loan.id}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded text-[11px] font-medium shadow">Recovery</button></td>
                     </tr>
                 `;
             });
         }
 
-        // SMART INSTANT LIVE SEARCH (NO LONG LIST CLUTTER)
+        function openRecoveryModal(id) {
+            activeRecoveryLoanId = id;
+            let loan = allLoans.find(l => l.id === id);
+            if(!loan) return;
+
+            let remPrincipal = loan.principal - loan.principalRecovered;
+            let defaultEmi = loan.principal / loan.tenure;
+
+            document.getElementById('recoveryModalBody').innerHTML = `
+                <div class="space-y-2">
+                    <p class="text-slate-300 font-semibold">Client: ${loan.clientName} (${loan.id})</p>
+                    <p class="text-[11px] text-slate-400">Pending Principal Balance: ₹${remPrincipal.toLocaleString()}</p>
+                    <div>
+                        <label class="block text-slate-400 mb-1 mt-2">Recovery Amount Received (₹)</label>
+                        <input type="number" id="recoveryAmtInput" value="${defaultEmi.toFixed(2)}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Payment Mode</label>
+                        <select id="recoveryPayMode" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                            <option value="Cash">Cash (नकद)</option>
+                            <option value="UPI (PhonePe, Google Pay, Other UPI)">UPI (PhonePe, Google Pay, Other UPI)</option>
+                            <option value="Bank Transfer / Cheque">Bank Transfer / Cheque</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            document.getElementById('recoveryModal').classList.remove('hidden');
+        }
+
+        function closeRecoveryModal() {
+            document.getElementById('recoveryModal').classList.add('hidden');
+            activeRecoveryLoanId = null;
+        }
+
+        function processRecoveryPayment() {
+            let amt = parseFloat(document.getElementById('recoveryAmtInput').value) || 0;
+            if(amt <= 0) {
+                alert("कृपया वैध राशि दर्ज करें!");
+                return;
+            }
+
+            let loan = allLoans.find(l => l.id === activeRecoveryLoanId);
+            if(!loan) return;
+
+            let pendingPrincipal = loan.principal - loan.principalRecovered;
+            if(amt >= pendingPrincipal) {
+                loan.principalRecovered = loan.principal;
+                loan.status = "Closed (Fully Settled)";
+            } else {
+                loan.principalRecovered += amt;
+            }
+
+            closeRecoveryModal();
+            renderDashboard();
+            alert("₹" + amt.toLocaleString() + " की रिकवरी सफलतापूर्वक दर्ज हो गई है!");
+        }
+
+        // SMART INSTANT LIVE SEARCH
         function filterClients() {
             let query = document.getElementById('liveSearchInput').value.toLowerCase().trim();
             let rows = document.querySelectorAll('.client-row');
