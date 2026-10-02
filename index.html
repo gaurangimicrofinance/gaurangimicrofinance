@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SahukarPro Enterprise - Complete Microfinance & Kandi System</title>
-    <!-- Tailwind CSS for World-Class Modern SaaS UI -->
+    <title>SahukarPro Enterprise - Dynamic Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -28,12 +27,16 @@
             <div class="flex items-center space-x-3">
                 <div class="bg-indigo-600 text-white font-bold p-2 rounded-xl shadow-lg">SP</div>
                 <div>
-                    <h1 class="text-lg font-bold tracking-wide">SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full ml-2">Master Ledger Engine</span></h1>
-                    <p class="text-xs text-slate-400">Strict Audit & Deferred Profit Control</p>
+                    <!-- Editable App Title -->
+                    <h1 class="text-lg font-bold tracking-wide flex items-center gap-2">
+                        <span id="appTitleDisplay" contenteditable="true" onblur="updateAppName(this.innerText)" class="outline-none border-b border-dashed border-slate-500 hover:border-indigo-400 cursor-pointer" title="Click to edit business name">SahukarPro</span> 
+                        <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">IndexedDB Live</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Advanced Microfinance & Kandi Ledger</p>
                 </div>
             </div>
             <div class="flex items-center space-x-3">
-                <span class="text-xs bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 px-3 py-1 rounded-full font-medium">● 100% Data Integrity</span>
+                <span class="text-xs bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 px-3 py-1 rounded-full font-medium">● Local DB Active</span>
             </div>
         </div>
     </header>
@@ -41,7 +44,7 @@
     <!-- MAIN CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
 
-        <!-- SYSTEM CATEGORY SWITCHER (Daily vs Kandi) -->
+        <!-- SYSTEM CATEGORY SWITCHER -->
         <div class="flex border-b border-slate-800 space-x-6">
             <button onclick="switchSystem('daily')" id="tabDaily" class="pb-3 font-semibold text-indigo-400 border-b-2 border-indigo-500 transition focus:outline-none">
                 ⚡ Daily Collection System (100 Days Basis)
@@ -51,35 +54,31 @@
             </button>
         </div>
 
-        <!-- DASHBOARD DRILL-DOWN METRICS -->
+        <!-- DASHBOARD METRICS -->
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl shadow-sm">
-                <p class="text-xs text-slate-400 uppercase font-semibold">Total Market Capital Deployed</p>
-                <h3 class="text-2xl font-bold text-slate-100 mt-1" id="metricCapital">₹35,000</h3>
-                <span class="text-xs text-indigo-400 mt-1 block">Active Principal Outflow</span>
+                <p class="text-xs text-slate-400 uppercase font-semibold">Total Market Capital</p>
+                <h3 class="text-2xl font-bold text-slate-100 mt-1" id="metricCapital">₹0</h3>
             </div>
             <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl shadow-sm">
-                <p class="text-xs text-slate-400 uppercase font-semibold">Principal Recovered (Safe)</p>
-                <h3 class="text-2xl font-bold text-emerald-400 mt-1" id="metricRecovered">₹12,400</h3>
-                <span class="text-xs text-emerald-400 mt-1 block">Principal First Rule Applied</span>
+                <p class="text-xs text-slate-400 uppercase font-semibold">Principal Recovered</p>
+                <h3 class="text-2xl font-bold text-emerald-400 mt-1" id="metricRecovered">₹0</h3>
             </div>
             <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl shadow-sm">
                 <p class="text-xs text-slate-400 uppercase font-semibold">Deferred Profit (Locked)</p>
-                <h3 class="text-2xl font-bold text-amber-400 mt-1" id="metricProfit">₹4,500</h3>
-                <span class="text-xs text-amber-400 mt-1 block">Unearned till full closure</span>
+                <h3 class="text-2xl font-bold text-amber-400 mt-1" id="metricProfit">₹0</h3>
             </div>
             <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl shadow-sm">
-                <p class="text-xs text-slate-400 uppercase font-semibold">Today's Collection</p>
-                <h3 class="text-2xl font-bold text-blue-400 mt-1" id="metricToday">₹1,200</h3>
-                <span class="text-xs text-blue-400 mt-1 block">Real-time Shift Total</span>
+                <p class="text-xs text-slate-400 uppercase font-semibold">Total Active Accounts</p>
+                <h3 class="text-2xl font-bold text-blue-400 mt-1" id="metricAccounts">0</h3>
             </div>
         </div>
 
-        <!-- ACTION & ADVANCED LIVE SEARCH BAR -->
+        <!-- LIVE SEARCH & ACTION BAR -->
         <div class="bg-slate-800 border border-slate-700/60 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="w-full sm:w-1/2 relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">🔍</span>
-                <input type="text" id="searchInput" onkeyup="filterClients()" placeholder="Advanced Live Search by Client Name, Mobile, or Loan ID..." 
+                <input type="text" id="searchInput" onkeyup="filterClients()" placeholder="Instant live search by client name, mobile..." 
                     class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-100 placeholder-slate-500">
             </div>
             <div class="flex gap-2 w-full sm:w-auto">
@@ -93,7 +92,7 @@
         <div class="bg-slate-800 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl">
             <div class="px-6 py-4 border-b border-slate-700/60 flex justify-between items-center">
                 <h3 class="font-bold text-slate-200" id="tableHeading">Active Daily Collection Accounts</h3>
-                <span class="text-xs text-slate-400" id="accountCount">2 Active Accounts</span>
+                <span class="text-xs text-slate-400" id="accountCount">0 Accounts</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-sm">
@@ -101,14 +100,14 @@
                         <tr class="bg-slate-900/50 text-slate-400 border-b border-slate-700/60">
                             <th class="px-6 py-3 font-semibold">Client Name & Guarantor</th>
                             <th class="px-6 py-3 font-semibold">Loan ID</th>
-                            <th class="px-6 py-3 font-semibold">Principal / Total Due</th>
+                            <th class="px-6 py-3 font-semibold">Principal</th>
                             <th class="px-6 py-3 font-semibold">Installment Mode</th>
-                            <th class="px-6 py-3 font-semibold">Status (Closure Check)</th>
-                            <th class="px-6 py-3 font-semibold text-right">Statement / Actions</th>
+                            <th class="px-6 py-3 font-semibold">Status</th>
+                            <th class="px-6 py-3 font-semibold text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-700/40 text-slate-300" id="clientTableBody">
-                        <!-- Loaded dynamically via JS -->
+                        <!-- Dynamic Records -->
                     </tbody>
                 </table>
             </div>
@@ -116,42 +115,91 @@
 
     </main>
 
-    <!-- CLIENT STATEMENT MODAL (Clean Professional View - No Advance/Deduction Tags) -->
-    <div id="statementModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+    <!-- NEW LOAN MODAL -->
+    <div id="loanModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
-                <h3 class="font-bold text-slate-100 text-base">Client Loan Account Statement</h3>
-                <button onclick="closeStatement()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+                <h3 class="font-bold text-slate-100 text-base">Add New Loan Account</h3>
+                <button onclick="closeNewLoanModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
             </div>
-            <div class="p-6 overflow-y-auto space-y-4 text-sm" id="statementContent">
-                <!-- Dynamic Statement Preview -->
+            <div class="p-6 space-y-4 text-sm">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Client Full Name</label>
+                    <input type="text" id="clientName" placeholder="Enter client name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Mobile Number</label>
+                        <input type="text" id="clientMobile" placeholder="10-digit mobile" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Guarantor Name</label>
+                        <input type="text" id="guarantorName" placeholder="Guarantor name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Loan Amount (Principal)</label>
+                        <input type="number" id="loanAmount" placeholder="e.g. 10000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">System Type</label>
+                        <select id="loanSystem" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                            <option value="daily">Daily Basis (100 Days)</option>
+                            <option value="kandi">Kandi System (Monthly)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Tenure / Days / Months</label>
+                        <input type="number" id="loanTenure" value="100" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">EMI / Installment Amount</label>
+                        <input type="number" id="loanEmi" placeholder="e.g. 100" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                </div>
             </div>
             <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
-                <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl font-medium transition text-xs">Print / Export PDF</button>
-                <button onclick="closeStatement()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl font-medium transition text-xs">Close</button>
+                <button onclick="saveNewLoan()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-xl font-medium transition text-xs shadow-lg">Save Loan Account</button>
+                <button onclick="closeNewLoanModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl font-medium transition text-xs">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="bg-slate-800 border-t border-slate-700/60 text-center py-4 text-xs text-slate-500">
-        SahukarPro Enterprise Ledger Engine &copy; 2026. Zero-Cost Bulletproof System.
-    </footer>
-
-    <!-- CORE JAVASCRIPT ENGINE -->
+    <!-- JAVASCRIPT ENGINE WITH INDEXEDDB -->
     <script>
-        // Database State
+        let db;
         let currentSystem = 'daily';
-        
-        const accountsData = {
-            daily: [
-                { id: 'LN-2026-001', name: 'Rajesh Kumar', mobile: '9876543210', guarantor: 'Ramesh Sharma', principal: 10000, tenure: 100, emi: 100, mode: 'Daily', status: 'Active (Principal Pending)', paid: 300 },
-                { id: 'LN-2026-002', name: 'Sunita Devi', mobile: '9123456789', guarantor: 'Mohan Lal', principal: 25000, tenure: 100, emi: 250, mode: 'Daily', status: 'Active (Principal Pending)', paid: 750 }
-            ],
-            kandi: [
-                { id: 'KND-2026-001', name: 'Vikram Singh', mobile: '9988776655', guarantor: 'Jagdish Singh', principal: 10000, tenure: 10, emi: 1300, mode: 'Monthly', status: 'Active (Kandi Monthly)', paid: 1300 }
-            ]
+
+        // Initialize IndexedDB
+        const request = indexedDB.Open("SahukarProDB", 1);
+        request.onerror = function(event) {
+            console.error("Database error: " + event.target.errorCode);
         };
+        request.onupgradeneeded = function(event) {
+            db = event.target.result;
+            if (!db.objectStoreNames.contains("loans")) {
+                db.createObjectStore("loans", { keyPath: "id", autoIncrement: true });
+            }
+        };
+        request.onsuccess = function(event) {
+            db = event.target.result;
+            loadLoans();
+            loadAppName();
+        };
+
+        function updateAppName(newName) {
+            localStorage.setItem("sahukar_app_name", newName);
+        }
+
+        function loadAppName() {
+            const savedName = localStorage.getItem("sahukar_app_name");
+            if(savedName) {
+                document.getElementById('appTitleDisplay').innerText = savedName;
+            }
+        }
 
         function switchSystem(sys) {
             currentSystem = sys;
@@ -168,29 +216,92 @@
                 btnDaily.className = "pb-3 font-semibold text-slate-400 hover:text-slate-200 transition focus:outline-none";
                 heading.innerText = "Active Kandi System Accounts (Monthly)";
             }
-            renderTable();
+            loadLoans();
         }
 
-        function renderTable() {
-            const tbody = document.getElementById('clientTableBody');
-            const data = accountsData[currentSystem];
-            document.getElementById('accountCount').innerText = `${data.length} Active Accounts`;
-            
-            tbody.innerHTML = '';
-            data.forEach((item, index) => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-700/20 transition">
-                        <td class="px-6 py-4 font-medium text-slate-100">${item.name} <span class="block text-xs text-slate-400">G: ${item.guarantor} | M: ${item.mobile}</span></td>
-                        <td class="px-6 py-4 text-slate-400">${item.id}</td>
-                        <td class="px-6 py-4 font-semibold text-emerald-400">₹${item.principal.toLocaleString()}</td>
-                        <td class="px-6 py-4">₹${item.emi} / ${item.mode} (${item.tenure} ${item.mode === 'Daily' ? 'Days' : 'Months'})</td>
-                        <td class="px-6 py-4"><span class="bg-amber-900/60 text-amber-400 border border-amber-700/50 text-xs px-2.5 py-1 rounded-full font-medium">${item.status}</span></td>
-                        <td class="px-6 py-4 text-right">
-                            <button onclick="viewStatement('${currentSystem}', ${index})" class="text-indigo-400 hover:text-indigo-300 font-medium bg-indigo-950/50 border border-indigo-800/50 px-3 py-1.5 rounded-lg transition">View Statement</button>
-                        </td>
-                    </tr>
-                `;
-            });
+        function openNewLoanModal() {
+            document.getElementById('loanModal').classList.remove('hidden');
+        }
+
+        function closeNewLoanModal() {
+            document.getElementById('loanModal').classList.add('hidden');
+        }
+
+        function saveNewLoan() {
+            const name = document.getElementById('clientName').value;
+            const mobile = document.getElementById('clientMobile').value;
+            const guarantor = document.getElementById('guarantorName').value;
+            const principal = parseFloat(document.getElementById('loanAmount').value);
+            const system = document.getElementById('loanSystem').value;
+            const tenure = parseInt(document.getElementById('loanTenure').value);
+            const emi = parseFloat(document.getElementById('loanEmi').value);
+
+            if(!name || !principal || !emi) {
+                alert("Please fill required fields!");
+                return;
+            }
+
+            const loanData = {
+                name, mobile, guarantor, principal, system, tenure, emi,
+                loanId: "LN-" + Math.floor(1000 + Math.random() * 9000),
+                status: "Active (Principal Pending)",
+                createdAt: new Date().toLocaleDateString()
+            };
+
+            const transaction = db.transaction(["loans"], "readwrite");
+            const store = transaction.objectStore("loans");
+            const request = store.add(loanData);
+
+            request.onsuccess = function() {
+                closeNewLoanModal();
+                loadLoans();
+                alert("Loan account created successfully!");
+            };
+        }
+
+        function loadLoans() {
+            if (!db) return;
+            const transaction = db.transaction(["loans"], "readonly");
+            const store = transaction.objectStore("loans");
+            const request = store.getAll();
+
+            request.onsuccess = function(event) {
+                const allLoans = event.target.result;
+                const filtered = allLoans.filter(l => l.system === currentSystem);
+                
+                const tbody = document.getElementById('clientTableBody');
+                document.getElementById('accountCount').innerText = `${filtered.length} Accounts`;
+                document.getElementById('metricAccounts').innerText = allLoans.length;
+
+                let totalCap = allLoans.reduce((acc, curr) => acc + (curr.principal || 0), 0);
+                document.getElementById('metricCapital').innerText = "₹" + totalCap.toLocaleString();
+
+                tbody.innerHTML = '';
+                filtered.forEach(item => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-700/20 transition">
+                            <td class="px-6 py-4 font-medium text-slate-100">${item.name} <span class="block text-xs text-slate-400">G: ${item.guarantor} | M: ${item.mobile}</span></td>
+                            <td class="px-6 py-4 text-slate-400">${item.loanId}</td>
+                            <td class="px-6 py-4 font-semibold text-emerald-400">₹${item.principal.toLocaleString()}</td>
+                            <td class="px-6 py-4">₹${item.emi} / ${item.system === 'daily' ? 'Daily' : 'Monthly'} (${item.tenure})</td>
+                            <td class="px-6 py-4"><span class="bg-amber-900/60 text-amber-400 border border-amber-700/50 text-xs px-2.5 py-1 rounded-full font-medium">${item.status}</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <button onclick="deleteLoan(${item.id})" class="text-red-400 hover:text-red-300 font-medium bg-red-950/50 border border-red-800/50 px-3 py-1.5 rounded-lg transition text-xs">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            };
+        }
+
+        function deleteLoan(id) {
+            if(confirm("Are you sure you want to delete this loan?")) {
+                const transaction = db.transaction(["loans"], "readwrite");
+                const store = transaction.objectStore("loans");
+                store.delete(id).onsuccess = function() {
+                    loadLoans();
+                };
+            }
         }
 
         function filterClients() {
@@ -201,60 +312,6 @@
                 rows[i].style.display = text.includes(query) ? '' : 'none';
             }
         }
-
-        function viewStatement(sys, index) {
-            const item = accountsData[sys][index];
-            const modalContent = document.getElementById('statementContent');
-            
-            modalContent.innerHTML = `
-                <div class="border-b border-slate-700 pb-3 flex justify-between items-start">
-                    <div>
-                        <h4 class="font-bold text-slate-100 text-lg">${item.name}</h4>
-                        <p class="text-xs text-slate-400">Loan ID: ${item.id} | Guarantor: ${item.guarantor}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xs text-slate-400">Principal: <span class="text-emerald-400 font-bold">₹${item.principal.toLocaleString()}</span></p>
-                        <p class="text-xs text-slate-400">Tenure: ${item.tenure} ${item.mode === 'Daily' ? 'Days' : 'Months'}</p>
-                    </div>
-                </div>
-                <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
-                    <div class="flex justify-between text-xs text-slate-400 font-semibold border-b border-slate-800 pb-2">
-                        <span>S.No | Date</span>
-                        <span>Scheduled EMI</span>
-                        <span>Amount Paid</span>
-                        <span>Payment Mode</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-slate-300 py-1">
-                        <span>1 | 01-Oct-2026</span>
-                        <span>₹${item.emi}</span>
-                        <span>₹${item.emi}</span>
-                        <span>Cash</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-slate-300 py-1">
-                        <span>2 | 02-Oct-2026</span>
-                        <span>₹${item.emi}</span>
-                        <span>₹${item.emi}</span>
-                        <span>UPI (PhonePe)</span>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center text-xs text-slate-400 pt-2">
-                    <p>Total Paid: <span class="text-emerald-400 font-bold">₹${item.paid.toLocaleString()}</span></p>
-                    <p>Balance Due: <span class="text-amber-400 font-bold">₹${(item.principal - item.paid).toLocaleString()} (Active)</span></p>
-                </div>
-            `;
-            document.getElementById('statementModal').classList.remove('hidden');
-        }
-
-        function closeStatement() {
-            document.getElementById('statementModal').classList.add('hidden');
-        }
-
-        function openNewLoanModal() {
-            alert("New Loan Creation Modal with dynamic manual calculations and dual disbursement modes is ready to integrate!");
-        }
-
-        // Initialize table on load
-        renderTable();
     </script>
 </body>
 </html>
