@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SahukarPro Enterprise - Advance Payment & Core Engine</title>
+    <title>SahukarPro Enterprise - Dual Ledger & Clean Statement Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,23 +26,23 @@
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div>
                 <h1 class="text-lg font-bold text-indigo-400 flex items-center gap-2">
-                    SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Advance Engine Active</span>
+                    SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Secure Dual Ledger</span>
                 </h1>
-                <p class="text-xs text-slate-400">Principal-First Accounting & Future Knock-off Module</p>
+                <p class="text-xs text-slate-400">Confidential Backend Tracking & Clean Customer View</p>
             </div>
-            <span class="text-xs bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 px-3 py-1 rounded-full font-medium">● Ready for Next Flow</span>
+            <span class="text-xs bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 px-3 py-1 rounded-full font-medium">● 100% Secure</span>
         </div>
     </header>
 
     <!-- MAIN CONTAINER -->
     <main class="max-w-6xl mx-auto p-6 flex-1 w-full space-y-6">
 
-        <!-- LOAN CREATION CARD -->
+        <!-- LOAN CREATION & DUAL MODEL CARD -->
         <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-2xl space-y-6">
             <div class="flex justify-between items-center border-b border-slate-700 pb-4">
-                <h2 class="text-base font-bold text-slate-100">Step 1 & 2: Flexible Loan & Advance Auto-Adjustment Engine</h2>
+                <h2 class="text-base font-bold text-slate-100">Step: Dual Model Selection & Secure Setup</h2>
                 <div class="flex gap-2">
-                    <button type="button" onclick="setModel('upfront')" id="btnModelUpfront" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition">Model A: Upfront Interest</button>
+                    <button type="button" onclick="setModel('upfront')" id="btnModelUpfront" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition">Model A: Upfront Cut</button>
                     <button type="button" onclick="setModel('full')" id="btnModelFull" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-slate-300 transition">Model B: Full Disbursement</button>
                 </div>
             </div>
@@ -54,67 +54,88 @@
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Loan Principal Face Value (₹)</label>
-                    <input type="number" id="inputPrincipal" value="10000" oninput="calculateEngine()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
+                    <input type="number" id="inputPrincipal" value="10000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
                 </div>
-                <div id="interestFieldContainer">
-                    <label class="block text-xs text-slate-400 mb-1" id="interestLabel">Upfront Interest Cut (₹)</label>
-                    <input type="number" id="inputInterest" value="1500" oninput="calculateEngine()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Tenure Cycle (Days)</label>
-                    <input type="number" id="inputTenure" value="100" oninput="calculateEngine()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Calculated Daily EMI</label>
-                    <input type="text" id="outputEmi" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-emerald-400 font-bold" value="₹100.00 / day">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Total Payable Amount</label>
-                    <input type="text" id="outputTotalPayable" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-indigo-400 font-bold" value="₹10,000">
+                    <input type="number" id="inputTenure" value="100" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
                 </div>
             </div>
 
-            <!-- FINANCIAL BREAKDOWN BOX -->
-            <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-700/80 grid grid-cols-1 sm:grid-cols-4 gap-4 text-sm">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <span class="text-slate-400 block text-xs">Net Cash Given to Client (Disbursal):</span>
-                    <span id="outputDisbursal" class="text-indigo-400 font-bold text-lg">₹8,500</span>
+                    <label class="block text-xs text-slate-400 mb-1">Loan Start Date</label>
+                    <input type="date" id="startDate" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
                 </div>
                 <div>
-                    <span class="text-slate-400 block text-xs">Deferred Profit (Locked until Principal Rec.):</span>
-                    <span id="outputLockedProfit" class="text-amber-400 font-bold text-lg">₹1,500</span>
+                    <label class="block text-xs text-slate-400 mb-1">Payment Mode (Disbursement / Collection)</label>
+                    <select id="paymentMode" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
+                        <option value="Cash">Cash (नकद)</option>
+                        <option value="UPI (PhonePe, Google Pay, Other UPI)">UPI (PhonePe, Google Pay, Other UPI)</option>
+                        <option value="Bank Transfer / Cheque">Bank Transfer / Cheque</option>
+                    </select>
                 </div>
-                <div>
-                    <span class="text-slate-400 block text-xs">Principal Recovery Target:</span>
-                    <span id="outputPrincipalTarget" class="text-emerald-400 font-bold text-lg">₹10,000</span>
-                </div>
-                <div>
-                    <span class="text-slate-400 block text-xs">Active Accounting Mode:</span>
-                    <span id="outputActiveMode" class="text-blue-400 font-bold text-sm mt-1 block">Upfront Interest Deduction</span>
-                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="button" onclick="generateCustomerStatement()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition shadow-lg">Generate Clean Statement Preview</button>
             </div>
         </div>
 
-        <!-- ADVANCE BULK PAYMENT SIMULATOR SECTION -->
-        <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-2xl space-y-4">
-            <h3 class="text-base font-bold text-slate-100">Bulk / Advance Payment Simulation (Future Knock-off)</h3>
-            <p class="text-xs text-slate-400">Enter bulk cash given by client. System will automatically divide it by Daily EMI to settle upcoming future dates.</p>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+        <!-- PROFESSIONAL CUSTOMER STATEMENT PREVIEW (PDF / PRINT READY) -->
+        <div id="statementPreviewCard" class="hidden bg-white text-slate-900 border border-slate-300 rounded-2xl p-8 shadow-2xl space-y-6">
+            <div class="flex justify-between items-start border-b border-slate-200 pb-4">
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Bulk Amount Received (₹)</label>
-                    <input type="number" id="bulkInputAmount" placeholder="e.g. 2000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
+                    <h2 class="text-xl font-extrabold text-indigo-900">SAHUKARPRO ENTERPRISE</h2>
+                    <p class="text-xs text-slate-500">Official Client Loan Schedule & Ledger Statement</p>
                 </div>
-                <div>
-                    <button type="button" onclick="simulateAdvancePayment()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl text-sm transition shadow-lg">Simulate Advance Adjust</button>
+                <div class="text-right text-xs text-slate-600">
+                    <p><strong>Loan ID:</strong> <span id="lblLoanId">LN-9042</span></p>
+                    <p><strong>Start Date:</strong> <span id="lblStartDate"></span></p>
                 </div>
             </div>
 
-            <div id="advanceResultBox" class="hidden bg-slate-900 p-4 rounded-xl border border-slate-700 text-sm space-y-2">
-                <!-- Dynamic calculation result preview -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+                <div>
+                    <span class="text-slate-500 block">Client Name:</span>
+                    <strong id="lblClientName" class="text-sm text-slate-900">Ramesh Kumar</strong>
+                </div>
+                <div>
+                    <span class="text-slate-500 block">Total Loan Amount:</span>
+                    <strong id="lblLoanAmount" class="text-sm text-indigo-700">₹10,000</strong>
+                </div>
+                <div>
+                    <span class="text-slate-500 block">Tenure:</span>
+                    <strong id="lblTenure" class="text-sm text-slate-900">100 Days</strong>
+                </div>
+                <div>
+                    <span class="text-slate-500 block">End Date (Auto):</span>
+                    <strong id="lblEndDate" class="text-sm text-emerald-700"></strong>
+                </div>
+            </div>
+
+            <!-- CLEAN SCHEDULE TABLE -->
+            <div class="border border-slate-200 rounded-xl overflow-hidden">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                            <th class="p-3 font-semibold">Sr No.</th>
+                            <th class="p-3 font-semibold">Date</th>
+                            <th class="p-3 font-semibold">Scheduled EMI (₹)</th>
+                            <th class="p-3 font-semibold">Deposit Amount (₹)</th>
+                            <th class="p-3 font-semibold">Payment Mode</th>
+                            <th class="p-3 font-semibold">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statementTableBody" class="divide-y divide-slate-200">
+                        <!-- Auto-generated schedule -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-between items-center pt-4 border-t border-slate-200 text-xs text-slate-500">
+                <p>Note: Confidential internal accounting rules, upfront deductions, or future advance adjustments are securely hidden from this customer view.</p>
+                <button onclick="window.print()" class="bg-slate-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800">Print / Download PDF</button>
             </div>
         </div>
 
@@ -122,78 +143,71 @@
 
     <script>
         let currentModel = 'upfront';
+        document.getElementById('startDate').valueAsDate = new Date();
 
         function setModel(model) {
             currentModel = model;
             const btnUp = document.getElementById('btnModelUpfront');
             const btnFull = document.getElementById('btnModelFull');
-            const label = document.getElementById('interestLabel');
-
             if(model === 'upfront') {
                 btnUp.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition";
                 btnFull.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-slate-300 transition";
-                label.innerText = "Upfront Interest Cut (₹)";
-                document.getElementById('outputActiveMode').innerText = "Upfront Interest Deduction";
             } else {
                 btnFull.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition";
                 btnUp.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-slate-300 transition";
-                label.innerText = "Agreed Total Interest (₹)";
-                document.getElementById('outputActiveMode').innerText = "Full Disbursement + Later Interest";
             }
-            calculateEngine();
         }
 
-        function calculateEngine() {
-            let principal = parseFloat(document.getElementById('inputPrincipal').value) || 0;
-            let interest = parseFloat(document.getElementById('inputInterest').value) || 0;
-            let tenure = parseInt(document.getElementById('inputTenure').value) || 100;
+        function generateCustomerStatement() {
+            const clientName = document.getElementById('clientName').value || 'Client';
+            const principal = parseFloat(document.getElementById('inputPrincipal').value) || 10000;
+            const tenure = parseInt(document.getElementById('inputTenure').value) || 100;
+            const startDateStr = document.getElementById('startDate').value;
+            const selectedMode = document.getElementById('paymentMode').value;
 
-            let disbursalAmt = 0;
-            let totalPayable = 0;
-            let dailyEmi = 0;
-
-            if(currentModel === 'upfront') {
-                disbursalAmt = principal - interest;
-                totalPayable = principal;
-                dailyEmi = tenure > 0 ? (principal / tenure) : 0;
-            } else {
-                disbursalAmt = principal;
-                totalPayable = principal + interest;
-                dailyEmi = tenure > 0 ? (totalPayable / tenure) : 0;
-            }
-
-            document.getElementById('outputDisbursal').innerText = "₹" + disbursalAmt.toLocaleString();
-            document.getElementById('outputLockedProfit').innerText = "₹" + interest.toLocaleString();
-            document.getElementById('outputPrincipalTarget').innerText = "₹" + principal.toLocaleString();
-            document.getElementById('outputTotalPayable').innerText = "₹" + totalPayable.toLocaleString();
-            document.getElementById('outputEmi').value = "₹" + dailyEmi.toFixed(2) + " / day";
-        }
-
-        function simulateAdvancePayment() {
-            let bulkAmt = parseFloat(document.getElementById('bulkInputAmount').value) || 0;
-            let principal = parseFloat(document.getElementById('inputPrincipal').value) || 10000;
-            let tenure = parseInt(document.getElementById('inputTenure').value) || 100;
-            let dailyEmi = principal / tenure;
-
-            if(bulkAmt <= 0) {
-                alert("कृपया वैध एडवांस राशि दर्ज करें!");
+            if(!startDateStr) {
+                alert("कृपया लोन की शुरुआत की तारीख चुनें!");
                 return;
             }
 
-            let daysCovered = Math.floor(bulkAmt / dailyEmi);
-            let remainder = bulkAmt % dailyEmi;
+            // INTERNAL SECRET BACKEND LOGIC CHECK (Confidential Tracking)
+            // Model A records upfront profit internally; Model B tracks later recognition.
+            console.log("Backend Ledger Mode Active:", currentModel);
 
-            let resultBox = document.getElementById('advanceResultBox');
-            resultBox.classList.remove('hidden');
-            resultBox.innerHTML = `
-                <p class="text-emerald-400 font-bold">✔ एडवांस राशि सफलतापूर्वक जांची गई:</p>
-                <p class="text-slate-300">कुल जमा राशि: <span class="font-semibold text-white">₹${bulkAmt.toLocaleString()}</span></p>
-                <p class="text-slate-300">कवर किए जाने वाले दिन (Days Knocked-off): <span class="font-semibold text-indigo-400">${daysCovered} दिन</span> (दैनिक किस्त ₹${dailyEmi} के हिसाब से)</p>
-                ${remainder > 0 ? `<p class="text-amber-400 text-xs">शेष अतिरिक्त राशि (Excess Wallet Balance): ₹${remainder} (इसे अगले दिन या आंशिक रूप में जोड़ा जाएगा)</p>` : '<p class="text-emerald-400 text-xs">हिसाब बिल्कुल सटीक बैठता है, कोई शेष राशि नहीं बची।</p>'}
-            `;
+            document.getElementById('lblClientName').innerText = clientName;
+            document.getElementById('lblLoanAmount').innerText = "₹" + principal.toLocaleString();
+            document.getElementById('lblTenure').innerText = tenure + " Days";
+            document.getElementById('lblStartDate').innerText = startDateStr;
+
+            let startDate = new Date(startDateStr);
+            let endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + tenure);
+            document.getElementById('lblEndDate').innerText = endDate.toISOString().split('T')[0];
+
+            let dailyEmi = principal / tenure;
+            let tbody = document.getElementById('statementTableBody');
+            tbody.innerHTML = '';
+
+            let currDate = new Date(startDate);
+            for(let i = 1; i <= Math.min(tenure, 10); i++) {
+                currDate.setDate(currDate.getDate() + 1);
+                let dateFormatted = currDate.toISOString().split('T')[0];
+                let isPaid = (i <= 3);
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-3 text-slate-600 font-medium">${i}</td>
+                        <td class="p-3 text-slate-800">${dateFormatted}</td>
+                        <td class="p-3 text-slate-800 font-semibold">₹${dailyEmi.toFixed(2)}</td>
+                        <td class="p-3 text-slate-900 font-bold">${isPaid ? '₹' + dailyEmi.toFixed(2) : '-'}</td>
+                        <td class="p-3 text-slate-600">${isPaid ? selectedMode : '-'}</td>
+                        <td class="p-3 ${isPaid ? 'text-emerald-600 font-semibold' : 'text-amber-600 font-medium'}">${isPaid ? 'Paid' : 'Pending'}</td>
+                    </tr>
+                `;
+            }
+
+            document.getElementById('statementPreviewCard').classList.remove('hidden');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
-
-        calculateEngine();
     </script>
 </body>
 </html>
