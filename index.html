@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SahukarPro Enterprise - Complete Ledger & Recovery Engine</title>
+    <title>SahukarPro Enterprise - Master Ledger & Recovery Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -29,13 +29,13 @@
                 <div>
                     <h1 class="text-lg font-bold tracking-wide flex items-center gap-2">
                         <span id="appTitleDisplay" contenteditable="true" onblur="updateAppName(this)" class="outline-none border-b border-dashed border-slate-500 hover:border-indigo-400 cursor-pointer px-1 rounded" title="Click to edit business name">SahukarPro</span> 
-                        <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Recovery Engine</span>
+                        <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Secure PWA Core</span>
                     </h1>
-                    <p class="text-xs text-slate-400">Strict Audit & Daily/Kandi Collection System</p>
+                    <p class="text-xs text-slate-400">Offline-First Microfinance & Kandi Engine</p>
                 </div>
             </div>
             <div class="flex items-center space-x-3">
-                <span class="text-xs bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 px-3 py-1 rounded-full font-medium">● Fully Operational</span>
+                <span class="text-xs bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 px-3 py-1 rounded-full font-medium">● 100% Data Safe</span>
             </div>
         </div>
     </header>
@@ -68,8 +68,8 @@
                 <h3 class="text-2xl font-bold text-amber-400 mt-1" id="metricProfit">₹0</h3>
             </div>
             <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl shadow-sm">
-                <p class="text-xs text-slate-400 uppercase font-semibold">Today's Total Collection</p>
-                <h3 class="text-2xl font-bold text-blue-400 mt-1" id="metricToday">₹0</h3>
+                <p class="text-xs text-slate-400 uppercase font-semibold">Total Active Accounts</p>
+                <h3 class="text-2xl font-bold text-blue-400 mt-1" id="metricAccounts">0</h3>
             </div>
         </div>
 
@@ -99,7 +99,7 @@
                         <tr class="bg-slate-900/50 text-slate-400 border-b border-slate-700/60">
                             <th class="px-6 py-3 font-semibold">Client Name & Guarantor</th>
                             <th class="px-6 py-3 font-semibold">Loan ID</th>
-                            <th class="px-6 py-3 font-semibold">Principal / Total Due</th>
+                            <th class="px-6 py-3 font-semibold">Principal / Due</th>
                             <th class="px-6 py-3 font-semibold">Installment Mode</th>
                             <th class="px-6 py-3 font-semibold">Status (Closure Check)</th>
                             <th class="px-6 py-3 font-semibold text-right">Recovery / Ledger</th>
@@ -171,7 +171,7 @@
         </div>
     </div>
 
-    <!-- RECOVERY / COLLECTION MODAL -->
+    <!-- RECOVERY MODAL -->
     <div id="recoveryModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
@@ -179,7 +179,7 @@
                 <button onclick="closeRecoveryModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
             </div>
             <div class="p-6 space-y-4 text-sm" id="recoveryModalBody">
-                <!-- Dynamic client summary loaded here -->
+                <!-- Dynamic client summary -->
             </div>
             <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
                 <button onclick="processRecovery()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-xl font-medium transition text-xs shadow-lg">Confirm Recovery</button>
@@ -188,34 +188,45 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT ENGINE -->
+    <!-- JAVASCRIPT ENGINE (INDEXEDDB + LOCALSTORAGE) -->
     <script>
         let db;
         let currentSystem = 'daily';
         let activeRecoveryId = null;
 
-        const request = indexedDB.open("SahukarProEnterpriseDB", 2);
-        request.onerror = function(event) { console.error("DB Error:", event.target.errorCode); };
+        // Initialize IndexedDB with robust error handling
+        const request = indexedDB.open("SahukarProMasterDB", 3);
+        
+        request.onerror = function(event) {
+            console.error("Database error: ", event.target.errorCode);
+            alert("Database connection failed! Please allow IndexedDB in browser.");
+        };
+
         request.onupgradeneeded = function(event) {
             db = event.target.result;
             if (!db.objectStoreNames.contains("loans")) {
                 db.createObjectStore("loans", { keyPath: "id", autoIncrement: true });
             }
         };
+
         request.onsuccess = function(event) {
             db = event.target.result;
-            loadLoans();
             loadAppName();
+            loadLoans();
         };
 
         function updateAppName(el) {
             const newName = el.innerText.trim();
-            if(newName) { localStorage.setItem("sahukar_custom_app_name", newName); }
+            if(newName) {
+                localStorage.setItem("sahukar_enterprise_app_name", newName);
+            }
         }
 
         function loadAppName() {
-            const savedName = localStorage.getItem("sahukar_custom_app_name");
-            if(savedName) { document.getElementById('appTitleDisplay').innerText = savedName; }
+            const savedName = localStorage.getItem("sahukar_enterprise_app_name");
+            if(savedName) {
+                document.getElementById('appTitleDisplay').innerText = savedName;
+            }
         }
 
         function switchSystem(sys) {
@@ -230,6 +241,11 @@
         function closeNewLoanModal() { document.getElementById('loanModal').classList.add('hidden'); }
 
         function saveNewLoan() {
+            if (!db) {
+                alert("Database not ready yet. Please wait a second.");
+                return;
+            }
+
             const name = document.getElementById('clientName').value.trim();
             const mobile = document.getElementById('clientMobile').value.trim();
             const guarantor = document.getElementById('guarantorName').value.trim();
@@ -240,7 +256,7 @@
             const emi = parseFloat(document.getElementById('loanEmi').value);
 
             if(!name || isNaN(principal) || isNaN(emi)) {
-                alert("Please fill client name, principal and EMI properly!");
+                alert("Please fill client name, principal amount and EMI properly!");
                 return;
             }
 
@@ -257,12 +273,17 @@
 
             const transaction = db.transaction(["loans"], "readwrite");
             const store = transaction.objectStore("loans");
-            store.add(loanData).onsuccess = function() {
+            const req = store.add(loanData);
+
+            req.onsuccess = function() {
                 closeNewLoanModal();
-                // Reset form
                 ['clientName', 'clientMobile', 'guarantorName', 'loanAmount', 'loanInterest', 'loanTenure', 'loanEmi'].forEach(id => document.getElementById(id).value = '');
                 loadLoans();
-                alert("New Loan Account Created Successfully!");
+                alert("Loan Account Saved Successfully!");
+            };
+
+            req.onerror = function(e) {
+                alert("Error saving record: " + e.target.error);
             };
         }
 
@@ -270,7 +291,9 @@
             if (!db) return;
             const transaction = db.transaction(["loans"], "readonly");
             const store = transaction.objectStore("loans");
-            store.getAll().onsuccess = function(event) {
+            const req = store.getAll();
+
+            req.onsuccess = function(event) {
                 const allLoans = event.target.result;
                 const filtered = allLoans.filter(l => l.system === currentSystem);
                 
@@ -285,11 +308,10 @@
                 document.getElementById('metricCapital').innerText = "₹" + totalCap.toLocaleString();
                 document.getElementById('metricRecovered').innerText = "₹" + totalRec.toLocaleString();
                 document.getElementById('metricProfit').innerText = "₹" + totalProf.toLocaleString();
-                document.getElementById('metricToday').innerText = "₹0"; // Real-time shift total can be tracked
 
                 tbody.innerHTML = '';
                 if(filtered.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-6 text-center text-slate-500">No active accounts in this section. Click '+ New Loan Account' to add.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-6 text-center text-slate-500">No active accounts found. Click '+ New Loan Account' to add.</td></tr>`;
                     return;
                 }
 
@@ -301,7 +323,7 @@
                         <tr class="hover:bg-slate-700/20 transition">
                             <td class="px-6 py-4 font-medium text-slate-100">${item.name} <span class="block text-xs text-slate-400">G: ${item.guarantor || 'N/A'} | M: ${item.mobile || 'N/A'}</span></td>
                             <td class="px-6 py-4 text-slate-400">${item.loanId}</td>
-                            <td class="px-6 py-4 font-semibold text-emerald-400">₹${item.principal.toLocaleString()} <span class="block text-xs text-slate-400">Bal Principal: ₹${balancePrincipal.toLocaleString()}</span></td>
+                            <td class="px-6 py-4 font-semibold text-emerald-400">₹${item.principal.toLocaleString()} <span class="block text-xs text-slate-400">Bal: ₹${balancePrincipal.toLocaleString()}</span></td>
                             <td class="px-6 py-4">₹${item.emi} / ${item.system === 'daily' ? 'Daily' : 'Monthly'} (${item.tenure})</td>
                             <td class="px-6 py-4"><span class="${badgeColor} border text-xs px-2.5 py-1 rounded-full font-medium">${item.status}</span></td>
                             <td class="px-6 py-4 text-right space-x-2">
@@ -331,17 +353,8 @@
                             <label class="block text-xs text-slate-400 mb-1 mt-3">Recovery Amount Received (₹)</label>
                             <input type="number" id="recoveryAmountInput" value="${item.emi}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
                         </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Payment Mode</label>
-                            <select id="recoveryMode" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
-                                <option value="Cash">Cash</option>
-                                <option value="UPI">UPI / QR</option>
-                                <option value="Bank Transfer">Bank Transfer / Cheque</option>
-                            </select>
-                        </div>
                     </div>
                 `;
-                document.getElementById('recoveryModal_modal')?.classList?.remove('hidden'); // safe fallback
                 document.getElementById('recoveryModal').classList.remove('hidden');
             };
         }
@@ -353,8 +366,8 @@
 
         function processRecovery() {
             const amt = parseFloat(document.getElementById('recoveryAmountInput').value);
-            if(isNaN(amt) || amt <=0) {
-                alert("Please enter a valid recovery amount!");
+            if(isNaN(amt) || amt <= 0) {
+                alert("Please enter a valid amount!");
                 return;
             }
 
@@ -364,7 +377,6 @@
                 let item = event.target.result;
                 let remainingAmt = amt;
 
-                // STRICT ACCOUNTING RULE: Principal Recovery Takes Precedence over Interest
                 let principalDue = item.principal - item.principalRecovered;
                 if(remainingAmt <= principalDue) {
                     item.principalRecovered += remainingAmt;
@@ -372,7 +384,6 @@
                 } else {
                     remainingAmt -= principalDue;
                     item.principalRecovered = item.principal;
-                    // Remaining goes to Interest
                     let interestDue = item.interest - item.interestRecovered;
                     if(remainingAmt >= interestDue) {
                         item.interestRecovered = item.interest;
@@ -383,7 +394,6 @@
 
                 item.totalRecovered += amt;
 
-                // Check Full Closure Condition
                 if(item.principalRecovered >= item.principal && item.interestRecovered >= item.interest) {
                     item.status = "Closed (Fully Settled)";
                 } else {
@@ -399,7 +409,7 @@
         }
 
         function deleteLoan(id) {
-            if(confirm("Are you sure you want to delete this loan account?")) {
+            if(confirm("Are you sure you want to delete this account?")) {
                 const transaction = db.transaction(["loans"], "readwrite");
                 const store = transaction.objectStore("loans");
                 store.delete(id).onsuccess = function() { loadLoans(); };
