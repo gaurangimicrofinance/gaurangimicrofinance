@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SahukarPro Enterprise - Master Pro Edition</title>
+    <title>SahukarPro Enterprise - Ultimate Master Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,16 +26,16 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div>
                 <h1 class="text-lg font-bold text-indigo-400 flex items-center gap-2">
-                    SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Pro Audit Master</span>
+                    SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Ultimate Pro</span>
                 </h1>
-                <p class="text-xs text-slate-400">100% Connected Product & Recovery Engine</p>
+                <p class="text-xs text-slate-400">100% Live Search, Principal-First Recovery & Clean Ledger</p>
             </div>
             <div class="flex gap-2">
                 <button onclick="openProductModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition shadow-md">
                     + Custom Product
                 </button>
                 <button onclick="openNewLoanModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg transition">
-                    + Register Loan
+                    + Register New Loan
                 </button>
             </div>
         </div>
@@ -68,11 +68,11 @@
         <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-slate-700 pb-4">
                 <div>
-                    <h3 class="font-bold text-slate-200 text-base">Active Client Accounts & Recovery</h3>
-                    <p class="text-xs text-slate-400">Instant smart search by name or mobile number.</p>
+                    <h3 class="font-bold text-slate-200 text-base">Active Client Accounts & Instant Recovery</h3>
+                    <p class="text-xs text-slate-400">Type client name or mobile to instantly filter accounts without scrolling.</p>
                 </div>
                 <div class="w-full sm:w-72 relative">
-                    <input type="text" id="liveSearchInput" oninput="filterClients()" placeholder="🔍 Search client name, mobile..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+                    <input type="text" id="liveSearchInput" oninput="filterClients()" placeholder="🔍 Live search name, mobile..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
                 </div>
             </div>
 
@@ -83,12 +83,12 @@
                             <th class="p-3">Client & Contact</th>
                             <th class="p-3">Guarantor</th>
                             <th class="p-3">Principal / Balance</th>
-                            <th class="p-3">Model & EMI</th>
+                            <th class="p-3">Product & EMI</th>
                             <th class="p-3 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="clientTableBody" class="divide-y divide-slate-700/50 text-slate-300">
-                        <tr><td colspan="5" class="p-6 text-center text-slate-500">No active client accounts found. Use '+ Register Loan' to add.</td></tr>
+                        <tr><td colspan="5" class="p-6 text-center text-slate-500">No active client accounts found. Use '+ Register New Loan' to add.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -106,7 +106,7 @@
             <div class="p-6 space-y-4 text-xs">
                 <div>
                     <label class="block text-slate-400 mb-1">Product Name *</label>
-                    <input type="text" id="prodName" placeholder="e.g. Daily Flexi 100" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                    <input type="text" id="prodName" placeholder="e.g. Daily Flexi Scheme" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -206,7 +206,7 @@
         </div>
     </div>
 
-    <!-- RECOVERY MODAL -->
+    <!-- RECOVERY MODAL WITH PAYMENT MODES -->
     <div id="recoveryModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
@@ -309,7 +309,7 @@
             allLoans.push(newLoan);
             closeNewLoanModal();
             renderDashboard();
-            alert("लोन खाता सफलतापर्वक रजिस्टर कर दिया गया है!");
+            alert("लोन खाता सफलतापूर्वक रजिस्टर कर दिया गया है!");
         }
 
         function renderDashboard() {
@@ -343,6 +343,7 @@
                     </tr>
                 `;
             });
+            filterClients(); // Re-apply search filter if active
         }
 
         function openRecoveryModal(id) {
@@ -381,6 +382,7 @@
 
         function processRecoveryPayment() {
             let amt = parseFloat(document.getElementById('recoveryAmtInput').value) || 0;
+            let payMode = document.getElementById('recoveryPayMode').value;
             if(amt <= 0) {
                 alert("कृपया वैध राशि दर्ज करें!");
                 return;
@@ -399,10 +401,10 @@
 
             closeRecoveryModal();
             renderDashboard();
-            alert("₹" + amt.toLocaleString() + " की रिकवरी सफलतापूर्वक दर्ज हो गई है!");
+            alert("₹" + amt.toLocaleString() + " की रिकवरी (" + payMode + ") सफलतापूर्वक दर्ज हो गई है!");
         }
 
-        // SMART INSTANT LIVE SEARCH
+        // SMART INSTANT LIVE SEARCH (REAL-TIME FILTER)
         function filterClients() {
             let query = document.getElementById('liveSearchInput').value.toLowerCase().trim();
             let rows = document.querySelectorAll('.client-row');
