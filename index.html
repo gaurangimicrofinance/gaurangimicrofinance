@@ -1,174 +1,429 @@
-<!doctype html>
-<html lang="hi">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0f5c4d">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href='data:application/manifest+json,{"name":"माइक्रोफाइनेंस मैनेजर","short_name":"MicroFin","display":"standalone","start_url":".","background_color":"#0f5c4d","theme_color":"#0f5c4d"}'>
-<title>माइक्रोफाइनेंस मैनेजर</title>
-<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#eef2f0;--card:#fff;--ink:#14302b;--mute:#5d716c;--line:#d5dfdb;--acc:#0f5c4d;--on:#fff;--acc2:#e0a100;--bad:#b3361f;--ok:#1d7a4a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1917;--card:#152623;--ink:#e6efec;--mute:#92a8a2;--line:#27403b;--acc:#3fb59c;--on:#06201b;--acc2:#e8b830;--bad:#ef7f68;--ok:#58c58a}}
-:root[data-theme="dark"]{--bg:#0d1917;--card:#152623;--ink:#e6efec;--mute:#92a8a2;--line:#27403b;--acc:#3fb59c;--on:#06201b;--acc2:#e8b830;--bad:#ef7f68;--ok:#58c58a}
-*{box-sizing:border-box}html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--ink);font-family:'Mukta',system-ui,sans-serif;font-size:16px}
-#app{display:flex;flex-direction:column;min-height:100%}
-main{flex:1;padding:16px 16px 96px;max-width:1000px;width:100%;margin:0 auto}
-h1{font-size:1.5rem;margin:0 0 12px;font-weight:700}h2{font-size:1.05rem;margin:20px 0 8px;font-weight:700}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
-nav button{flex:1;border:0;background:none;color:var(--mute);padding:12px 2px;font:inherit;font-size:.82rem;font-weight:600}
-nav button.on{color:var(--acc);box-shadow:inset 0 3px 0 var(--acc)}.brand,.sp{display:none}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-.stat b{display:block;font-size:1.3rem}.stat span{color:var(--mute);font-size:.85rem}
-.bad{color:var(--bad)}.ok{color:var(--ok)}.mute{color:var(--mute)}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-.row:last-child{border:0}.row small{color:var(--mute);display:block}.r{text-align:right}
-.btn{border:0;border-radius:8px;background:var(--acc);color:var(--on);font:inherit;font-weight:600;padding:10px 16px;min-height:44px;cursor:pointer;text-decoration:none;display:inline-block}
-.btn.alt{background:none;color:var(--acc);border:1px solid var(--acc)}.btn.sm{padding:6px 12px;min-height:36px;font-size:.9rem}
-.bar{height:6px;background:var(--line);border-radius:3px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc2)}
-.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%}td,th{padding:8px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
-dialog{border:0;border-radius:12px;padding:18px;width:min(460px,94vw);max-height:90vh;background:var(--card);color:var(--ink)}dialog::backdrop{background:#0008}
-label{display:block;font-size:.85rem;color:var(--mute);margin:10px 0 4px}
-input,select{width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);min-height:44px}
-.empty{color:var(--mute);padding:18px 0;text-align:center}
-.pill{font-size:.75rem;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--mute)}
-@media(min-width:768px){
-#app{flex-direction:row}
-nav{position:sticky;top:0;height:100vh;width:220px;flex-direction:column;border-top:0;border-right:1px solid var(--line);padding:16px 10px;gap:4px}
-nav button{flex:none;text-align:left;padding:12px 14px;border-radius:8px;font-size:1rem}nav button.on{background:var(--bg);box-shadow:none}
-.brand{display:block;font-weight:700;font-size:1.15rem;color:var(--acc);padding:4px 14px 16px}.sp{display:block;flex:1}
-main{padding:28px 28px 40px}.grid{grid-template-columns:repeat(3,1fr)}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SahukarPro Enterprise - Master Ledger & Recovery Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate900: '#0f172a',
+                        indigo600: '#4f46e5',
+                        emerald600: '#059669',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-<div id="app"><nav id="nav"></nav><main id="main"></main></div>
-<dialog id="dlg"><form id="frm"></form></dialog>
-<script>
-const K='mf_data_v2';
-const blank=()=>({c:[],l:[],p:[],s:{org:'मेरा माइक्रोफाइनेंस'}});
-function load(){try{return Object.assign(blank(),JSON.parse(localStorage.getItem(K)||localStorage.getItem('mf_data_v1')||'{}'))}catch(e){return blank()}}
-let db=load(),view='dash';
-function save(){try{localStorage.setItem(K,JSON.stringify(db))}catch(e){alert('डेटा सेव नहीं हो पाया। Backup डाउनलोड कर लें।')}}
-const $=s=>document.querySelector(s);
-const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-const T=()=>new Date().toISOString().slice(0,10);
-const R=n=>'₹'+Math.round(n).toLocaleString('en-IN');
-const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const cn=id=>(db.c.find(c=>c.id==id)||{name:'?'}).name;
-const fd=d=>d?d.split('-').reverse().join('/'):'-';
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
 
-/* ---- ब्याज और किस्त की गणना ----
- type F = Flat (साल की दर, मूल पर)   type R = Reducing (EMI)
- freq W = साप्ताहिक (52/साल)        freq M = मासिक (12/साल) */
-function due(l,i){const d=new Date(l.start+'T00:00:00Z');if(l.freq=='W')d.setUTCDate(d.getUTCDate()+7*i);else d.setUTCMonth(d.getUTCMonth()+i);return d.toISOString().slice(0,10)}
-function calc(l){
- const ppy=l.freq=='W'?52:12,r=l.rate/100/ppy;let total;
- if(l.type=='R'&&r>0){const f=Math.pow(1+r,l.n);total=l.amt*r*f/(f-1)*l.n}
- else total=l.amt+l.amt*(l.rate/100)*l.n/ppy;
- return{total,inst:Math.ceil(total/l.n)}
-}
-function info(l){
- const{total,inst}=calc(l),paid=db.p.filter(p=>p.l==l.id).reduce((a,p)=>a+p.a,0);
- let k=0;for(let i=1;i<=l.n;i++)if(due(l,i)<=T())k=i;
- const over=Math.max(0,Math.min(total,inst*k)-paid),bal=Math.max(0,total-paid),j=Math.floor(paid/inst)+1;
- return{total,inst,paid,bal,over,closed:bal<=0.5,next:bal>0.5&&j<=l.n?due(l,j):null,pct:Math.min(100,paid/total*100),
-  late:over>0?Math.floor((Date.now()-new Date(due(l,Math.floor(paid/inst)+1)))/864e5):0}
-}
-const active=()=>db.l.map(l=>({l,i:info(l)})).filter(x=>!x.i.closed);
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white font-bold p-2 rounded-xl shadow-lg">SP</div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-wide flex items-center gap-2">
+                        <span id="appTitleDisplay" contenteditable="true" onblur="updateAppName(this)" class="outline-none border-b border-dashed border-slate-500 hover:border-indigo-400 cursor-pointer px-1 rounded" title="Click to edit business name">SahukarPro</span> 
+                        <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Secure PWA Core</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Offline-First Microfinance & Kandi Engine</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="text-xs bg-emerald-900/60 text-emerald-400 border border-emerald-700/50 px-3 py-1 rounded-full font-medium">● 100% Data Safe</span>
+            </div>
+        </div>
+    </header>
 
-/* ---- स्क्रीन ---- */
-const TABS=[['dash','होम'],['clients','ग्राहक'],['loans','लोन'],['collect','वसूली'],['reports','रिपोर्ट']];
-function go(v){view=v;render()}
-function render(){
- $('#nav').innerHTML='<div class="brand">'+esc(db.s.org)+'</div>'+TABS.map(t=>`<button class="${t[0]==view?'on':''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('')+'<div class="sp"></div>';
- $('#main').innerHTML=({dash,clients,loans,collect,reports})[view]();scrollTo(0,0)
-}
-function dash(){
- const a=active(),out=a.reduce((s,x)=>s+x.i.bal,0),ov=a.reduce((s,x)=>s+x.i.over,0),td=db.p.filter(p=>p.d==T()).reduce((s,p)=>s+p.a,0);
- const late=a.filter(x=>x.i.over>0).sort((x,y)=>y.i.over-x.i.over).slice(0,8),par=out?ov/out*100:0;
- return`<h1>होम</h1><div class="grid">
- <div class="card stat"><b class="ok">${R(td)}</b><span>आज की वसूली</span></div>
- <div class="card stat"><b class="${ov?'bad':''}">${R(ov)}</b><span>बकाया (Overdue)</span></div>
- <div class="card stat"><b>${R(out)}</b><span>कुल बाकी रकम</span></div>
- <div class="card stat"><b>${a.length}</b><span>चालू लोन</span></div>
- <div class="card stat"><b>${db.c.length}</b><span>ग्राहक</span></div>
- <div class="card stat"><b class="${par>5?'bad':''}">${par.toFixed(1)}%</b><span>PAR (जोखिम वाला हिस्सा)</span></div></div>
- <h2>बकाया वाले ग्राहक</h2><div class="card">${late.map(x=>`<div class="row"><div>${esc(cn(x.l.c))}<small>${x.i.late} दिन लेट</small></div><div class="r"><b class="bad">${R(x.i.over)}</b><br><button class="btn sm" onclick="payForm('${x.l.id}')">वसूली लें</button></div></div>`).join('')||'<div class="empty">कोई बकाया नहीं।</div>'}</div>`
-}
-function clientList(q=''){
- q=q.toLowerCase();
- return db.c.filter(c=>(c.name+c.phone+c.village).toLowerCase().includes(q)).map(c=>{
-  const ls=db.l.filter(l=>l.c==c.id),bal=ls.reduce((s,l)=>s+info(l).bal,0);
-  return`<div class="row"><div>${esc(c.name)}<small>${esc(c.phone)} ${c.village?'· '+esc(c.village):''}</small></div><div class="r">${R(bal)}<small>${ls.length} लोन</small><button class="btn alt sm" onclick="clientForm('${c.id}')">बदलें</button></div></div>`
- }).join('')||'<div class="empty">कोई ग्राहक नहीं मिला।</div>'
-}
-function clients(){return`<h1>ग्राहक</h1><div class="tools"><button class="btn" onclick="clientForm()">+ नया ग्राहक</button></div><input placeholder="नाम, फोन या गाँव से खोजें" oninput="$('#cl').innerHTML=clientList(this.value)" style="margin-bottom:12px"><div class="card" id="cl">${clientList()}</div>`}
-function loans(){
- return`<h1>लोन</h1><div class="tools"><button class="btn" onclick="loanForm()">+ नया लोन</button></div>${db.l.slice().reverse().map(l=>{
-  const i=info(l);
-  return`<div class="card" style="margin-bottom:10px"><div class="row" style="border:0;padding:0"><div><b>${esc(cn(l.c))}</b> <span class="pill">${l.type=='R'?'Reducing':'Flat'}</span><small>${R(l.amt)} · ${l.rate}% सालाना · ${l.n} ${l.freq=='W'?'हफ्ते':'महीने'} · ${R(i.inst)}/किस्त</small></div><div class="r"><b>${R(i.bal)}</b><small>${i.closed?'<span class="ok">बंद</span>':'अगली: '+fd(i.next)}</small></div></div><div class="bar"><i style="width:${i.pct}%"></i></div><div class="tools" style="margin:10px 0 0"><button class="btn alt sm" onclick="schedule('${l.id}')">किस्तों का हिसाब</button>${i.closed?'':`<button class="btn sm" onclick="payForm('${l.id}')">वसूली लें</button>`}${i.over?`<span class="bad" style="align-self:center">बकाया ${R(i.over)}</span>`:''}</div></div>`}).join('')||'<div class="empty">अभी कोई लोन नहीं है।</div>'}`
-}
-function collect(){
- const a=active().filter(x=>x.i.next&&x.i.next<=T()).sort((x,y)=>x.i.next.localeCompare(y.i.next)),rec=db.p.slice().reverse().slice(0,15);
- return`<h1>वसूली</h1><h2>आज तक की देय किस्तें</h2><div class="card">${a.map(x=>{const c=db.c.find(c=>c.id==x.l.c),amt=x.i.over||x.i.inst,ph=((c&&c.phone)||'').replace(/\D/g,'').slice(-10);
-  const wa=ph?`https://wa.me/91${ph}?text=${encodeURIComponent('नमस्ते '+c.name+' जी, आपकी '+R(amt)+' की किस्त बाकी है। कृपया जमा करें। - '+db.s.org)}`:'';
-  return`<div class="row"><div>${esc(cn(x.l.c))}<small>देय ${fd(x.i.next)}</small></div><div class="r"><b>${R(amt)}</b><br>${wa?`<a class="btn alt sm" href="${wa}" target="_blank" rel="noopener">WhatsApp</a> `:''}<button class="btn sm" onclick="payForm('${x.l.id}')">वसूली</button></div></div>`}).join('')||'<div class="empty">सब किस्तें अप-टू-डेट हैं।</div>'}</div>
- <h2>हाल की वसूली</h2><div class="card">${rec.map(p=>{const l=db.l.find(l=>l.id==p.l);return`<div class="row"><div>${esc(l?cn(l.c):'?')}<small>${fd(p.d)}</small></div><div class="r"><b class="ok">${R(p.a)}</b> <button class="btn alt sm" onclick="delPay('${p.id}')">हटाएँ</button></div></div>`}).join('')||'<div class="empty">अभी कोई वसूली नहीं।</div>'}</div>`
-}
-function reports(){
- const days=[];for(let i=0;i<14;i++){const d=new Date();d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10))}
- const rows=days.map(d=>[d,db.l.filter(l=>l.date==d).reduce((s,l)=>s+l.amt-(l.fee||0),0),db.p.filter(p=>p.d==d).reduce((s,p)=>s+p.a,0),db.l.filter(l=>l.date==d).reduce((s,l)=>s+(l.fee||0),0)]);
- const coll=db.p.reduce((s,p)=>s+p.a,0),fee=db.l.reduce((s,l)=>s+(l.fee||0),0),dis=db.l.reduce((s,l)=>s+l.amt-(l.fee||0),0),exp=db.l.reduce((s,l)=>s+calc(l).total,0);
- return`<h1>रिपोर्ट</h1><div class="grid"><div class="card stat"><b>${R(dis)}</b><span>कुल नकद दिया (फीस काटकर)</span></div><div class="card stat"><b>${R(coll+fee)}</b><span>कुल वसूली + फीस</span></div><div class="card stat"><b class="${coll+fee-dis<0?'bad':'ok'}">${R(coll+fee-dis)}</b><span>नेट कैश फ्लो</span></div><div class="card stat"><b>${R(exp)}</b><span>कुल वसूली योग्य (मूल+ब्याज)</span></div><div class="card stat"><b>${R(fee)}</b><span>प्रोसेसिंग फीस आय</span></div></div>
- <h2>पिछले 14 दिन</h2><div class="card scroll"><table><tr><th>तारीख</th><th>लोन दिया</th><th>वसूली+फीस</th><th>नेट</th></tr>${rows.map(r=>{const n=r[2]+r[3]-r[1];return`<tr><td>${fd(r[0])}</td><td>${R(r[1])}</td><td>${R(r[2]+r[3])}</td><td class="${n<0?'bad':'ok'}">${R(n)}</td></tr>`}).join('')}</table></div>
- <h2>डेटा और सेटिंग</h2><div class="tools"><button class="btn alt" onclick="csv()">वसूली CSV</button><button class="btn alt" onclick="backup()">Backup डाउनलोड</button><button class="btn alt" onclick="$('#rf').click()">Backup रिस्टोर</button><button class="btn alt" onclick="orgForm()">संस्था का नाम</button><button class="btn alt" onclick="theme()">डार्क/लाइट</button><input id="rf" type="file" accept=".json" hidden onchange="restore(this.files[0])"></div>
- <p class="mute" style="font-size:.9rem">डेटा इसी डिवाइस के browser में सेव होता है। फोन और laptop के बीच ले जाने के लिए Backup डाउनलोड करके दूसरे डिवाइस पर रिस्टोर करें।</p>`
-}
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
 
-/* ---- फॉर्म ---- */
-function openForm(title,html,ok,okLabel='सेव करें'){
- $('#frm').innerHTML=`<h1 style="font-size:1.2rem">${title}</h1>${html}<div class="tools" style="margin-top:16px">${ok?`<button class="btn" type="submit">${okLabel}</button>`:''}<button class="btn alt" type="button" onclick="$('#dlg').close()">बंद करें</button></div>`;
- $('#frm').onsubmit=e=>{e.preventDefault();if(ok&&ok(new FormData($('#frm')))!==false)$('#dlg').close()};$('#dlg').showModal()
-}
-function clientForm(id){
- const c=db.c.find(c=>c.id==id)||{name:'',phone:'',village:''};
- openForm(id?'ग्राहक बदलें':'नया ग्राहक',`<label>नाम</label><input name="n" required value="${esc(c.name)}"><label>फोन</label><input name="p" type="tel" value="${esc(c.phone)}"><label>गाँव / इलाका</label><input name="v" value="${esc(c.village)}">${id&&!db.l.some(l=>l.c==id)?`<p><button type="button" class="btn alt sm" onclick="delClient('${id}')">ग्राहक हटाएँ</button></p>`:''}`,
- f=>{if(id){Object.assign(c,{name:f.get('n').trim(),phone:f.get('p'),village:f.get('v')})}else db.c.push({id:uid(),name:f.get('n').trim(),phone:f.get('p'),village:f.get('v')});save();render()})
-}
-function delClient(id){if(confirm('ग्राहक हटा दें?')){db.c=db.c.filter(c=>c.id!=id);save();$('#dlg').close();render()}}
-function loanForm(){
- if(!db.c.length){alert('पहले ग्राहक जोड़ें।');return go('clients')}
- openForm('नया लोन',`<label>ग्राहक</label><select name="c">${db.c.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select><label>लोन रकम (₹)</label><input name="a" type="number" min="1" required oninput="prev()"><label>सालाना ब्याज %</label><input name="r" type="number" step="0.01" min="0" value="24" required oninput="prev()"><label>ब्याज का तरीका</label><select name="t" onchange="prev()"><option value="F">Flat (मूल पर)</option><option value="R">Reducing (EMI)</option></select><label>किस्तों की संख्या</label><input name="n" type="number" min="1" value="12" required oninput="prev()"><label>किस्त कब</label><select name="f" onchange="prev()"><option value="W">हर हफ्ते</option><option value="M">हर महीने</option></select><label>प्रोसेसिंग फीस %</label><input name="x" type="number" step="0.01" min="0" value="0" oninput="prev()"><label>लोन की तारीख</label><input name="d" type="date" value="${T()}" required><p class="card" id="pv" style="margin-top:12px"></p>`,
- f=>{const a=+f.get('a');db.l.push({id:uid(),c:f.get('c'),amt:a,rate:+f.get('r'),type:f.get('t'),n:+f.get('n'),freq:f.get('f'),fee:Math.round(a*(+f.get('x')||0)/100),start:f.get('d'),date:f.get('d')});save();render()});prev()
-}
-function prev(){const f=$('#frm');if(!f||!f.a)return;const a=+f.a.value||0,o={amt:a,rate:+f.r.value||0,type:f.t.value,n:+f.n.value||1,freq:f.f.value},c=calc(o),fee=a*(+f.x.value||0)/100;
- $('#pv').innerHTML=`किस्त: <b>${R(c.inst)}</b> × ${o.n}<br>कुल वापसी: <b>${R(c.total)}</b> (ब्याज ${R(c.total-a)})<br>ग्राहक को नकद: <b>${R(a-fee)}</b> (फीस ${R(fee)})`}
-function payForm(id){
- const a=active();if(!a.length){alert('कोई चालू लोन नहीं है।');return}
- const sel=id||a[0].l.id;
- openForm('वसूली लें',`<label>लोन</label><select name="l" onchange="this.form.a.value=Math.round(dueOf(this.value))">${a.map(y=>`<option value="${y.l.id}" ${y.l.id==sel?'selected':''}>${esc(cn(y.l.c))} · बाकी ${R(y.i.bal)}</option>`).join('')}</select><label>रकम (₹)</label><input name="a" type="number" min="1" value="${Math.round(dueOf(sel))}" required><label>तारीख</label><input name="d" type="date" value="${T()}" required>`,
- f=>{const l=db.l.find(l=>l.id==f.get('l')),b=info(l).bal;if(+f.get('a')>b+0.5&&!confirm('रकम बाकी बैलेंस से ज़्यादा है। फिर भी सेव करें?'))return false;db.p.push({id:uid(),l:l.id,a:+f.get('a'),d:f.get('d')});save();render()},'वसूली सेव करें')
-}
-function dueOf(id){const x=active().find(x=>x.l.id==id);return x?(x.i.over||x.i.inst):0}
-function schedule(id){
- const l=db.l.find(l=>l.id==id),i=info(l);let rows='';
- for(let k=1;k<=l.n;k++){const cum=Math.min(i.total,i.inst*k),d=due(l,k),st=i.paid>=cum-0.5?'<span class="ok">जमा</span>':d<T()?'<span class="bad">बकाया</span>':'<span class="mute">आगे</span>';rows+=`<tr><td>${k}</td><td>${fd(d)}</td><td>${R(k==l.n?i.total-i.inst*(l.n-1):i.inst)}</td><td>${st}</td></tr>`}
- openForm(esc(cn(l.c))+' · किस्तों का हिसाब',`<p>कुल ${R(i.total)} · जमा ${R(i.paid)} · बाकी <b>${R(i.bal)}</b></p><div class="scroll" style="max-height:50vh"><table><tr><th>#</th><th>तारीख</th><th>रकम</th><th>स्थिति</th></tr>${rows}</table></div>`,null)
-}
-function delPay(id){if(confirm('यह वसूली हटा दें?')){db.p=db.p.filter(p=>p.id!=id);save();render()}}
-function orgForm(){openForm('संस्था का नाम',`<label>नाम</label><input name="o" value="${esc(db.s.org)}" required>`,f=>{db.s.org=f.get('o');save();render()})}
-function theme(){const r=document.documentElement,d=r.dataset.theme=='dark'||(!r.dataset.theme&&matchMedia('(prefers-color-scheme:dark)').matches);r.dataset.theme=d?'light':'dark'}
+        <!-- SYSTEM CATEGORY SWITCHER -->
+        <div class="flex border-b border-slate-800 space-x-6">
+            <button onclick="switchSystem('daily')" id="tabDaily" class="pb-3 font-semibold text-indigo-400 border-b-2 border-indigo-500 transition focus:outline-none">
+                ⚡ Daily Collection System (Daily Basis)
+            </button>
+            <button onclick="switchSystem('kandi')" id="tabKandi" class="pb-3 font-semibold text-slate-400 hover:text-slate-200 transition focus:outline-none">
+                🌙 Kandi System (Monthly Basis)
+            </button>
+        </div>
 
-/* ---- एक्सपोर्ट / बैकअप ---- */
-function dl(n,t,m){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;a.click()}
-function csv(){dl('vasooli.csv','\ufeffतारीख,ग्राहक,रकम\n'+db.p.map(p=>{const l=db.l.find(l=>l.id==p.l);return[p.d,'"'+(l?cn(l.c):'?')+'"',p.a].join(',')}).join('\n'),'text/csv')}
-function backup(){dl('microfinance-backup-'+T()+'.json',JSON.stringify(db),'application/json')}
-function restore(f){if(!f)return;f.text().then(t=>{try{const d=JSON.parse(t);if(!d.c||!d.l||!d.p)throw 0;if(confirm('मौजूदा डेटा बदल जाएगा। आगे बढ़ें?')){db=Object.assign(blank(),d);save();render()}}catch(e){alert('यह सही backup फ़ाइल नहीं है।')}})}
-render();
-</script>
+        <!-- DASHBOARD METRICS -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-slate-400 uppercase font-semibold">Total Market Capital</p>
+                <h3 class="text-2xl font-bold text-slate-100 mt-1" id="metricCapital">₹0</h3>
+            </div>
+            <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-slate-400 uppercase font-semibold">Principal Recovered (Safe)</p>
+                <h3 class="text-2xl font-bold text-emerald-400 mt-1" id="metricRecovered">₹0</h3>
+            </div>
+            <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-slate-400 uppercase font-semibold">Deferred Profit (Locked)</p>
+                <h3 class="text-2xl font-bold text-amber-400 mt-1" id="metricProfit">₹0</h3>
+            </div>
+            <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-slate-400 uppercase font-semibold">Total Active Accounts</p>
+                <h3 class="text-2xl font-bold text-blue-400 mt-1" id="metricAccounts">0</h3>
+            </div>
+        </div>
+
+        <!-- LIVE SEARCH & ACTION BAR -->
+        <div class="bg-slate-800 border border-slate-700/60 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="w-full sm:w-1/2 relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">🔍</span>
+                <input type="text" id="searchInput" onkeyup="filterClients()" placeholder="Instant live search by client name, mobile, loan ID..." 
+                    class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-100 placeholder-slate-500">
+            </div>
+            <div class="flex gap-2 w-full sm:w-auto">
+                <button onclick="openNewLoanModal()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-indigo-600/20 transition">
+                    + New Loan Account
+                </button>
+            </div>
+        </div>
+
+        <!-- MAIN DATA TABLE -->
+        <div class="bg-slate-800 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl">
+            <div class="px-6 py-4 border-b border-slate-700/60 flex justify-between items-center">
+                <h3 class="font-bold text-slate-200" id="tableHeading">Active Daily Collection Accounts</h3>
+                <span class="text-xs text-slate-400" id="accountCount">0 Accounts</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-900/50 text-slate-400 border-b border-slate-700/60">
+                            <th class="px-6 py-3 font-semibold">Client Name & Guarantor</th>
+                            <th class="px-6 py-3 font-semibold">Loan ID</th>
+                            <th class="px-6 py-3 font-semibold">Principal / Due</th>
+                            <th class="px-6 py-3 font-semibold">Installment Mode</th>
+                            <th class="px-6 py-3 font-semibold">Status (Closure Check)</th>
+                            <th class="px-6 py-3 font-semibold text-right">Recovery / Ledger</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/40 text-slate-300" id="clientTableBody">
+                        <!-- Dynamic Records -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- NEW LOAN MODAL -->
+    <div id="loanModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-slate-100 text-base">Add New Loan Account</h3>
+                <button onclick="closeNewLoanModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="p-6 space-y-4 text-sm">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Client Full Name</label>
+                    <input type="text" id="clientName" placeholder="Enter client name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Mobile Number</label>
+                        <input type="text" id="clientMobile" placeholder="10-digit mobile" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Guarantor Name</label>
+                        <input type="text" id="guarantorName" placeholder="Guarantor name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Principal Amount (₹)</label>
+                        <input type="number" id="loanAmount" placeholder="e.g. 10000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Total Interest / Profit (₹)</label>
+                        <input type="number" id="loanInterest" placeholder="e.g. 1500" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">System Type</label>
+                        <select id="loanSystem" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                            <option value="daily">Daily Collection</option>
+                            <option value="kandi">Kandi (Monthly)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Tenure</label>
+                        <input type="number" id="loanTenure" placeholder="100 / 10" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">EMI Amount (₹)</label>
+                        <input type="number" id="loanEmi" placeholder="EMI" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
+                <button onclick="saveNewLoan()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-xl font-medium transition text-xs shadow-lg">Save Loan Account</button>
+                <button onclick="closeNewLoanModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl font-medium transition text-xs">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECOVERY MODAL -->
+    <div id="recoveryModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-slate-100 text-base">Record Recovery Payment</h3>
+                <button onclick="closeRecoveryModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="p-6 space-y-4 text-sm" id="recoveryModalBody">
+                <!-- Dynamic client summary -->
+            </div>
+            <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
+                <button onclick="processRecovery()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-xl font-medium transition text-xs shadow-lg">Confirm Recovery</button>
+                <button onclick="closeRecoveryModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl font-medium transition text-xs">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT ENGINE (INDEXEDDB + LOCALSTORAGE) -->
+    <script>
+        let db;
+        let currentSystem = 'daily';
+        let activeRecoveryId = null;
+
+        // Initialize IndexedDB with robust error handling
+        const request = indexedDB.open("SahukarProMasterDB", 3);
+        
+        request.onerror = function(event) {
+            console.error("Database error: ", event.target.errorCode);
+            alert("Database connection failed! Please allow IndexedDB in browser.");
+        };
+
+        request.onupgradeneeded = function(event) {
+            db = event.target.result;
+            if (!db.objectStoreNames.contains("loans")) {
+                db.createObjectStore("loans", { keyPath: "id", autoIncrement: true });
+            }
+        };
+
+        request.onsuccess = function(event) {
+            db = event.target.result;
+            loadAppName();
+            loadLoans();
+        };
+
+        function updateAppName(el) {
+            const newName = el.innerText.trim();
+            if(newName) {
+                localStorage.setItem("sahukar_enterprise_app_name", newName);
+            }
+        }
+
+        function loadAppName() {
+            const savedName = localStorage.getItem("sahukar_enterprise_app_name");
+            if(savedName) {
+                document.getElementById('appTitleDisplay').innerText = savedName;
+            }
+        }
+
+        function switchSystem(sys) {
+            currentSystem = sys;
+            document.getElementById('tabDaily').className = sys === 'daily' ? "pb-3 font-semibold text-indigo-400 border-b-2 border-indigo-500 transition focus:outline-none" : "pb-3 font-semibold text-slate-400 hover:text-slate-200 transition focus:outline-none";
+            document.getElementById('tabKandi').className = sys === 'kandi' ? "pb-3 font-semibold text-indigo-400 border-b-2 border-indigo-500 transition focus:outline-none" : "pb-3 font-semibold text-slate-400 hover:text-slate-200 transition focus:outline-none";
+            document.getElementById('tableHeading').innerText = sys === 'daily' ? "Active Daily Collection Accounts (Daily Basis)" : "Active Kandi System Accounts (Monthly Basis)";
+            loadLoans();
+        }
+
+        function openNewLoanModal() { document.getElementById('loanModal').classList.remove('hidden'); }
+        function closeNewLoanModal() { document.getElementById('loanModal').classList.add('hidden'); }
+
+        function saveNewLoan() {
+            if (!db) {
+                alert("Database not ready yet. Please wait a second.");
+                return;
+            }
+
+            const name = document.getElementById('clientName').value.trim();
+            const mobile = document.getElementById('clientMobile').value.trim();
+            const guarantor = document.getElementById('guarantorName').value.trim();
+            const principal = parseFloat(document.getElementById('loanAmount').value);
+            const interest = parseFloat(document.getElementById('loanInterest').value) || 0;
+            const system = document.getElementById('loanSystem').value;
+            const tenure = parseInt(document.getElementById('loanTenure').value) || 100;
+            const emi = parseFloat(document.getElementById('loanEmi').value);
+
+            if(!name || isNaN(principal) || isNaN(emi)) {
+                alert("Please fill client name, principal amount and EMI properly!");
+                return;
+            }
+
+            const loanData = {
+                name, mobile, guarantor, principal, interest, system, tenure, emi,
+                totalPayable: principal + interest,
+                totalRecovered: 0,
+                principalRecovered: 0,
+                interestRecovered: 0,
+                loanId: "LN-" + Math.floor(1000 + Math.random() * 9000),
+                status: "Active (Principal Pending)",
+                createdAt: new Date().toLocaleDateString()
+            };
+
+            const transaction = db.transaction(["loans"], "readwrite");
+            const store = transaction.objectStore("loans");
+            const req = store.add(loanData);
+
+            req.onsuccess = function() {
+                closeNewLoanModal();
+                ['clientName', 'clientMobile', 'guarantorName', 'loanAmount', 'loanInterest', 'loanTenure', 'loanEmi'].forEach(id => document.getElementById(id).value = '');
+                loadLoans();
+                alert("Loan Account Saved Successfully!");
+            };
+
+            req.onerror = function(e) {
+                alert("Error saving record: " + e.target.error);
+            };
+        }
+
+        function loadLoans() {
+            if (!db) return;
+            const transaction = db.transaction(["loans"], "readonly");
+            const store = transaction.objectStore("loans");
+            const req = store.getAll();
+
+            req.onsuccess = function(event) {
+                const allLoans = event.target.result;
+                const filtered = allLoans.filter(l => l.system === currentSystem);
+                
+                const tbody = document.getElementById('clientTableBody');
+                document.getElementById('accountCount').innerText = `${filtered.length} Accounts`;
+                document.getElementById('metricAccounts').innerText = allLoans.filter(l => l.status.includes('Active')).length;
+
+                let totalCap = allLoans.reduce((acc, curr) => acc + (curr.principal - curr.principalRecovered), 0);
+                let totalRec = allLoans.reduce((acc, curr) => acc + curr.principalRecovered, 0);
+                let totalProf = allLoans.reduce((acc, curr) => acc + curr.interestRecovered, 0);
+
+                document.getElementById('metricCapital').innerText = "₹" + totalCap.toLocaleString();
+                document.getElementById('metricRecovered').innerText = "₹" + totalRec.toLocaleString();
+                document.getElementById('metricProfit').innerText = "₹" + totalProf.toLocaleString();
+
+                tbody.innerHTML = '';
+                if(filtered.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-6 text-center text-slate-500">No active accounts found. Click '+ New Loan Account' to add.</td></tr>`;
+                    return;
+                }
+
+                filtered.forEach(item => {
+                    const balancePrincipal = item.principal - item.principalRecovered;
+                    const badgeColor = item.status.includes('Closed') ? 'bg-emerald-900/60 text-emerald-400 border-emerald-700/50' : 'bg-amber-900/60 text-amber-400 border-amber-700/50';
+                    
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-700/20 transition">
+                            <td class="px-6 py-4 font-medium text-slate-100">${item.name} <span class="block text-xs text-slate-400">G: ${item.guarantor || 'N/A'} | M: ${item.mobile || 'N/A'}</span></td>
+                            <td class="px-6 py-4 text-slate-400">${item.loanId}</td>
+                            <td class="px-6 py-4 font-semibold text-emerald-400">₹${item.principal.toLocaleString()} <span class="block text-xs text-slate-400">Bal: ₹${balancePrincipal.toLocaleString()}</span></td>
+                            <td class="px-6 py-4">₹${item.emi} / ${item.system === 'daily' ? 'Daily' : 'Monthly'} (${item.tenure})</td>
+                            <td class="px-6 py-4"><span class="${badgeColor} border text-xs px-2.5 py-1 rounded-full font-medium">${item.status}</span></td>
+                            <td class="px-6 py-4 text-right space-x-2">
+                                ${item.status.includes('Active') ? `<button onclick="openRecoveryModal(${item.id})" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition">Recovery</button>` : ''}
+                                <button onclick="deleteLoan(${item.id})" class="text-red-400 hover:text-red-300 font-medium bg-red-950/50 border border-red-800/50 px-2.5 py-1.5 rounded-lg transition text-xs">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            };
+        }
+
+        function openRecoveryModal(id) {
+            activeRecoveryId = id;
+            const transaction = db.transaction(["loans"], "readonly");
+            const store = transaction.objectStore("loans");
+            store.get(id).onsuccess = function(event) {
+                const item = event.target.result;
+                const remPrincipal = item.principal - item.principalRecovered;
+                const remInterest = item.interest - item.interestRecovered;
+                
+                document.getElementById('recoveryModalBody').innerHTML = `
+                    <div class="space-y-2">
+                        <p class="text-slate-300 font-semibold">Client: ${item.name} (${item.loanId})</p>
+                        <p class="text-xs text-slate-400">Pending Principal: ₹${remPrincipal.toLocaleString()} | Pending Interest: ₹${remInterest.toLocaleString()}</p>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1 mt-3">Recovery Amount Received (₹)</label>
+                            <input type="number" id="recoveryAmountInput" value="${item.emi}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
+                        </div>
+                    </div>
+                `;
+                document.getElementById('recoveryModal').classList.remove('hidden');
+            };
+        }
+
+        function closeRecoveryModal() {
+            document.getElementById('recoveryModal').classList.add('hidden');
+            activeRecoveryId = null;
+        }
+
+        function processRecovery() {
+            const amt = parseFloat(document.getElementById('recoveryAmountInput').value);
+            if(isNaN(amt) || amt <= 0) {
+                alert("Please enter a valid amount!");
+                return;
+            }
+
+            const transaction = db.transaction(["loans"], "readwrite");
+            const store = transaction.objectStore("loans");
+            store.get(activeRecoveryId).onsuccess = function(event) {
+                let item = event.target.result;
+                let remainingAmt = amt;
+
+                let principalDue = item.principal - item.principalRecovered;
+                if(remainingAmt <= principalDue) {
+                    item.principalRecovered += remainingAmt;
+                    remainingAmt = 0;
+                } else {
+                    remainingAmt -= principalDue;
+                    item.principalRecovered = item.principal;
+                    let interestDue = item.interest - item.interestRecovered;
+                    if(remainingAmt >= interestDue) {
+                        item.interestRecovered = item.interest;
+                    } else {
+                        item.interestRecovered += remainingAmt;
+                    }
+                }
+
+                item.totalRecovered += amt;
+
+                if(item.principalRecovered >= item.principal && item.interestRecovered >= item.interest) {
+                    item.status = "Closed (Fully Settled)";
+                } else {
+                    item.status = "Active (Principal Pending)";
+                }
+
+                store.put(item).onsuccess = function() {
+                    closeRecoveryModal();
+                    loadLoans();
+                    alert("Recovery of ₹" + amt.toLocaleString() + " recorded successfully!");
+                };
+            };
+        }
+
+        function deleteLoan(id) {
+            if(confirm("Are you sure you want to delete this account?")) {
+                const transaction = db.transaction(["loans"], "readwrite");
+                const store = transaction.objectStore("loans");
+                store.delete(id).onsuccess = function() { loadLoans(); };
+            }
+        }
+
+        function filterClients() {
+            let query = document.getElementById('searchInput').value.toLowerCase();
+            let rows = document.getElementById('clientTableBody').getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                let text = rows[i].innerText.toLowerCase();
+                rows[i].style.display = text.includes(query) ? '' : 'none';
+            }
+        }
+    </script>
 </body>
 </html>
