@@ -1092,57 +1092,6 @@ body.b16-ready .penalty-grid{
   </table>
 </div>
 
-<div class="card">
-    <h2>7. Penalty Ledger</h2>
-    <div class="grid">
-      <div>
-        <label>Penalty Amount (₹)</label>
-        <input id="penaltyAmount" type="number" min="0" step="0.01" value="0">
-      </div>
-      <div>
-        <label>Penalty Date</label>
-        <input id="penaltyDate" type="date">
-      </div>
-      <div>
-        <label>Penalty Status</label>
-        <select id="penaltyStatus">
-          <option value="due">Due / Outstanding</option>
-          <option value="collected">Collected / Received</option>
-        </select>
-      </div>
-      <div>
-        <label>Collection Date (if collected)</label>
-        <input id="penaltyCollectionDate" type="date">
-      </div>
-    </div>
-    <br>
-    <button onclick="addPenalty()">Add Penalty Entry</button>
-    <table>
-      <thead>
-        <tr>
-          <th>Penalty Date</th>
-          <th>Amount</th>
-          <th>Status</th>
-          <th>Collection Date</th>
-        </tr>
-      </thead>
-      <tbody id="penaltyRows"></tbody>
-    </table>
-  </div>
-
-  <div class="card">
-    <h2>8. Current Ledger Summary</h2>
-    <div class="results">
-      <div class="metric"><small>Total Penalty Due</small><strong id="penaltyDue">₹0.00</strong></div>
-      <div class="metric"><small>Total Penalty Collected</small><strong id="penaltyCollected">₹0.00</strong></div>
-    </div>
-    <div class="notice danger">
-      Penalty is maintained separately from interest income. A penalty can remain <b>Due</b> without
-      interrupting the loan cycle, and can later be changed/recorded as <b>Collected</b> with its actual collection date.
-    </div>
-  </div>
-</div>
-
 <script>
 const state = {
   contractAmount: 0,
@@ -1237,54 +1186,6 @@ function renderPayments(){const b=document.getElementById('paymentRows');b.inner
 function generateCustomerStatement(){const name=document.getElementById('customerName').value.trim()||'Customer',start=document.getElementById('loanStartDate').value,days=Math.max(1,Number(document.getElementById('statementCycleDays').value)||1),loanAmount=Math.max(0,Number(document.getElementById('statementLoanAmount').value)||0),emi=Math.max(0,Number(document.getElementById('statementDailyEmi').value)||0);if(!start){alert('Please enter the loan start date.');return;}const end=addDays(start,days-1);document.getElementById('statementHeader').innerHTML=`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px;margin-bottom:16px"><div><b>Customer:</b> ${escapeHtml(name)}</div><div><b>Loan Amount:</b> ${money(loanAmount)}</div><div><b>Loan Start Date:</b> ${formatDateDisplay(start)}</div><div><b>Loan End Date:</b> ${formatDateDisplay(end)}</div></div>`;const rows=document.getElementById('statementRows');rows.innerHTML='';let totalDeposits=0;for(let i=0;i<days;i++){const date=addDays(start,i),dayPayments=state.payments.filter(p=>p.type==='receipt'&&p.date===date),deposits=dayPayments.reduce((s,p)=>s+p.amount,0),modes=dayPayments.map(p=>paymentModeLabel(p.mode)).join(', ')||'—',tr=document.createElement('tr');tr.innerHTML=`<td>${i+1}</td><td>${formatDateDisplay(date)}</td><td>${money(emi)}</td><td>${money(deposits)}</td><td>${escapeHtml(modes)}</td>`;rows.appendChild(tr);totalDeposits+=deposits;}document.getElementById('statementTotalEmi').textContent=money(emi*days);document.getElementById('statementTotalDeposits').textContent=money(totalDeposits);}
 function escapeHtml(value){return value.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));}
 
-function addPenalty() {
-  const amount = Math.max(0, Number(document.getElementById('penaltyAmount').value) || 0);
-  const date = document.getElementById('penaltyDate').value;
-  const status = document.getElementById('penaltyStatus').value;
-  const collectionDate = document.getElementById('penaltyCollectionDate').value;
-
-  if (amount <= 0) {
-    alert('Please enter a valid penalty amount.');
-    return;
-  }
-  if (!date) {
-    alert('Please enter the penalty date.');
-    return;
-  }
-  if (status === 'collected' && !collectionDate) {
-    alert('Please enter the penalty collection date.');
-    return;
-  }
-
-  state.penalties.push({ amount, date, status, collectionDate });
-  renderPenalties();
-
-  document.getElementById('penaltyAmount').value = 0;
-}
-
-function renderPenalties() {
-  const tbody = document.getElementById('penaltyRows');
-  tbody.innerHTML = '';
-
-  let due = 0, collected = 0;
-
-  state.penalties.forEach(p => {
-    if (p.status === 'due') due += p.amount;
-    if (p.status === 'collected') collected += p.amount;
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${p.date}</td>
-      <td>${money(p.amount)}</td>
-      <td>${p.status === 'due' ? 'Due / Outstanding' : 'Collected / Received'}</td>
-      <td>${p.collectionDate || '—'}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  document.getElementById('penaltyDue').textContent = money(due);
-  document.getElementById('penaltyCollected').textContent = money(collected);
-}
 
 const today=new Date();document.getElementById('penaltyDate').valueAsDate=today;document.getElementById('advanceDepositDate').valueAsDate=today;const tomorrow=new Date(today);tomorrow.setDate(tomorrow.getDate()+1);document.getElementById('firstDueDate').valueAsDate=tomorrow;calculateLoan();
 </script>
@@ -2410,10 +2311,10 @@ document.addEventListener('DOMContentLoaded', function() {
 <section id="penaltyLedgerSection" class="card" style="margin-top:20px">
   <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
     <div>
-      <h2 style="margin:0">Penalty Ledger</h2>
-      <div class="penalty-small">Internal mechanism only — penalties never appear on customer-facing statements.</div>
+      <h2 style="margin:0">Penalty Management</h2>
+      <div class="penalty-small">Apply a penalty to a specific Loan and its specific EMI / Due Date. Penalties never appear on customer-facing statements.</div>
     </div>
-    <button type="button" onclick="openPenaltyModal()">+ Add Penalty</button>
+    <button type="button" onclick="openPenaltyModal()">+ Apply Penalty to Loan / EMI</button>
   </div>
 
   <div id="loanPenaltyFilter" class="loan-penalty-filter">
@@ -2432,6 +2333,10 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     </div>
     <div id="loanPenaltyFilterStatus" class="loan-penalty-filter-note"></div>
+    <div class="notice" style="margin-top:12px">
+      <b>How penalty is applied:</b> First select the <b>Loan</b>, then select the exact <b>EMI / Due Date</b>.
+      The penalty due date is taken from that EMI. Then enter the penalty amount and save.
+    </div>
   </div>
 
   <div id="penaltyLedgerSummary" style="margin-top:12px"></div>
