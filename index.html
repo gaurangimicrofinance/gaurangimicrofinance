@@ -1,424 +1,483 @@
 <!DOCTYPE html>
+
+<!--
+MICROFINANCE CORE BASELINE
+Agreed business rules through this version:
+1. Finance amount is the contractual/recovery principal.
+2. Upfront interest is configurable by rate and is deducted from disbursement.
+3. Upfront interest is NOT treated as earned profit on Day 0.
+4. Profit recognition is separated from cash/disbursement logic.
+5. Deferred interest mode: full finance amount is disbursed and interest is collected later.
+6. Cycle duration is configurable; not hard-coded to 100 days.
+7. Payment frequency is flexible.
+8. Penalty is a separate ledger and can be Due or Collected with a collection date.
+9. Advance deposits are stored as one original transaction and allocated across future scheduled dues.
+10. Customer statement does not expose internal deduction/profit/allocation terminology.
+11. Customer statement contains loan start/end dates, schedule, EMI, deposits and payment mode.
+12. Payment modes: Cash, UPI (PhonePe / Google Pay / Other UPI), Bank Transfer / Cheque.
+13. Customer-facing ID Proof and standalone Payment Mode legend are excluded.
+14. Business identity is editable and persisted locally in the browser.
+-->
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SahukarPro Enterprise - Ultimate Master Engine</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        slate900: '#0f172a',
-                        indigo600: '#4f46e5',
-                        emerald600: '#059669',
-                    }
-                }
-            }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microfinance Core Engine - V2</title>
+<style>
+  :root { --border:#d8dde5; --bg:#f6f8fb; --text:#17202a; --muted:#657080; --card:#fff; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial,sans-serif; background:var(--bg); color:var(--text); }
+  .wrap { max-width:1100px; margin:30px auto; padding:0 16px 40px; }
+  h1 { margin:0 0 6px; font-size:26px; }
+  .sub { color:var(--muted); margin-bottom:22px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:16px; }
+  label { display:block; font-weight:600; margin-bottom:7px; }
+  input, select, button {
+    width:100%; padding:11px 12px; border:1px solid var(--border);
+    border-radius:8px; font-size:15px; background:#fff;
+  }
+  button { cursor:pointer; font-weight:700; }
+  .primary { background:#17202a; color:#fff; border-color:#17202a; }
+  .results { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; }
+  .metric { border:1px solid var(--border); border-radius:10px; padding:14px; }
+  .metric small { color:var(--muted); display:block; margin-bottom:5px; }
+  .metric strong { font-size:19px; }
+  table { width:100%; border-collapse:collapse; margin-top:12px; }
+  th,td { border-bottom:1px solid var(--border); padding:10px 8px; text-align:left; }
+  th { font-size:13px; color:var(--muted); }
+  .notice { padding:12px; border-radius:8px; background:#f0f3f7; margin-top:12px; line-height:1.5; }
+  .danger { border-left:4px solid #b42318; }
+  @media(max-width:650px) {
+    .wrap { margin:15px auto; }
+    h1 { font-size:22px; }
+    th,td { font-size:13px; }
+  }
+</style>
+<style id="banking-statement-v6-style">
+        .statement-paper { font-family: Arial, sans-serif; }
+        .statement-paper h2 { letter-spacing:.2px; }
+        .statement-paper table { font-size:13px; }
+        .statement-paper .statement-meta { background:#f6f8fb; padding:12px; border-radius:8px; }
+        @media print {
+          .statement-paper { border:0 !important; box-shadow:none !important; }
         }
-    </script>
-</head>
-<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+        </style>
+        </head>
+<body>
+<div class="wrap">
+  <h1>Microfinance Core Engine — V2</h1>
+  <div class="sub">Flexible finance, upfront interest, deferred interest and penalty ledger foundation.</div>
 
-    <!-- TOP HEADER -->
-    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-lg font-bold text-indigo-400 flex items-center gap-2">
-                    SahukarPro <span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded-full">Ultimate Pro</span>
-                </h1>
-                <p class="text-xs text-slate-400">100% Live Search, Principal-First Recovery & Clean Ledger</p>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="openProductModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition shadow-md">
-                    + Custom Product
-                </button>
-                <button onclick="openNewLoanModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg transition">
-                    + Register New Loan
-                </button>
-            </div>
-        </div>
-    </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-7xl mx-auto p-6 flex-1 w-full space-y-6">
-
-        <!-- DASHBOARD METRICS -->
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <div class="bg-slate-800 border border-slate-700/80 p-4 rounded-2xl shadow-sm">
-                <p class="text-xs text-slate-400 uppercase font-semibold">Total Market Capital</p>
-                <h3 class="text-2xl font-bold text-slate-100 mt-1" id="metricCapital">₹0</h3>
-            </div>
-            <div class="bg-slate-800 border border-slate-700/80 p-4 rounded-2xl shadow-sm">
-                <p class="text-xs text-slate-400 uppercase font-semibold">Principal Recovered (Safe)</p>
-                <h3 class="text-2xl font-bold text-emerald-400 mt-1" id="metricPrincipalRec">₹0</h3>
-            </div>
-            <div class="bg-slate-800 border border-slate-700/80 p-4 rounded-2xl shadow-sm">
-                <p class="text-xs text-slate-400 uppercase font-semibold">Locked / Deferred Profit</p>
-                <h3 class="text-2xl font-bold text-amber-400 mt-1" id="metricLockedProfit">₹0</h3>
-            </div>
-            <div class="bg-slate-800 border border-slate-700/80 p-4 rounded-2xl shadow-sm">
-                <p class="text-xs text-slate-400 uppercase font-semibold">Active Accounts</p>
-                <h3 class="text-2xl font-bold text-blue-400 mt-1" id="metricActiveCount">0</h3>
-            </div>
-        </div>
-
-        <!-- SEARCH-FIRST RECOVERY & CLIENT SECTION -->
-        <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-xl space-y-4">
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-slate-700 pb-4">
-                <div>
-                    <h3 class="font-bold text-slate-200 text-base">Active Client Accounts & Instant Recovery</h3>
-                    <p class="text-xs text-slate-400">Type client name or mobile to instantly filter accounts without scrolling.</p>
-                </div>
-                <div class="w-full sm:w-72 relative">
-                    <input type="text" id="liveSearchInput" oninput="filterClients()" placeholder="🔍 Live search name, mobile..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
-                </div>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-900/50 text-slate-400 border-b border-slate-700">
-                            <th class="p-3">Client & Contact</th>
-                            <th class="p-3">Guarantor</th>
-                            <th class="p-3">Principal / Balance</th>
-                            <th class="p-3">Product & EMI</th>
-                            <th class="p-3 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientTableBody" class="divide-y divide-slate-700/50 text-slate-300">
-                        <tr><td colspan="5" class="p-6 text-center text-slate-500">No active client accounts found. Use '+ Register New Loan' to add.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- CUSTOM PRODUCT MODAL -->
-    <div id="productModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col">
-            <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
-                <h3 class="font-bold text-slate-100 text-base">Create Custom Loan Scheme</h3>
-                <button onclick="closeProductModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
-            </div>
-            <div class="p-6 space-y-4 text-xs">
-                <div>
-                    <label class="block text-slate-400 mb-1">Product Name *</label>
-                    <input type="text" id="prodName" placeholder="e.g. Daily Flexi Scheme" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-slate-400 mb-1">Principal Amount (₹) *</label>
-                        <input type="number" id="prodPrincipal" placeholder="e.g. 10000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                    </div>
-                    <div>
-                        <label class="block text-slate-400 mb-1">Tenure (Days) *</label>
-                        <input type="number" id="prodTenure" value="100" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-slate-400 mb-1">Total Interest Amount (₹)</label>
-                        <input type="number" id="prodInterestAmt" placeholder="e.g. 1500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-indigo-400 font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-slate-400 mb-1">Default Model</label>
-                        <select id="prodModel" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                            <option value="Upfront Cut">Model A: Upfront Cut</option>
-                            <option value="Full Disbursal">Model B: Full Disbursal</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
-                <button type="button" onclick="saveCustomProduct()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-5 py-2 rounded-xl transition shadow-lg">Save Scheme</button>
-                <button type="button" onclick="closeProductModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl transition">Cancel</button>
-            </div>
-        </div>
+  <div class="card" id="businessIdentityCard">
+    <h2>Business / Statement Identity</h2>
+    <div class="grid">
+      <div>
+        <label>Business / Company Name</label>
+        <input id="businessName" type="text" placeholder="Enter your business name">
+      </div>
+      <div>
+        <label>Statement Header Subtitle</label>
+        <input id="businessSubtitle" type="text" placeholder="Microfinance Services">
+      </div>
+      <div>
+        <label>Business Mobile</label>
+        <input id="businessMobile" type="text" placeholder="Mobile number">
+      </div>
+      <div>
+        <label>Business Email</label>
+        <input id="businessEmail" type="email" placeholder="Email address">
+      </div>
     </div>
+    <br>
+    <button class="primary" onclick="saveBusinessIdentity()">Save Business Identity</button>
+    <div class="notice">Saved locally in this browser. Refreshing the GitHub-hosted app will not remove these settings on the same browser/device.</div>
+  </div>
 
-    <!-- ADVANCED MASTER CLIENT REGISTRATION MODAL -->
-    <div id="newLoanModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
-                <h3 class="font-bold text-slate-100 text-base">Advanced Master Client Registration</h3>
-                <button onclick="closeNewLoanModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto space-y-4 text-xs">
-                
-                <!-- Product Selector -->
-                <div class="bg-indigo-950/40 p-4 rounded-xl border border-indigo-800/60 space-y-2">
-                    <label class="block text-indigo-300 font-semibold">Select from Created Custom Products (Optional)</label>
-                    <select id="selectCustomProduct" onchange="applySelectedProduct()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                        <option value="">-- Manual Entry / No Product Selected --</option>
-                    </select>
-                </div>
-
-                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
-                    <h4 class="font-semibold text-indigo-400 uppercase tracking-wide">1. Client Details</h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div><label class="block text-slate-400 mb-1">Full Name *</label><input type="text" id="clientName" placeholder="Client name" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Primary Mobile *</label><input type="text" id="clientPrimaryMobile" placeholder="10-digit mobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Secondary Mobile</label><input type="text" id="clientSecondaryMobile" placeholder="Optional" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                    </div>
-                    <div><label class="block text-slate-400 mb-1">Complete Address *</label><input type="text" id="clientAddress" placeholder="Address, City" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                </div>
-
-                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
-                    <h4 class="font-semibold text-indigo-400 uppercase tracking-wide">2. Guarantor Details</h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div><label class="block text-slate-400 mb-1">Guarantor Name *</label><input type="text" id="guarantorName" placeholder="Guarantor name" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Primary Mobile *</label><input type="text" id="guarantorPrimaryMobile" placeholder="Mobile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Secondary Mobile</label><input type="text" id="guarantorSecondaryMobile" placeholder="Optional" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                    </div>
-                    <div><label class="block text-slate-400 mb-1">Guarantor Address *</label><input type="text" id="guarantorAddress" placeholder="Guarantor address" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                </div>
-
-                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
-                    <h4 class="font-semibold text-indigo-400 uppercase tracking-wide">3. Financial Structure & Model</h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div><label class="block text-slate-400 mb-1">Principal (₹) *</label><input type="number" id="loanPrincipal" placeholder="e.g. 10000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Total Interest (₹)</label><input type="number" id="loanInterestAmt" placeholder="e.g. 1500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                        <div><label class="block text-slate-400 mb-1">Tenure (Days)</label><input type="number" id="loanTenure" value="100" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"></div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-slate-400 mb-1">Accounting Model *</label>
-                            <select id="disbursementModel" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                                <option value="Upfront Cut">Model A: Upfront Cut (Deferred Profit Locked)</option>
-                                <option value="Full Disbursal">Model B: Full Disbursal (Later Interest)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 mb-1">Start Date *</label>
-                            <input type="date" id="modalStartDate" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
-                <button type="button" onclick="saveNewLoanAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-5 py-2 rounded-xl transition shadow-lg">Save Account</button>
-                <button type="button" onclick="closeNewLoanModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl transition">Cancel</button>
-            </div>
-        </div>
+  <div class="card">
+    <h2>1. Finance Setup</h2>
+    <div class="grid">
+      <div>
+        <label>Finance / Contract Amount (₹)</label>
+        <input id="amount" type="number" min="0" step="0.01" value="10000">
+      </div>
+      <div>
+        <label>Interest Mode</label>
+        <select id="interestMode">
+          <option value="upfront">Upfront Deduction</option>
+          <option value="deferred">Deferred / Later Collection</option>
+        </select>
+      </div>
+      <div>
+        <label>Interest Rate (%)</label>
+        <input id="rate" type="number" min="0" step="0.01" value="15">
+      </div>
+      <div>
+        <label>Cycle / Duration (Days)</label>
+        <input id="cycleDays" type="number" min="1" step="1" value="100">
+      </div>
+      <div>
+        <label>Payment Frequency</label>
+        <select id="frequency">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="custom">Custom / Flexible</option>
+        </select>
+      </div>
     </div>
+    <br>
+    <button class="primary" onclick="calculateLoan()">Calculate</button>
+  </div>
 
-    <!-- RECOVERY MODAL WITH PAYMENT MODES -->
-    <div id="recoveryModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
-            <div class="px-6 py-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
-                <h3 class="font-bold text-slate-100 text-base">Record Recovery Payment</h3>
-                <button onclick="closeRecoveryModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
-            </div>
-            <div class="p-6 space-y-4 text-xs" id="recoveryModalBody">
-                <!-- Dynamic Content -->
-            </div>
-            <div class="p-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3">
-                <button type="button" onclick="processRecoveryPayment()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-5 py-2 rounded-xl transition shadow-lg">Confirm Recovery</button>
-                <button type="button" onclick="closeRecoveryModal()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl transition">Cancel</button>
-            </div>
-        </div>
+  <div class="card">
+    <h2>2. Contract Result</h2>
+    <div class="results">
+      <div class="metric"><small>Contract / Recovery Principal</small><strong id="contractAmount">₹0.00</strong></div>
+      <div class="metric"><small>Interest Amount</small><strong id="interestAmount">₹0.00</strong></div>
+      <div class="metric"><small>Net Disbursement</small><strong id="netDisbursement">₹0.00</strong></div>
+      <div class="metric"><small>Total Customer Liability</small><strong id="totalLiability">₹0.00</strong></div>
+      <div class="metric"><small>Cycle</small><strong id="cycleResult">0 days</strong></div>
     </div>
+    <div id="logicNote" class="notice"></div>
+  </div>
 
-    <!-- JAVASCRIPT MASTER CORE -->
-    <script>
-        let customProducts = [];
-        let allLoans = [];
-        let activeRecoveryLoanId = null;
-        document.getElementById('modalStartDate').valueAsDate = new Date();
+  <div class="card">
+    <h2>3. Recovery Status</h2>
+    <div class="grid">
+      <div>
+        <label>Principal Recovered (₹)</label>
+        <input id="principalRecovered" type="number" min="0" step="0.01" value="0">
+      </div>
+      <div>
+        <label>Deferred Interest Collected (₹)</label>
+        <input id="deferredInterestCollected" type="number" min="0" step="0.01" value="0">
+      </div>
+    </div>
+    <br>
+    <button onclick="updateRecovery()">Update Recovery Position</button>
+    <div class="results" style="margin-top:12px">
+      <div class="metric"><small>Principal Outstanding</small><strong id="principalOutstanding">₹0.00</strong></div>
+      <div class="metric"><small>Interest Outstanding</small><strong id="interestOutstanding">₹0.00</strong></div>
+      <div class="metric"><small>Profit Recognizable Now</small><strong id="recognizedProfit">₹0.00</strong></div>
+    </div>
+    <div class="notice">
+      Profit recognition is intentionally separated from upfront deduction. For this business model,
+      an upfront interest amount is <b>not treated as immediately earned profit</b>.
+      The engine keeps principal recovery and interest recognition as separate concepts.
+    </div>
+  </div>
 
-        function openProductModal() { document.getElementById('productModal').classList.remove('hidden'); }
-        function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
-        function openNewLoanModal() { document.getElementById('newLoanModal').classList.remove('hidden'); }
-        function closeNewLoanModal() { document.getElementById('newLoanModal').classList.add('hidden'); }
+  <div class="card">
+    <h2>4. Advance Deposit & Future Allocation</h2>
+    <div class="grid">
+      <div><label>Daily Scheduled Amount (₹)</label><input id="dailyDue" type="number" min="0" step="0.01" value="500"></div>
+      <div><label>Advance Deposit Amount (₹)</label><input id="advanceDepositAmount" type="number" min="0" step="0.01" value="10000"></div>
+      <div><label>Deposit Date</label><input id="advanceDepositDate" type="date"></div>
+      <div><label>First Upcoming Due Date</label><input id="firstDueDate" type="date"></div>
+    </div><br>
+    <button class="primary" onclick="addAdvanceDeposit()">Record Advance Deposit & Allocate</button>
+    <div class="notice"><b>Original transaction is preserved:</b> the full deposit remains visible as one receipt, while its amount is separately allocated across future scheduled dates.</div>
+    <h3>Original Advance Deposit Transactions</h3>
+    <table><thead><tr><th>Deposit Date</th><th>Amount Received</th><th>Allocated</th><th>Remaining</th></tr></thead><tbody id="advanceDepositRows"></tbody></table>
+    <h3>Future Schedule Allocations</h3>
+    <table><thead><tr><th>Due Date</th><th>Scheduled Due</th><th>Advance Allocated</th><th>Status</th><th>Source Deposit</th></tr></thead><tbody id="advanceAllocationRows"></tbody></table>
+  </div>
 
-        function saveCustomProduct() {
-            const name = document.getElementById('prodName').value.trim();
-            const principal = parseFloat(document.getElementById('prodPrincipal').value);
-            const tenure = parseInt(document.getElementById('prodTenure').value) || 100;
-            const interestAmt = parseFloat(document.getElementById('prodInterestAmt').value) || 0;
-            const model = document.getElementById('prodModel').value;
+  <div class="card">
+    <h2>5. Payment / Receipt Mode</h2>
+    <div class="grid">
+      <div><label>Transaction Type</label><select id="paymentType"><option value="disbursement">Payment Given / Disbursement</option><option value="receipt">Payment Received / Collection</option></select></div>
+      <div><label>Payment Mode</label><select id="paymentMode"><option value="cash">Cash</option><option value="upi">UPI (PhonePe / Google Pay / Other UPI)</option><option value="bank">Bank Transfer / Cheque</option></select></div>
+      <div><label>Transaction Amount (₹)</label><input id="transactionAmount" type="number" min="0" step="0.01" value="500"></div>
+      <div><label>Transaction Date</label><input id="transactionDate" type="date"></div>
+    </div><br><button onclick="recordPayment()">Record Payment</button>
+    <table><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Mode</th></tr></thead><tbody id="paymentRows"></tbody></table>
+  </div>
 
-            if(!name || isNaN(principal)) {
-                alert("कृपया प्रोडक्ट का नाम और प्रिंसिपल अमाउंट सही से भरें!");
-                return;
-            }
+  <div class="card">
+    <h2>6. Customer Statement</h2>
+    <div class="grid">
+      <div><label>Customer Name</label><input id="customerName" type="text" placeholder="Customer name"></div>
+      <div><label>Loan Start Date</label><input id="loanStartDate" type="date"></div>
+      <div><label>Loan Duration (Days)</label><input id="statementCycleDays" type="number" min="1" value="100"></div>
+      <div><label>Loan Amount (₹)</label><input id="statementLoanAmount" type="number" min="0" step="0.01" value="10000"></div>
+      <div><label>Daily EMI (₹)</label><input id="statementDailyEmi" type="number" min="0" step="0.01" value="100"></div>
+    </div><br>
+    <button class="primary" onclick="generateCustomerStatement()">Generate Statement Preview</button>
+    <button onclick="window.print()">Print / Save as PDF</button>
+    <div id="customerStatement" class="statement-paper" style="margin-top:18px;background:#fff;border:1px solid #d8dde5;padding:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:2px solid #17202a;padding-bottom:12px;margin-bottom:16px;">
+        <div>
+          <div id="v4BusinessName" style="font-size:22px;font-weight:800;">Your Business Name</div>
+          <div id="v4BusinessSubtitle" style="color:#657080;margin-top:4px;">Microfinance Services</div>
+          <div id="v4BusinessContact" style="color:#657080;margin-top:4px;font-size:12px;"></div>
+        </div>
+        <div style="text-align:right;">
+          <h2 style="margin:0;">LOAN STATEMENT</h2>
+          <div style="color:#657080;margin-top:5px;">Customer Copy</div>
+        </div>
+      </div><h2 style="margin:0">LOAN REPAYMENT STATEMENT</h2><div style="color:#657080;margin-top:5px">Customer Copy</div></div>
+      <div id="statementHeader"></div>
+      <table><thead><tr><th>Sr. No.</th><th>Date</th><th>EMI</th><th>Deposit</th><th>Payment Mode</th></tr></thead><tbody id="statementRows"></tbody></table><div id="statementTotals" style="margin-top:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px"><div><b>Total Scheduled EMI:</b> <span id="statementTotalEmi">₹0.00</span></div><div><b>Total Deposits:</b> <span id="statementTotalDeposits">₹0.00</span></div></div>
+    </div>
+      <div style="margin-top:18px;padding-top:12px;border-top:1px solid #d8dde5;font-size:12px;color:#657080;display:flex;justify-content:space-between;">
+        <span>System generated loan statement</span>
+        <span>Customer Copy</span>
+      </div>
+    </div>
+  </div>
 
-            customProducts.push({ name, principal, tenure, interestAmt, model });
-            closeProductModal();
-            document.getElementById('prodName').value = '';
-            document.getElementById('prodPrincipal').value = '';
-            document.getElementById('prodInterestAmt').value = '';
-            
-            updateProductDropdown();
-            alert("कस्टम प्रोडक्ट सफलतापूर्वक सेव हो गया है और लोन रजिस्ट्रेशन में उपलब्ध है!");
-        }
+  <div class="card">
+    <h2>7. Penalty Ledger</h2>
+    <div class="grid">
+      <div>
+        <label>Penalty Amount (₹)</label>
+        <input id="penaltyAmount" type="number" min="0" step="0.01" value="0">
+      </div>
+      <div>
+        <label>Penalty Date</label>
+        <input id="penaltyDate" type="date">
+      </div>
+      <div>
+        <label>Penalty Status</label>
+        <select id="penaltyStatus">
+          <option value="due">Due / Outstanding</option>
+          <option value="collected">Collected / Received</option>
+        </select>
+      </div>
+      <div>
+        <label>Collection Date (if collected)</label>
+        <input id="penaltyCollectionDate" type="date">
+      </div>
+    </div>
+    <br>
+    <button onclick="addPenalty()">Add Penalty Entry</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Penalty Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Collection Date</th>
+        </tr>
+      </thead>
+      <tbody id="penaltyRows"></tbody>
+    </table>
+  </div>
 
-        function updateProductDropdown() {
-            let select = document.getElementById('selectCustomProduct');
-            select.innerHTML = '<option value="">-- Manual Entry / No Product Selected --</option>';
-            customProducts.forEach((prod, index) => {
-                select.innerHTML += `<option value="${index}">${prod.name} (₹${prod.principal.toLocaleString()} | Interest: ₹${prod.interestAmt})</option>`;
-            });
-        }
+  <div class="card">
+    <h2>8. Current Ledger Summary</h2>
+    <div class="results">
+      <div class="metric"><small>Total Penalty Due</small><strong id="penaltyDue">₹0.00</strong></div>
+      <div class="metric"><small>Total Penalty Collected</small><strong id="penaltyCollected">₹0.00</strong></div>
+    </div>
+    <div class="notice danger">
+      Penalty is maintained separately from interest income. A penalty can remain <b>Due</b> without
+      interrupting the loan cycle, and can later be changed/recorded as <b>Collected</b> with its actual collection date.
+    </div>
+  </div>
+</div>
 
-        function applySelectedProduct() {
-            let idx = document.getElementById('selectCustomProduct').value;
-            if(idx !== "") {
-                let prod = customProducts[idx];
-                document.getElementById('loanPrincipal').value = prod.principal;
-                document.getElementById('loanInterestAmt').value = prod.interestAmt;
-                document.getElementById('loanTenure').value = prod.tenure;
-                document.getElementById('disbursementModel').value = prod.model;
-            }
-        }
+<script>
+const state = {
+  contractAmount: 0,
+  interest: 0,
+  netDisbursement: 0,
+  totalLiability: 0,
+  cycleDays: 0,
+  interestMode: 'upfront',
+  penalties: [],
+  advanceDeposits: [],
+  advanceAllocations: [],
+  payments: []
+};
 
-        function saveNewLoanAccount() {
-            const clientName = document.getElementById('clientName').value.trim();
-            const primaryMobile = document.getElementById('clientPrimaryMobile').value.trim();
-            const address = document.getElementById('clientAddress').value.trim();
-            const guarantorName = document.getElementById('guarantorName').value.trim();
-            const guarantorMobile = document.getElementById('guarantorPrimaryMobile').value.trim();
-            const guarantorAddress = document.getElementById('guarantorAddress').value.trim();
-            const principal = parseFloat(document.getElementById('loanPrincipal').value);
-            const interestAmt = parseFloat(document.getElementById('loanInterestAmt').value) || 0;
-            const tenure = parseInt(document.getElementById('loanTenure').value) || 100;
-            const disburseModel = document.getElementById('disbursementModel').value;
-            const startDate = document.getElementById('modalStartDate').value;
+const money = n => '₹' + Number(n || 0).toLocaleString('en-IN', {
+  minimumFractionDigits: 2, maximumFractionDigits: 2
+});
 
-            let prodIdx = document.getElementById('selectCustomProduct').value;
-            let productName = prodIdx !== "" ? customProducts[prodIdx].name : "Manual Custom Loan";
+function calculateLoan() {
+  const amount = Math.max(0, Number(document.getElementById('amount').value) || 0);
+  const rate = Math.max(0, Number(document.getElementById('rate').value) || 0);
+  const days = Math.max(1, Number(document.getElementById('cycleDays').value) || 1);
+  const mode = document.getElementById('interestMode').value;
 
-            if(!clientName || !primaryMobile || !address || !guarantorName || !guarantorMobile || !guarantorAddress || isNaN(principal)) {
-                alert("कृपया सभी अनिवार्य फील्ड्स (Client, Guarantor, Principal) भरें!");
-                return;
-            }
+  const interest = amount * rate / 100;
 
-            const newLoan = {
-                id: "LN-" + Math.floor(1000 + Math.random() * 9000),
-                clientName, primaryMobile, address,
-                guarantorName, guarantorMobile, guarantorAddress,
-                principal, interestAmt, tenure, disburseModel, startDate, productName,
-                principalRecovered: 0,
-                status: "Active (Principal Pending)"
-            };
+  state.contractAmount = amount;
+  state.interest = interest;
+  state.cycleDays = days;
+  state.interestMode = mode;
 
-            allLoans.push(newLoan);
-            closeNewLoanModal();
-            renderDashboard();
-            alert("लोन खाता सफलतापूर्वक रजिस्टर कर दिया गया है!");
-        }
+  if (mode === 'upfront') {
+    state.netDisbursement = Math.max(0, amount - interest);
+    state.totalLiability = amount;
+  } else {
+    state.netDisbursement = amount;
+    state.totalLiability = amount + interest;
+  }
 
-        function renderDashboard() {
-            let tbody = document.getElementById('clientTableBody');
-            tbody.innerHTML = '';
+  document.getElementById('contractAmount').textContent = money(amount);
+  document.getElementById('interestAmount').textContent = money(interest);
+  document.getElementById('netDisbursement').textContent = money(state.netDisbursement);
+  document.getElementById('totalLiability').textContent = money(state.totalLiability);
+  document.getElementById('cycleResult').textContent = days + ' days';
 
-            let totalCap = allLoans.reduce((acc, curr) => acc + (curr.principal - curr.principalRecovered), 0);
-            let totalPrinRec = allLoans.reduce((acc, curr) => acc + curr.principalRecovered, 0);
-            let totalLockedProfit = allLoans.reduce((acc, curr) => acc + curr.interestAmt, 0);
+  document.getElementById('logicNote').innerHTML =
+    mode === 'upfront'
+    ? `<b>Upfront model:</b> ${money(interest)} is deducted at disbursement. `
+      + `Customer receives ${money(state.netDisbursement)} and contractual recovery remains ${money(amount)}. `
+      + `The deducted interest is tracked separately and is not automatically recognized as earned profit on day 0.`
+    : `<b>Deferred model:</b> customer receives the full ${money(amount)}. `
+      + `Interest of ${money(interest)} is a separate later-recovery obligation, making total contractual collection ${money(state.totalLiability)}.`;
 
-            document.getElementById('metricCapital').innerText = "₹" + totalCap.toLocaleString();
-            document.getElementById('metricPrincipalRec').innerText = "₹" + totalPrinRec.toLocaleString();
-            document.getElementById('metricLockedProfit').innerText = "₹" + totalLockedProfit.toLocaleString();
-            document.getElementById('metricActiveCount').innerText = allLoans.filter(l => l.status.includes('Active')).length;
+  updateRecovery();
+}
 
-            if(allLoans.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No active client accounts found.</td></tr>`;
-                return;
-            }
+function updateRecovery() {
+  const principalRecovered = Math.max(0, Number(document.getElementById('principalRecovered').value) || 0);
+  const deferredCollected = Math.max(0, Number(document.getElementById('deferredInterestCollected').value) || 0);
 
-            allLoans.forEach(loan => {
-                let balance = loan.principal - loan.principalRecovered;
-                let emi = loan.principal / loan.tenure;
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-700/25 transition client-row" data-name="${loan.clientName.toLowerCase()}" data-mobile="${loan.primaryMobile}">
-                        <td class="p-3 font-medium text-slate-100">${loan.clientName}<span class="block text-[10px] text-slate-400">M: ${loan.primaryMobile} | ${loan.address}</span></td>
-                        <td class="p-3 text-slate-300">${loan.guarantorName}<span class="block text-[10px] text-slate-400">M: ${loan.guarantorMobile}</span></td>
-                        <td class="p-3 font-semibold text-emerald-400">₹${loan.principal.toLocaleString()} <span class="block text-[10px] text-slate-400">Bal: ₹${balance.toLocaleString()}</span></td>
-                        <td class="p-3 text-indigo-300">${loan.productName}<span class="block text-[10px] text-slate-400">EMI: ₹${emi.toFixed(2)}/d</span></td>
-                        <td class="p-3 text-right"><button onclick="openRecoveryModal('${loan.id}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded text-[11px] font-medium shadow">Recovery</button></td>
-                    </tr>
-                `;
-            });
-            filterClients(); // Re-apply search filter if active
-        }
+  const principalOutstanding = Math.max(0, state.contractAmount - principalRecovered);
+  const interestOutstanding = state.interestMode === 'deferred'
+    ? Math.max(0, state.interest - deferredCollected)
+    : state.interest;
 
-        function openRecoveryModal(id) {
-            activeRecoveryLoanId = id;
-            let loan = allLoans.find(l => l.id === id);
-            if(!loan) return;
+  // Business rule introduced in this version:
+  // upfront interest is not considered earned until the financed principal is recovered.
+  // Recognition is capped at the interest amount.
+  let recognizedProfit = 0;
 
-            let remPrincipal = loan.principal - loan.principalRecovered;
-            let defaultEmi = loan.principal / loan.tenure;
+  if (state.interestMode === 'deferred') {
+    recognizedProfit = Math.min(state.interest, deferredCollected);
+  } else {
+    const principalRecoveryRatio = state.contractAmount > 0
+      ? Math.min(1, principalRecovered / state.contractAmount)
+      : 0;
+    recognizedProfit = state.interest * principalRecoveryRatio;
+  }
 
-            document.getElementById('recoveryModalBody').innerHTML = `
-                <div class="space-y-2">
-                    <p class="text-slate-300 font-semibold">Client: ${loan.clientName} (${loan.id})</p>
-                    <p class="text-[11px] text-slate-400">Pending Principal Balance: ₹${remPrincipal.toLocaleString()}</p>
-                    <div>
-                        <label class="block text-slate-400 mb-1 mt-2">Recovery Amount Received (₹)</label>
-                        <input type="number" id="recoveryAmtInput" value="${defaultEmi.toFixed(2)}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-slate-400 mb-1">Payment Mode</label>
-                        <select id="recoveryPayMode" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100">
-                            <option value="Cash">Cash (नकद)</option>
-                            <option value="UPI (PhonePe, Google Pay, Other UPI)">UPI (PhonePe, Google Pay, Other UPI)</option>
-                            <option value="Bank Transfer / Cheque">Bank Transfer / Cheque</option>
-                        </select>
-                    </div>
-                </div>
-            `;
-            document.getElementById('recoveryModal').classList.remove('hidden');
-        }
+  document.getElementById('principalOutstanding').textContent = money(principalOutstanding);
+  document.getElementById('interestOutstanding').textContent = money(interestOutstanding);
+  document.getElementById('recognizedProfit').textContent = money(recognizedProfit);
+}
 
-        function closeRecoveryModal() {
-            document.getElementById('recoveryModal').classList.add('hidden');
-            activeRecoveryLoanId = null;
-        }
+function formatDateDisplay(x){if(!x)return '—';return new Date(x+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function addDays(x,n){const d=new Date(x+'T00:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function addAdvanceDeposit(){const amount=Math.max(0,Number(document.getElementById('advanceDepositAmount').value)||0),daily=Math.max(0,Number(document.getElementById('dailyDue').value)||0),depositDate=document.getElementById('advanceDepositDate').value,firstDue=document.getElementById('firstDueDate').value;if(amount<=0||daily<=0||!depositDate||!firstDue){alert('Please enter valid deposit, daily due, deposit date and first due date.');return;}const id='ADV-'+Date.now();let rem=amount,d=firstDue,guard=0;while(rem>0&&guard<10000){const a=Math.min(daily,rem);state.advanceAllocations.push({depositId:id,depositDate,dueDate:d,scheduledDue:daily,allocated:a,status:a>=daily?'Paid by Advance':'Partially Covered'});rem-=a;if(rem<.000001)rem=0;d=addDays(d,1);guard++;}state.advanceDeposits.push({id,date:depositDate,amount,allocated:amount-rem,remaining:rem});renderAdvanceLedger();}
+function renderAdvanceLedger(){const db=document.getElementById('advanceDepositRows'),ab=document.getElementById('advanceAllocationRows');db.innerHTML='';ab.innerHTML='';state.advanceDeposits.forEach(d=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${formatDateDisplay(d.date)}</td><td>${money(d.amount)}</td><td>${money(d.allocated)}</td><td>${money(d.remaining)}</td>`;db.appendChild(tr);});state.advanceAllocations.forEach(a=>{const dep=state.advanceDeposits.find(d=>d.id===a.depositId);const tr=document.createElement('tr');tr.innerHTML=`<td>${formatDateDisplay(a.dueDate)}</td><td>${money(a.scheduledDue)}</td><td>${money(a.allocated)}</td><td>${a.status}</td><td>${formatDateDisplay(a.depositDate)} — ${money(dep?dep.amount:0)}</td>`;ab.appendChild(tr);});}
+function paymentModeLabel(mode) { return mode === 'upi' ? 'UPI (PhonePe / Google Pay / Other UPI)' : mode === 'bank' ? 'Bank Transfer / Cheque' : 'Cash'; }
+function recordPayment() { const amount=Math.max(0,Number(document.getElementById('transactionAmount').value)||0),date=document.getElementById('transactionDate').value,type=document.getElementById('paymentType').value,mode=document.getElementById('paymentMode').value; if(amount<=0||!date){alert('Please enter a valid amount and transaction date.');return;} state.payments.push({amount,date,type,mode}); renderPayments(); }
+function renderPayments(){const b=document.getElementById('paymentRows');b.innerHTML='';state.payments.forEach(p=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${formatDateDisplay(p.date)}</td><td>${p.type==='receipt'?'Received':'Disbursement'}</td><td>${money(p.amount)}</td><td>${paymentModeLabel(p.mode)}</td>`;b.appendChild(tr);});}
+function generateCustomerStatement(){const name=document.getElementById('customerName').value.trim()||'Customer',start=document.getElementById('loanStartDate').value,days=Math.max(1,Number(document.getElementById('statementCycleDays').value)||1),loanAmount=Math.max(0,Number(document.getElementById('statementLoanAmount').value)||0),emi=Math.max(0,Number(document.getElementById('statementDailyEmi').value)||0);if(!start){alert('Please enter the loan start date.');return;}const end=addDays(start,days-1);document.getElementById('statementHeader').innerHTML=`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px;margin-bottom:16px"><div><b>Customer:</b> ${escapeHtml(name)}</div><div><b>Loan Amount:</b> ${money(loanAmount)}</div><div><b>Loan Start Date:</b> ${formatDateDisplay(start)}</div><div><b>Loan End Date:</b> ${formatDateDisplay(end)}</div></div>`;const rows=document.getElementById('statementRows');rows.innerHTML='';let totalDeposits=0;for(let i=0;i<days;i++){const date=addDays(start,i),dayPayments=state.payments.filter(p=>p.type==='receipt'&&p.date===date),deposits=dayPayments.reduce((s,p)=>s+p.amount,0),modes=dayPayments.map(p=>paymentModeLabel(p.mode)).join(', ')||'—',tr=document.createElement('tr');tr.innerHTML=`<td>${i+1}</td><td>${formatDateDisplay(date)}</td><td>${money(emi)}</td><td>${money(deposits)}</td><td>${escapeHtml(modes)}</td>`;rows.appendChild(tr);totalDeposits+=deposits;}document.getElementById('statementTotalEmi').textContent=money(emi*days);document.getElementById('statementTotalDeposits').textContent=money(totalDeposits);}
+function escapeHtml(value){return value.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));}
 
-        function processRecoveryPayment() {
-            let amt = parseFloat(document.getElementById('recoveryAmtInput').value) || 0;
-            let payMode = document.getElementById('recoveryPayMode').value;
-            if(amt <= 0) {
-                alert("कृपया वैध राशि दर्ज करें!");
-                return;
-            }
+function addPenalty() {
+  const amount = Math.max(0, Number(document.getElementById('penaltyAmount').value) || 0);
+  const date = document.getElementById('penaltyDate').value;
+  const status = document.getElementById('penaltyStatus').value;
+  const collectionDate = document.getElementById('penaltyCollectionDate').value;
 
-            let loan = allLoans.find(l => l.id === activeRecoveryLoanId);
-            if(!loan) return;
+  if (amount <= 0) {
+    alert('Please enter a valid penalty amount.');
+    return;
+  }
+  if (!date) {
+    alert('Please enter the penalty date.');
+    return;
+  }
+  if (status === 'collected' && !collectionDate) {
+    alert('Please enter the penalty collection date.');
+    return;
+  }
 
-            let pendingPrincipal = loan.principal - loan.principalRecovered;
-            if(amt >= pendingPrincipal) {
-                loan.principalRecovered = loan.principal;
-                loan.status = "Closed (Fully Settled)";
-            } else {
-                loan.principalRecovered += amt;
-            }
+  state.penalties.push({ amount, date, status, collectionDate });
+  renderPenalties();
 
-            closeRecoveryModal();
-            renderDashboard();
-            alert("₹" + amt.toLocaleString() + " की रिकवरी (" + payMode + ") सफलतापूर्वक दर्ज हो गई है!");
-        }
+  document.getElementById('penaltyAmount').value = 0;
+}
 
-        // SMART INSTANT LIVE SEARCH (REAL-TIME FILTER)
-        function filterClients() {
-            let query = document.getElementById('liveSearchInput').value.toLowerCase().trim();
-            let rows = document.querySelectorAll('.client-row');
-            
-            rows.forEach(row => {
-                let name = row.getAttribute('data-name');
-                let mobile = row.getAttribute('data-mobile');
-                if(name.includes(query) || mobile.includes(query)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-    </script>
+function renderPenalties() {
+  const tbody = document.getElementById('penaltyRows');
+  tbody.innerHTML = '';
+
+  let due = 0, collected = 0;
+
+  state.penalties.forEach(p => {
+    if (p.status === 'due') due += p.amount;
+    if (p.status === 'collected') collected += p.amount;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${p.date}</td>
+      <td>${money(p.amount)}</td>
+      <td>${p.status === 'due' ? 'Due / Outstanding' : 'Collected / Received'}</td>
+      <td>${p.collectionDate || '—'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('penaltyDue').textContent = money(due);
+  document.getElementById('penaltyCollected').textContent = money(collected);
+}
+
+const today=new Date();document.getElementById('penaltyDate').valueAsDate=today;document.getElementById('advanceDepositDate').valueAsDate=today;const tomorrow=new Date(today);tomorrow.setDate(tomorrow.getDate()+1);document.getElementById('firstDueDate').valueAsDate=tomorrow;calculateLoan();
+</script>
+
+<script id="final-business-identity-js">
+(function(){
+  const KEY = 'microfinance_business_identity_v1';
+
+  window.loadBusinessIdentity = function(){
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+
+    const fields = {
+      businessName: saved.businessName || '',
+      businessSubtitle: saved.businessSubtitle || 'Microfinance Services',
+      businessMobile: saved.businessMobile || '',
+      businessEmail: saved.businessEmail || ''
+    };
+
+    Object.keys(fields).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = fields[id];
+    });
+
+    window.applyBusinessIdentity(fields);
+  };
+
+  window.applyBusinessIdentity = function(data){
+    const name = data.businessName || 'Your Business Name';
+    const subtitle = data.businessSubtitle || 'Microfinance Services';
+    const contact = [data.businessMobile, data.businessEmail].filter(Boolean).join('  |  ');
+
+    const a = document.getElementById('v4BusinessName');
+    const b = document.getElementById('v4BusinessSubtitle');
+    const c = document.getElementById('v4BusinessContact');
+    if (a) a.textContent = name;
+    if (b) b.textContent = subtitle;
+    if (c) c.textContent = contact;
+  };
+
+  window.saveBusinessIdentity = function(){
+    const data = {
+      businessName: (document.getElementById('businessName')?.value || '').trim(),
+      businessSubtitle: (document.getElementById('businessSubtitle')?.value || '').trim(),
+      businessMobile: (document.getElementById('businessMobile')?.value || '').trim(),
+      businessEmail: (document.getElementById('businessEmail')?.value || '').trim()
+    };
+
+    localStorage.setItem(KEY, JSON.stringify(data));
+    window.applyBusinessIdentity(data);
+    alert('Business identity saved.');
+  };
+
+  document.addEventListener('DOMContentLoaded', window.loadBusinessIdentity);
+})();
+</script>
+
 </body>
 </html>
