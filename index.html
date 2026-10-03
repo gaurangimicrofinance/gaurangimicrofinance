@@ -189,6 +189,17 @@ body.b16-ready textarea{
   background:#fff!important;
 }
 body.b16-ready textarea{min-height:78px!important}
+/* V17 workflow polish */
+.v17-section{border:1px solid #dfe6ef;border-radius:14px;padding:16px;background:#fff;margin-bottom:14px}
+.v17-section-title{font-size:14px;font-weight:800;margin:0 0 12px;color:#153a5b}
+.v17-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+.v17-summary-card{border:1px solid #dfe6ef;border-radius:12px;padding:11px 12px;background:#f8fafc}
+.v17-summary-card span{display:block;font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.v17-summary-card strong{display:block;font-size:16px;margin-top:4px;color:#153a5b}
+.v17-help{font-size:11px;color:#64748b;margin-top:5px}
+.v17-savebar{display:flex;justify-content:flex-end;gap:10px;align-items:center;padding-top:4px}
+@media(max-width:900px){.v17-summary{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.v17-summary{grid-template-columns:1fr}.v17-savebar{display:block}.v17-savebar button{width:100%}}
 body.b16-ready input:focus,
 body.b16-ready select:focus,
 body.b16-ready textarea:focus{
@@ -585,14 +596,22 @@ body.b16-ready .penalty-grid{
 <h2>Product Management & Loan Categories</h2>
 <div class="grid">
 <div><label>Product Name</label><input id="v7ProductName" placeholder="e.g. Daily Loan 10K"></div>
-<div><label>Loan Amount (₹)</label><input id="v7ProductAmount" type="number" value="10000"></div>
-<div><label>Interest Rate (%)</label><input id="v7ProductRate" type="number" value="15"></div>
-<div><label>Cycle / Duration (Days)</label><input id="v7ProductDays" type="number" value="100"></div>
+<div><label>Loan Amount (₹)</label><input id="v7ProductAmount" type="number" min="0" step="0.01" value="10000"></div>
+<div><label>Interest Rate (%)</label><input id="v7ProductRate" type="number" min="0" step="0.01" value="15"><div class="v17-help">Enter percentage → interest amount is calculated automatically.</div></div>
+<div><label>Interest Amount (₹)</label><input id="v7ProductInterestAmount" type="number" min="0" step="0.01" value="1500"><div class="v17-help">Enter rupees → percentage is calculated automatically.</div></div>
+<div><label>Cycle / Duration (Days)</label><input id="v7ProductDays" type="number" min="1" step="1" value="100"></div>
 <div><label>Payment Frequency</label><select id="v7ProductFrequency"><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Custom</option></select></div>
-<div><label>Total Installments</label><input id="v7ProductInstallments" type="number" value="100"></div>
-</div><br>
-<button class="primary" onclick="v7SaveProduct()">Save Product</button>
-<table><thead><tr><th>Category</th><th>Product</th><th>Amount</th><th>Rate</th><th>Cycle</th><th>Frequency</th></tr></thead>
+<div><label>Total Installments</label><input id="v7ProductInstallments" type="number" min="1" step="1" value="100"></div>
+</div>
+<div class="v17-summary" id="v7ProductSummary">
+  <div class="v17-summary-card"><span>Loan Amount</span><strong id="v7SummaryAmount">₹0.00</strong></div>
+  <div class="v17-summary-card"><span>Interest</span><strong id="v7SummaryInterest">₹0.00 / 0%</strong></div>
+  <div class="v17-summary-card"><span>Net Disbursement — Upfront</span><strong id="v7SummaryNet">₹0.00</strong></div>
+  <div class="v17-summary-card"><span>Total Recovery — Upfront</span><strong id="v7SummaryRecovery">₹0.00</strong></div>
+</div>
+<br>
+<div class="v17-savebar"><button class="primary" onclick="v7SaveProduct()">Save Product</button></div>
+<table><thead><tr><th>Category</th><th>Product</th><th>Amount</th><th>Rate</th><th>Interest</th><th>Cycle</th><th>Frequency</th></tr></thead>
 <tbody id="v7ProductRows"></tbody></table>
 </div>
 
@@ -617,10 +636,20 @@ body.b16-ready .penalty-grid{
 <label>Interest Treatment</label><select id="v7InterestTreatment">
 <option value="upfront">Deduct Interest / Charges Upfront</option>
 <option value="deferred">Give Full Amount / Collect Interest Later</option>
-</select></div>
+</select>
+<label>Loan Relationship</label><select id="v7LoanRelationship">
+<option value="new">New Loan</option><option value="renewal">Renewal</option><option value="topup">Top-Up</option>
+</select>
+<label>Parent Loan (Renewal / Top-Up)</label><select id="v7ParentLoan"><option value="">Not applicable — New Loan</option></select></div>
 </div>
-<div class="notice" id="v7LoanCalculation">Create a product first.</div><br>
-<button class="primary" onclick="v7CreateLoanPreview()">Preview Loan</button>
+<div class="v17-summary" id="v7LoanCalculation">
+  <div class="v17-summary-card"><span>Loan</span><strong id="v7LoanCalcAmount">₹0.00</strong></div>
+  <div class="v17-summary-card"><span>Interest</span><strong id="v7LoanCalcInterest">₹0.00</strong></div>
+  <div class="v17-summary-card"><span>Net Disbursement</span><strong id="v7LoanCalcNet">₹0.00</strong></div>
+  <div class="v17-summary-card"><span>Total Collection</span><strong id="v7LoanCalcTotal">₹0.00</strong></div>
+</div>
+<br>
+<div class="v17-savebar"><button class="primary" type="button" onclick="v7SaveNewLoan()">Save Loan &amp; Client</button></div>
 </div>
 
 
@@ -782,9 +811,6 @@ body.b16-ready .penalty-grid{
   <h3>Customer Loan Tree</h3>
   <div id="v8TreeView" class="notice">No customer/loan tree created yet.</div>
 </div>
-
-<div class="card"><h2>Loan Confirmation Preview</h2>
-<div id="v7LoanPreviewBox" class="notice">No loan preview generated yet.</div></div>
 
   <div class="card">
     <h2>1. Finance Setup</h2>
@@ -1320,42 +1346,155 @@ const today=new Date();document.getElementById('penaltyDate').valueAsDate=today;
 <script>
 window.v7Products = JSON.parse(localStorage.getItem('microfinance_products_v7') || '[]');
 function v7Money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function v7Escape(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+function v7Escape(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+function v7ProductInterest(){
+ const amount=Number(document.getElementById('v7ProductAmount')?.value)||0;
+ const rate=Number(document.getElementById('v7ProductRate')?.value)||0;
+ const interest=Number(document.getElementById('v7ProductInterestAmount')?.value)||0;
+ return {amount,rate,interest};
+}
+function v7SyncInterestFields(source){
+ const amountEl=document.getElementById('v7ProductAmount');
+ const rateEl=document.getElementById('v7ProductRate');
+ const interestEl=document.getElementById('v7ProductInterestAmount');
+ const amount=Number(amountEl?.value)||0;
+ if(source==='interest'){
+   const interest=Number(interestEl?.value)||0;
+   if(amount>0 && interestEl) rateEl.value=((interest/amount)*100).toFixed(2).replace(/\.00$/,'');
+ }else{
+   const rate=Number(rateEl?.value)||0;
+   if(interestEl) interestEl.value=(amount*rate/100).toFixed(2).replace(/\.00$/,'');
+ }
+ v7UpdateProductSummary();
+}
+function v7UpdateProductSummary(){
+ const {amount,rate,interest}=v7ProductInterest();
+ const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+ set('v7SummaryAmount',v7Money(amount));
+ set('v7SummaryInterest',v7Money(interest)+' / '+rate.toFixed(2).replace(/\.00$/,'')+'%');
+ set('v7SummaryNet',v7Money(Math.max(0,amount-interest)));
+ set('v7SummaryRecovery',v7Money(amount));
+}
 function v7SaveProduct(){
- const p={name:v7ProductName.value.trim(),amount:+v7ProductAmount.value||0,rate:+v7ProductRate.value||0,days:+v7ProductDays.value||0,frequency:v7ProductFrequency.value,installments:+v7ProductInstallments.value||0};
- if(!p.name||p.amount<=0||p.days<=0||p.installments<=0){alert('Please complete the product details.');return;}
- window.v7Products.push(p);localStorage.setItem('microfinance_products_v7',JSON.stringify(window.v7Products));v7RenderProducts();
+ const name=document.getElementById('v7ProductName').value.trim();
+ const amount=Number(document.getElementById('v7ProductAmount').value)||0;
+ const rate=Number(document.getElementById('v7ProductRate').value)||0;
+ const interest=Number(document.getElementById('v7ProductInterestAmount').value)||0;
+ const days=Number(document.getElementById('v7ProductDays').value)||0;
+ const frequency=document.getElementById('v7ProductFrequency').value;
+ const installments=Number(document.getElementById('v7ProductInstallments').value)||0;
+ if(!name||amount<=0||days<=0||installments<=0||rate<0||interest<0){alert('Please complete the product details.');return;}
+ if(Math.abs((amount*rate/100)-interest)>0.01){alert('Interest Rate and Interest Amount are not matching. Enter either one and let the system calculate the other.');return;}
+ const existing=window.v7Products.find(p=>p.name.toLowerCase()===name.toLowerCase());
+ const p={id:existing?.id||('PRD-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)),name,amount,rate,interestAmount:interest,days,frequency,installments};
+ if(existing) Object.assign(existing,p); else window.v7Products.push(p);
+ localStorage.setItem('microfinance_products_v7',JSON.stringify(window.v7Products));
+ if(window.v9Products) window.v9Products=window.v7Products;
+ v7RenderProducts();
+ alert('Product saved successfully.');
 }
 function v7RenderProducts(){
- v7ProductRows.innerHTML='';v7LoanProduct.innerHTML='';
+ const rows=document.getElementById('v7ProductRows'), loan=document.getElementById('v7LoanProduct');
+ if(!rows||!loan)return;
+ rows.innerHTML='';loan.innerHTML='';
  window.v7Products.forEach((p,i)=>{
-  v7ProductRows.innerHTML+=`<tr><td>${v7Money(p.amount)}</td><td>${v7Escape(p.name)}</td><td>${v7Money(p.amount)}</td><td>${p.rate}%</td><td>${p.days} days</td><td>${v7Escape(p.frequency)}</td></tr>`;
-  v7LoanProduct.innerHTML+=`<option value="${i}">${v7Escape(p.name)} — ${v7Money(p.amount)}</option>`;
- });v7UpdateLoanCalculation();
+   if(!p.id)p.id='PRD-'+Date.now()+'-'+i;
+   if(p.interestAmount===undefined)p.interestAmount=Number(p.amount||0)*Number(p.rate||0)/100;
+   rows.innerHTML+=`<tr><td>${v7Money(p.amount)}</td><td>${v7Escape(p.name)}</td><td>${v7Money(p.amount)}</td><td>${Number(p.rate||0).toFixed(2)}%</td><td>${v7Money(p.interestAmount)}</td><td>${p.days} days</td><td>${v7Escape(p.frequency)}</td></tr>`;
+   loan.innerHTML+=`<option value="${i}">${v7Escape(p.name)} — ${v7Money(p.amount)}</option>`;
+ });
+ localStorage.setItem('microfinance_products_v7',JSON.stringify(window.v7Products));
+ v7UpdateLoanCalculation();
 }
 function v7UpdateLoanCalculation(){
- const p=window.v7Products[+v7LoanProduct.value],mode=v7InterestTreatment.value;
- if(!p){v7LoanCalculation.textContent='Create a product first.';return;}
- const interest=p.amount*p.rate/100,net=mode==='upfront'?p.amount-interest:p.amount,total=mode==='upfront'?p.amount:p.amount+interest;
- v7LoanCalculation.innerHTML=`<b>Loan:</b> ${v7Money(p.amount)} &nbsp; <b>Interest:</b> ${v7Money(interest)} &nbsp; <b>Net Disbursement:</b> ${v7Money(net)} &nbsp; <b>Total Collection:</b> ${v7Money(total)}`;
+ const p=window.v7Products[Number(document.getElementById('v7LoanProduct')?.value)];
+ const mode=document.getElementById('v7InterestTreatment')?.value||'upfront';
+ const amount=Number(p?.amount)||0;
+ const interest=Number(p?.interestAmount??((p?.amount||0)*(p?.rate||0)/100))||0;
+ const net=mode==='upfront'?Math.max(0,amount-interest):amount;
+ const total=mode==='upfront'?amount:amount+interest;
+ const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+ set('v7LoanCalcAmount',v7Money(amount));set('v7LoanCalcInterest',v7Money(interest));set('v7LoanCalcNet',v7Money(net));set('v7LoanCalcTotal',v7Money(total));
 }
-function v7CreateLoanPreview(){
- const p=window.v7Products[+v7LoanProduct.value];if(!p){alert('Please create/select a product first.');return;}
- const mode=v7InterestTreatment.value,interest=p.amount*p.rate/100,net=mode==='upfront'?p.amount-interest:p.amount;
- v7LoanPreviewBox.innerHTML=`<b>Customer:</b> ${v7Escape(v7CustomerName.value||'—')}<br>
- <b>Customer Mobile:</b> ${v7Escape(v7CustomerPrimaryMobile.value||'—')}${v7CustomerSecondaryMobile.value?' / '+v7Escape(v7CustomerSecondaryMobile.value):''}<br>
- <b>Customer Address:</b> ${v7Escape(v7CustomerAddress.value||'—')}<br>
- <b>Guarantor:</b> ${v7Escape(v7GuarantorName.value||'—')}<br>
- <b>Guarantor Mobile:</b> ${v7Escape(v7GuarantorPrimaryMobile.value||'—')}${v7GuarantorSecondaryMobile.value?' / '+v7Escape(v7GuarantorSecondaryMobile.value):''}<br>
- <b>Guarantor Address:</b> ${v7Escape(v7GuarantorAddress.value||'—')}<br>
- <b>Product:</b> ${v7Escape(p.name)}<br><b>Loan Amount:</b> ${v7Money(p.amount)}<br>
- <b>Interest:</b> ${v7Money(interest)}<br><b>Interest Treatment:</b> ${mode==='upfront'?'Upfront Deduction':'Deferred / Later Collection'}<br>
- <b>Net Disbursement:</b> ${v7Money(net)}<br><b>Payment Mode:</b> ${v7Escape(v7DisbursementMode.value)}<br>
- <b>Disbursement Date:</b> ${v7DisbursementDate.value||'—'}`;
+function v7RefreshParentLoans(){
+ const rel=document.getElementById('v7LoanRelationship')?.value;
+ const sel=document.getElementById('v7ParentLoan');if(!sel)return;
+ sel.innerHTML='<option value="">Not applicable — New Loan</option>';
+ if(rel==='new'){sel.disabled=true;return;}
+ sel.disabled=false;
+ const primary=document.getElementById('v7CustomerPrimaryMobile')?.value.trim();
+ const c=window.v8Customers?.find(x=>x.primaryMobile===primary);
+ (window.v8Loans||[]).filter(l=>!c||l.customerId===c.id).forEach(l=>{sel.innerHTML+=`<option value="${v7Escape(l.id)}">${v7Escape(l.loanNo)} — ${v7Escape(l.relationshipLabel||'Loan')} — ${v7Escape(l.productName||'')}</option>`;});
 }
+function v7MakeSchedule(loan,product,totalCollection){
+ if(!window.v10Schedules)return;
+ const count=Math.max(1,Number(product.installments)||1);
+ const emi=totalCollection/count;
+ const start=loan.disbursementDate;
+ const freq=String(product.frequency||'Daily').toLowerCase();
+ const addDays=(d,n)=>{const x=new Date(d+'T00:00:00');x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+ const addMonths=(d,n)=>{const x=new Date(d+'T00:00:00');x.setMonth(x.getMonth()+n);return x.toISOString().slice(0,10)};
+ const interval=product.days>0&&freq==='custom'?Math.max(1,Math.round(Number(product.days)/count)):1;
+ const schedule=[];
+ for(let i=0;i<count;i++){
+   let dueDate;
+   if(freq==='daily') dueDate=addDays(start,i+1);
+   else if(freq==='weekly') dueDate=addDays(start,(i+1)*7);
+   else if(freq==='monthly') dueDate=addMonths(start,i+1);
+   else dueDate=addDays(start,(i+1)*interval);
+   schedule.push({scheduleId:'SCH-'+loan.id+'-'+String(i+1).padStart(4,'0'),loanId:loan.id,installmentNo:i+1,dueDate,scheduledEmi:emi,deposit:0,advanceAllocated:0,penaltyDue:0,penaltyCollected:0});
+ }
+ window.v10Schedules[loan.id]=schedule;
+ localStorage.setItem('microfinance_loan_schedules_v10',JSON.stringify(window.v10Schedules));
+}
+window.v7SaveNewLoan=function(){
+ const name=document.getElementById('v7CustomerName').value.trim(),primary=document.getElementById('v7CustomerPrimaryMobile').value.trim(),secondary=document.getElementById('v7CustomerSecondaryMobile').value.trim(),address=document.getElementById('v7CustomerAddress').value.trim();
+ const gName=document.getElementById('v7GuarantorName').value.trim(),gPrimary=document.getElementById('v7GuarantorPrimaryMobile').value.trim(),gSecondary=document.getElementById('v7GuarantorSecondaryMobile').value.trim(),gAddress=document.getElementById('v7GuarantorAddress').value.trim();
+ const product=window.v7Products[Number(document.getElementById('v7LoanProduct').value)];
+ const disbursementDate=document.getElementById('v7DisbursementDate').value;
+ const disbursementMode=document.getElementById('v7DisbursementMode').value;
+ const interestTreatment=document.getElementById('v7InterestTreatment').value;
+ const relationship=document.getElementById('v7LoanRelationship').value;
+ const parentLoanId=document.getElementById('v7ParentLoan').value||null;
+ if(!name||!primary||!address||!gName||!gPrimary||!gAddress){alert('Customer name, primary mobile, address, guarantor name, guarantor primary mobile and guarantor address are required.');return;}
+ if(!product){alert('Please create/select a product first.');return;}
+ if(!disbursementDate){alert('Please select the disbursement date.');return;}
+ if((relationship==='renewal'||relationship==='topup')&&!parentLoanId){alert('Select the previous loan for Renewal / Top-Up.');return;}
+ window.v8Customers=window.v8Customers||JSON.parse(localStorage.getItem('microfinance_customers_v8')||'[]');
+ window.v8Loans=window.v8Loans||JSON.parse(localStorage.getItem('microfinance_loans_v8')||'[]');
+ let customer=window.v8Customers.find(c=>c.primaryMobile===primary);
+ if(customer){customer.name=name;customer.secondaryMobile=secondary;customer.currentAddress=address;customer.updatedAt=new Date().toISOString();}
+ else {customer={id:'CUS-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name,primaryMobile:primary,secondaryMobile:secondary,currentAddress:address,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};window.v8Customers.push(customer);}
+ const interest=Number(product.interestAmount??(product.amount*product.rate/100))||0;
+ const net=interestTreatment==='upfront'?Math.max(0,product.amount-interest):product.amount;
+ const total=interestTreatment==='upfront'?product.amount:product.amount+interest;
+ const sequence=window.v8Loans.filter(l=>l.customerId===customer.id).length+1;
+ const label=relationship==='renewal'?'Renewal':relationship==='topup'?'Top-Up':'New Loan';
+ const loan={id:'LOAN-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),loanNo:'LN-'+String(Date.now()).slice(-8),customerId:customer.id,sequence,relationship,relationshipLabel:label,parentLoanId,productId:product.id||null,productName:product.name,productAmount:product.amount,interestRate:product.rate,interestAmount:interest,interestTreatment,netDisbursement:net,totalCollection:total,disbursementDate,disbursementMode,status:'active',customerSnapshot:{name,primaryMobile:primary,secondaryMobile:secondary,address},guarantorSnapshot:{name:gName,primaryMobile:gPrimary,secondaryMobile:gSecondary,address:gAddress},createdAt:new Date().toISOString(),lifecycle:[{status:'active',changedAt:new Date().toISOString()}]};
+ window.v8Loans.push(loan);
+ localStorage.setItem('microfinance_customers_v8',JSON.stringify(window.v8Customers));
+ localStorage.setItem('microfinance_loans_v8',JSON.stringify(window.v8Loans));
+ if(window.v9Customers)window.v9Customers=window.v8Customers;if(window.v9Loans)window.v9Loans=window.v8Loans;
+ v7MakeSchedule(loan,product,total);
+ if(typeof v8RenderCustomers==='function')v8RenderCustomers();
+ if(typeof v9RenderDueSheet==='function')v9RenderDueSheet();
+ if(typeof populateSelectors==='function')populateSelectors();
+ if(typeof dashboard==='function')dashboard();
+ document.getElementById('v7CustomerName').value='';document.getElementById('v7CustomerPrimaryMobile').value='';document.getElementById('v7CustomerSecondaryMobile').value='';document.getElementById('v7CustomerAddress').value='';document.getElementById('v7GuarantorName').value='';document.getElementById('v7GuarantorPrimaryMobile').value='';document.getElementById('v7GuarantorSecondaryMobile').value='';document.getElementById('v7GuarantorAddress').value='';
+ if(typeof b16CloseNewLoan==='function')b16CloseNewLoan();
+ alert(label+' saved successfully. Loan ID: '+loan.loanNo);
+};
 document.addEventListener('DOMContentLoaded',()=>{
- v7RenderProducts();v7LoanProduct.addEventListener('change',v7UpdateLoanCalculation);v7InterestTreatment.addEventListener('change',v7UpdateLoanCalculation);
- v7DisbursementDate.value=new Date().toISOString().slice(0,10);
+ v7RenderProducts();
+ document.getElementById('v7LoanProduct')?.addEventListener('change',v7UpdateLoanCalculation);
+ document.getElementById('v7InterestTreatment')?.addEventListener('change',v7UpdateLoanCalculation);
+ document.getElementById('v7ProductRate')?.addEventListener('input',()=>v7SyncInterestFields('rate'));
+ document.getElementById('v7ProductInterestAmount')?.addEventListener('input',()=>v7SyncInterestFields('interest'));
+ document.getElementById('v7ProductAmount')?.addEventListener('input',()=>v7SyncInterestFields('rate'));
+ document.getElementById('v7LoanRelationship')?.addEventListener('change',v7RefreshParentLoans);
+ document.getElementById('v7CustomerPrimaryMobile')?.addEventListener('input',v7RefreshParentLoans);
+ const d=document.getElementById('v7DisbursementDate');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);
+ v7RefreshParentLoans();v7UpdateProductSummary();
 });
 </script>
 
@@ -2329,11 +2468,11 @@ document.addEventListener('DOMContentLoaded', function() {
       <input type="hidden" id="penaltyEditId">
 
       <div class="penalty-grid" style="margin-top:15px">
-        <label>Loan ID
-          <input id="penaltyLoanId" required placeholder="Loan ID">
+        <label>Apply Penalty To — Loan
+          <select id="penaltyLoanId" required></select>
         </label>
-        <label>Schedule ID / EMI
-          <input id="penaltyScheduleId" required placeholder="Schedule ID">
+        <label>Apply Penalty To — EMI / Due
+          <select id="penaltyScheduleId" required></select>
         </label>
         <label>Penalty Due Date
           <input id="penaltyDueDate" type="date" required>
@@ -3059,5 +3198,41 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
+
+<script id="v17-penalty-workflow-js">
+(function(){
+  function loanList(){try{return JSON.parse(localStorage.getItem('microfinance_loans_v8')||'[]')}catch(e){return []}}
+  function scheduleMap(){try{return JSON.parse(localStorage.getItem('microfinance_loan_schedules_v10')||'{}')}catch(e){return {}}}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+  function refreshLoans(selected){
+    const el=document.getElementById('penaltyLoanId');if(!el)return;
+    const loans=loanList();el.innerHTML='<option value="">Select loan</option>'+loans.map(l=>`<option value="${esc(l.id)}">${esc(l.loanNo||l.id)} — ${esc(l.productName||'Loan')} — ${esc(l.customerSnapshot?.name||'')}</option>`).join('');
+    if(selected)el.value=selected;
+    refreshSchedules(document.getElementById('penaltyScheduleId')?.value);
+  }
+  function refreshSchedules(selected){
+    const loan=document.getElementById('penaltyLoanId')?.value;const el=document.getElementById('penaltyScheduleId');if(!el)return;
+    const rows=scheduleMap()[loan]||[];el.innerHTML='<option value="">Select EMI / due date</option>'+rows.map(r=>`<option value="${esc(r.scheduleId)}">EMI ${esc(r.installmentNo)} — ${esc(r.dueDate)} — ₹${Number(r.scheduledEmi||0).toLocaleString('en-IN',{maximumFractionDigits:2})}</option>`).join('');
+    if(selected)el.value=selected;
+    syncDueDate();
+  }
+  function syncDueDate(){
+    const loan=document.getElementById('penaltyLoanId')?.value,sid=document.getElementById('penaltyScheduleId')?.value;
+    const row=(scheduleMap()[loan]||[]).find(r=>r.scheduleId===sid);const d=document.getElementById('penaltyDueDate');
+    if(row&&d)d.value=row.dueDate;
+  }
+  window.v17RefreshPenaltySelectors=refreshLoans;
+  window.v17SyncPenaltyDueDate=syncDueDate;
+  document.addEventListener('DOMContentLoaded',()=>{
+    refreshLoans();
+    document.getElementById('penaltyLoanId')?.addEventListener('change',()=>refreshSchedules());
+    document.getElementById('penaltyScheduleId')?.addEventListener('change',syncDueDate);
+  });
+  const oldOpen=window.openPenaltyModal;
+  if(typeof oldOpen==='function')window.openPenaltyModal=function(id){oldOpen(id);setTimeout(()=>{const p=id?(JSON.parse(localStorage.getItem('microfinance_penalty_ledger_v12')||'[]').find(x=>x.penaltyId===id)):null;refreshLoans(p?.loanId);refreshSchedules(p?.scheduleId);syncDueDate()},0)};
+  const oldEdit=window.editPenalty;
+  if(typeof oldEdit==='function')window.editPenalty=function(id){oldEdit(id);setTimeout(()=>{const p=(JSON.parse(localStorage.getItem('microfinance_penalty_ledger_v12')||'[]').find(x=>x.penaltyId===id));refreshLoans(p?.loanId);refreshSchedules(p?.scheduleId);syncDueDate()},0)};
+})();
+</script>
 </body>
 </html>
