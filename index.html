@@ -17,6 +17,32 @@ Agreed business rules through this version:
 12. Payment modes: Cash, UPI (PhonePe / Google Pay / Other UPI), Bank Transfer / Cheque.
 13. Customer-facing ID Proof and standalone Payment Mode legend are excluded.
 14. Business identity is editable and persisted locally in the browser.
+
+15. Customer Master is separate from Loan Contract records.
+16. Product Master is separate from Loan Contract records.
+17. A customer can have multiple loans in one chronological loan tree.
+18. Renewal and Top-Up are child/related loans linked to a parent loan.
+19. Each loan stores a historical customer snapshot and guarantor snapshot.
+20. Later customer/guarantor changes do not rewrite historical loan snapshots.
+
+21. Customer ID, Product ID and Loan ID are permanent immutable identifiers.
+22. Mobile numbers are not permanent identity keys.
+23. Loan lifecycle is tracked with status history.
+24. Consolidated due sheets must use each loan's own customer/guarantor snapshot.
+25. Multiple simultaneous loans for one customer must never merge guarantor/contact data.
+
+26. Repayment schedules are keyed by Loan ID.
+27. Every deposit, penalty and advance transaction carries a mandatory Loan ID.
+28. Advance allocation can only consume the selected Loan ID's schedule.
+29. Loan-specific transactions cannot modify another loan's schedule.
+30. Payment history is stored as an auditable transaction ledger.
+31. Schedule generation respects the selected loan's frequency and cycle settings.
+
+32. Collection allocation rule: unpaid installments due on/before receipt date are settled first, oldest-first.
+33. Remaining collection amount is allocated to future installments, oldest future date first.
+34. Original collection transaction retains its actual receipt date and full original amount.
+35. Allocation is recorded as auditable allocation lines linked to the same Loan ID.
+36. Penalty remains a separate ledger category until an explicit penalty-settlement priority is defined.
 -->
 
 <html lang="en">
@@ -54,6 +80,287 @@ Agreed business rules through this version:
     h1 { font-size:22px; }
     th,td { font-size:13px; }
   }
+
+/* ===== V12 Advanced Penalty Ledger ===== */
+.penalty-status{font-weight:700}
+.penalty-due{color:#b45309}
+.penalty-partial{color:#2563eb}
+.penalty-collected{color:#15803d}
+.penalty-card{border:1px solid #dbe3ef;border-radius:14px;padding:16px;margin:12px 0;background:#fff}
+.penalty-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.penalty-actions{display:flex;gap:8px;flex-wrap:wrap}
+.penalty-small{font-size:12px;color:#64748b}
+@media(max-width:760px){
+  .penalty-grid{grid-template-columns:1fr}
+  .penalty-actions{width:100%}
+}
+
+
+/* ===== V13 Penalty Collection History / Audit ===== */
+.penalty-history-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.58);z-index:10000;padding:18px;overflow:auto}
+.penalty-history-panel{max-width:1000px;margin:24px auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.22)}
+.penalty-history-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.penalty-history-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:15px 0}
+.penalty-history-stat{border:1px solid #dbe3ef;border-radius:12px;padding:12px}
+.penalty-history-stat .label{font-size:12px;color:#64748b}
+.penalty-history-stat .value{font-size:18px;font-weight:700;margin-top:4px}
+.penalty-audit-table{width:100%;border-collapse:collapse}
+.penalty-audit-table th,.penalty-audit-table td{padding:9px 8px;border-bottom:1px solid #e5e7eb;text-align:left;white-space:nowrap}
+.penalty-audit-table th{font-size:12px;color:#475569}
+@media(max-width:760px){.penalty-history-summary{grid-template-columns:1fr 1fr}.penalty-history-panel{margin:8px auto;padding:13px}.penalty-audit-table{font-size:12px}}
+
+
+/* ===== V14 Loan-wise Penalty Management ===== */
+.loan-penalty-filter{
+  margin-top:15px;padding:14px;border:1px solid #dbe3ef;border-radius:14px;
+  background:#f8fafc
+}
+.loan-penalty-filter-grid{
+  display:grid;grid-template-columns:minmax(240px,1fr) auto;gap:10px;
+  align-items:end
+}
+.loan-penalty-filter-actions{display:flex;gap:8px;flex-wrap:wrap}
+.loan-penalty-result{
+  margin-top:14px;border:1px solid #dbe3ef;border-radius:14px;padding:14px;
+  background:#fff
+}
+.loan-penalty-result-summary{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0
+}
+.loan-penalty-history-block{
+  border:1px solid #e2e8f0;border-radius:12px;margin-top:12px;overflow:hidden
+}
+.loan-penalty-history-head{
+  padding:11px 12px;background:#f8fafc;display:flex;
+  justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap
+}
+.loan-penalty-history-body{padding:10px;overflow:auto}
+.loan-penalty-filter-note{font-size:12px;color:#64748b;margin-top:6px}
+@media(max-width:760px){
+  .loan-penalty-filter-grid{grid-template-columns:1fr}
+  .loan-penalty-result-summary{grid-template-columns:1fr 1fr}
+}
+
+
+/* =========================================================
+   V15 PREMIUM BANKING UI
+   Existing business logic is preserved; this layer organizes
+   the workspace and adds dashboard/report UX.
+   ========================================================= */
+:root{
+  --v15-bg:#f4f7fb;
+  --v15-surface:#ffffff;
+  --v15-surface-2:#f8fafc;
+  --v15-border:#e2e8f0;
+  --v15-text:#0f172a;
+  --v15-muted:#64748b;
+  --v15-brand:#173a5e;
+  --v15-brand-2:#0b5cab;
+  --v15-brand-soft:#eaf2fb;
+  --v15-success:#15803d;
+  --v15-warning:#b45309;
+  --v15-danger:#b91c1c;
+  --v15-shadow:0 12px 32px rgba(15,23,42,.07);
+  --v15-radius:16px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--v15-bg)!important;
+  color:var(--v15-text)!important;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+}
+body.v15-ready .wrap{max-width:none!important;width:100%!important;margin:0!important;padding:0!important}
+body.v15-ready .wrap>h1,
+body.v15-ready .wrap>.sub{display:none!important}
+body.v15-ready .card,
+body.v15-ready section.card{
+  border:1px solid var(--v15-border)!important;
+  border-radius:var(--v15-radius)!important;
+  box-shadow:var(--v15-shadow)!important;
+  background:var(--v15-surface)!important;
+}
+body.v15-ready h2{color:var(--v15-text)!important;font-weight:750!important;letter-spacing:-.02em}
+body.v15-ready h3{color:#1e293b!important}
+body.v15-ready label{color:#334155!important;font-weight:600!important}
+body.v15-ready input,
+body.v15-ready select,
+body.v15-ready textarea{
+  border:1px solid #cbd5e1!important;
+  border-radius:10px!important;
+  background:#fff!important;
+  min-height:42px;
+  box-sizing:border-box;
+}
+body.v15-ready input:focus,
+body.v15-ready select:focus,
+body.v15-ready textarea:focus{
+  outline:none!important;
+  border-color:#5b8fc4!important;
+  box-shadow:0 0 0 3px rgba(11,92,171,.10)!important;
+}
+body.v15-ready button{
+  border-radius:10px!important;
+  border:1px solid #cbd5e1!important;
+  font-weight:650!important;
+  transition:transform .12s ease,box-shadow .12s ease,background .12s ease!important;
+}
+body.v15-ready button:hover{transform:translateY(-1px);box-shadow:0 5px 15px rgba(15,23,42,.08)}
+body.v15-ready button.primary{
+  background:var(--v15-brand)!important;
+  color:#fff!important;
+  border-color:var(--v15-brand)!important;
+}
+body.v15-ready table{border-color:var(--v15-border)!important}
+body.v15-ready th{
+  background:#f8fafc!important;
+  color:#475569!important;
+  font-size:12px!important;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+body.v15-ready .notice{border-radius:12px!important;border-color:var(--v15-border)!important}
+body.v15-ready .metric{
+  border:1px solid var(--v15-border)!important;
+  background:#fff!important;
+  border-radius:14px!important;
+}
+body.v15-ready .statement-paper{
+  border:1px solid var(--v15-border)!important;
+  border-radius:14px!important;
+  box-shadow:var(--v15-shadow)!important;
+}
+
+/* Shell */
+.v15-shell{display:flex;min-height:100vh}
+.v15-sidebar{
+  width:250px;background:linear-gradient(180deg,#102f4d 0%,#0d2741 100%);
+  color:#fff;position:fixed;left:0;top:0;bottom:0;z-index:900;
+  padding:18px 14px;overflow:auto
+}
+.v15-brand{padding:10px 10px 18px;border-bottom:1px solid rgba(255,255,255,.13);margin-bottom:12px}
+.v15-brand-title{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.v15-brand-sub{font-size:11px;color:#bfd0e1;margin-top:4px}
+.v15-nav-label{font-size:10px;color:#8fa9c2;text-transform:uppercase;letter-spacing:.12em;padding:12px 10px 6px}
+.v15-nav button{
+  width:100%;display:flex;align-items:center;gap:10px;text-align:left;
+  color:#dce8f4;background:transparent;border:1px solid transparent!important;
+  padding:10px 11px;margin:2px 0;border-radius:10px!important;font-size:13px
+}
+.v15-nav button:hover{background:rgba(255,255,255,.07);transform:none;box-shadow:none}
+.v15-nav button.active{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.14)!important;color:#fff}
+.v15-nav .dot{width:7px;height:7px;border-radius:50%;background:#80b8e8;flex:none}
+.v15-main{margin-left:250px;flex:1;min-width:0}
+.v15-topbar{
+  position:sticky;top:0;z-index:800;background:rgba(244,247,251,.92);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--v15-border);
+  padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px
+}
+.v15-top-title{font-size:17px;font-weight:800}
+.v15-top-sub{font-size:12px;color:var(--v15-muted);margin-top:2px}
+.v15-search{
+  display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--v15-border);
+  border-radius:12px;padding:5px 8px;width:min(420px,48vw)
+}
+.v15-search input{border:0!important;box-shadow:none!important;min-height:34px!important;flex:1}
+.v15-content{padding:24px;max-width:1600px;margin:auto}
+.v15-module{display:none}
+.v15-module.active{display:block}
+.v15-section-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:15px;
+  margin:0 0 16px
+}
+.v15-section-title{font-size:24px;font-weight:800;letter-spacing:-.03em}
+.v15-section-sub{font-size:13px;color:var(--v15-muted);margin-top:4px}
+.v15-stack>*{margin-bottom:16px}
+
+/* Dashboard */
+.v15-hero{
+  background:linear-gradient(135deg,#173a5e 0%,#0b5cab 100%);
+  border-radius:20px;padding:22px;color:#fff;box-shadow:0 16px 40px rgba(16,58,94,.18);
+  margin-bottom:18px
+}
+.v15-hero-row{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}
+.v15-hero h2{color:#fff!important;margin:0;font-size:25px}
+.v15-hero p{margin:5px 0 0;color:#d8e7f5;font-size:13px}
+.v15-hero-meta{display:flex;gap:8px;flex-wrap:wrap}
+.v15-pill{padding:7px 10px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.10);font-size:11px}
+.v15-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.v15-kpi{
+  background:#fff;border:1px solid var(--v15-border);border-radius:15px;padding:15px;
+  box-shadow:0 8px 22px rgba(15,23,42,.05);cursor:pointer
+}
+.v15-kpi:hover{border-color:#9fb9d3;transform:translateY(-2px);transition:.15s}
+.v15-kpi-label{font-size:11px;color:var(--v15-muted);text-transform:uppercase;letter-spacing:.06em}
+.v15-kpi-value{font-size:23px;font-weight:800;margin-top:7px;letter-spacing:-.03em}
+.v15-kpi-note{font-size:11px;color:var(--v15-muted);margin-top:5px}
+.v15-dashboard-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:16px;margin-top:16px}
+.v15-panel{background:#fff;border:1px solid var(--v15-border);border-radius:16px;padding:16px;box-shadow:var(--v15-shadow)}
+.v15-panel-title{font-weight:800;font-size:15px}
+.v15-panel-sub{font-size:12px;color:var(--v15-muted);margin-top:3px}
+.v15-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.v15-quick button{min-height:64px;background:#f8fafc!important;text-align:left}
+.v15-quick strong{display:block}
+.v15-quick small{display:block;color:var(--v15-muted);margin-top:3px}
+
+/* Filters & drilldown */
+.v15-filterbar{
+  display:grid;grid-template-columns:repeat(6,minmax(120px,1fr));gap:9px;
+  padding:12px;background:#f8fafc;border:1px solid var(--v15-border);border-radius:13px;
+  margin-bottom:12px
+}
+.v15-filterbar label{font-size:11px}
+.v15-filterbar input,.v15-filterbar select{min-height:38px!important;font-size:12px}
+.v15-report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.v15-drill-modal{display:none;position:fixed;inset:0;background:rgba(2,6,23,.62);z-index:12000;padding:18px;overflow:auto}
+.v15-drill-panel{max-width:1250px;margin:20px auto;background:#fff;border-radius:18px;padding:18px;box-shadow:0 25px 80px rgba(0,0,0,.25)}
+.v15-modal-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.v15-modal-title{font-size:20px;font-weight:800}
+.v15-report-table{width:100%;border-collapse:collapse}
+.v15-report-table th,.v15-report-table td{padding:9px 8px;border-bottom:1px solid #e5e7eb;text-align:left;white-space:nowrap}
+.v15-report-table td{font-size:12px}
+
+/* Search center */
+.v15-search-center{margin-bottom:16px}
+.v15-search-results{max-height:520px;overflow:auto;border:1px solid var(--v15-border);border-radius:12px}
+.v15-result-row{padding:12px;border-bottom:1px solid #e5e7eb;display:grid;grid-template-columns:1.2fr 1fr 1fr .8fr;gap:10px}
+.v15-result-row:last-child{border-bottom:0}
+.v15-result-main{font-weight:750}.v15-result-meta{font-size:11px;color:var(--v15-muted);margin-top:3px}
+.v15-badge{display:inline-block;padding:4px 7px;border-radius:999px;background:#eef2f7;color:#475569;font-size:10px;font-weight:700}
+.v15-empty{padding:28px;text-align:center;color:var(--v15-muted)}
+
+/* Form grouping */
+.v15-form-guide{
+  padding:10px 12px;background:#f8fafc;border-left:3px solid #5b8fc4;
+  border-radius:8px;color:#475569;font-size:12px;margin-bottom:12px
+}
+.v15-mobile-nav{display:none}
+@media(max-width:1200px){
+  .v15-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .v15-dashboard-grid{grid-template-columns:1fr}
+  .v15-filterbar{grid-template-columns:repeat(3,minmax(120px,1fr))}
+}
+@media(max-width:850px){
+  .v15-sidebar{display:none}
+  .v15-main{margin-left:0}
+  .v15-mobile-nav{display:flex;gap:7px;overflow:auto;padding:8px 12px;background:#102f4d}
+  .v15-mobile-nav button{white-space:nowrap;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:8px 11px;border-radius:9px}
+  .v15-content{padding:14px}
+  .v15-topbar{padding:10px 14px}
+  .v15-topbar .v15-search{display:none}
+  .v15-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .v15-quick{grid-template-columns:1fr 1fr}
+  .v15-filterbar{grid-template-columns:1fr 1fr}
+  .v15-result-row{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .v15-kpis{grid-template-columns:1fr 1fr}
+  .v15-kpi-value{font-size:19px}
+  .v15-filterbar{grid-template-columns:1fr}
+  .v15-quick{grid-template-columns:1fr}
+  .v15-section-title{font-size:20px}
+  .v15-hero h2{font-size:21px}
+}
+
 </style>
 <style id="banking-statement-v6-style">
         .statement-paper { font-family: Arial, sans-serif; }
@@ -66,6 +373,199 @@ Agreed business rules through this version:
         </style>
         </head>
 <body>
+
+<!-- =========================================================
+     V15 PREMIUM BANKING WORKSPACE
+     ========================================================= -->
+<div id="v15Shell" class="v15-shell">
+  <aside class="v15-sidebar">
+    <div class="v15-brand">
+      <div class="v15-brand-title" id="v15BrandName">Microfinance Core</div>
+      <div class="v15-brand-sub">Loan & Collection Management</div>
+    </div>
+    <div class="v15-nav">
+      <div class="v15-nav-label">Workspace</div>
+      <button data-v15-nav="overview" class="active"><span class="dot"></span>Overview</button>
+
+      <div class="v15-nav-label">Masters</div>
+      <button data-v15-nav="master"><span class="dot"></span>Business & Products</button>
+      <button data-v15-nav="customers"><span class="dot"></span>Customers</button>
+
+      <div class="v15-nav-label">Operations</div>
+      <button data-v15-nav="loans"><span class="dot"></span>Loans & Lifecycle</button>
+      <button data-v15-nav="collections"><span class="dot"></span>Collections & Schedules</button>
+      <button data-v15-nav="recovery"><span class="dot"></span>Recovery Search</button>
+
+      <div class="v15-nav-label">Reports</div>
+      <button data-v15-nav="reports"><span class="dot"></span>Statements & Reports</button>
+      <button data-v15-nav="penalties"><span class="dot"></span>Penalty Management</button>
+    </div>
+  </aside>
+
+  <main class="v15-main">
+    <div class="v15-topbar">
+      <div>
+        <div class="v15-top-title" id="v15PageTitle">Overview</div>
+        <div class="v15-top-sub">Professional loan portfolio workspace</div>
+      </div>
+      <div class="v15-search">
+        <span style="font-size:13px">⌕</span>
+        <input id="v15GlobalSearch" placeholder="Search customer, loan, mobile or transaction...">
+      </div>
+    </div>
+
+    <div class="v15-mobile-nav">
+      <button data-v15-nav="overview">Overview</button>
+      <button data-v15-nav="master">Masters</button>
+      <button data-v15-nav="customers">Customers</button>
+      <button data-v15-nav="loans">Loans</button>
+      <button data-v15-nav="collections">Collections</button>
+      <button data-v15-nav="recovery">Recovery</button>
+      <button data-v15-nav="reports">Reports</button>
+      <button data-v15-nav="penalties">Penalties</button>
+    </div>
+
+    <div class="v15-content">
+      <section id="v15Module-overview" class="v15-module active">
+        <div class="v15-hero">
+          <div class="v15-hero-row">
+            <div>
+              <h2 id="v15HeroBusiness">Microfinance Core</h2>
+              <p>Banking-style portfolio overview, collections, recovery and reporting.</p>
+            </div>
+            <div class="v15-hero-meta">
+              <span class="v15-pill" id="v15Today">Today</span>
+              <span class="v15-pill" id="v15PortfolioState">Portfolio</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="v15-kpis">
+          <div class="v15-kpi" data-v15-drill="portfolio"><div class="v15-kpi-label">Loan Portfolio</div><div id="v15KpiPortfolio" class="v15-kpi-value">₹0</div><div class="v15-kpi-note">Contractual principal</div></div>
+          <div class="v15-kpi" data-v15-drill="collections"><div class="v15-kpi-label">Collections</div><div id="v15KpiCollections" class="v15-kpi-value">₹0</div><div class="v15-kpi-note">Recorded receipts</div></div>
+          <div class="v15-kpi" data-v15-drill="outstanding"><div class="v15-kpi-label">Outstanding EMI</div><div id="v15KpiOutstanding" class="v15-kpi-value">₹0</div><div class="v15-kpi-note">Scheduled unpaid amount</div></div>
+          <div class="v15-kpi" data-v15-drill="customers"><div class="v15-kpi-label">Customers</div><div id="v15KpiCustomers" class="v15-kpi-value">0</div><div class="v15-kpi-note">Customer master</div></div>
+          <div class="v15-kpi" data-v15-drill="loans"><div class="v15-kpi-label">Loans</div><div id="v15KpiLoans" class="v15-kpi-value">0</div><div class="v15-kpi-note">Loan contracts</div></div>
+          <div class="v15-kpi" data-v15-drill="penalties"><div class="v15-kpi-label">Penalty Outstanding</div><div id="v15KpiPenalty" class="v15-kpi-value">₹0</div><div class="v15-kpi-note">Internal penalty ledger</div></div>
+        </div>
+
+        <div class="v15-dashboard-grid">
+          <div class="v15-panel">
+            <div class="v15-panel-title">Portfolio Activity</div>
+            <div class="v15-panel-sub">Click a metric above to open its detailed, filterable register.</div>
+            <div class="v15-quick">
+              <button type="button" onclick="v15Go('customers')"><strong>Customer Master</strong><small>Search and maintain customer records</small></button>
+              <button type="button" onclick="v15Go('loans')"><strong>Loan Contracts</strong><small>Products, lifecycle and snapshots</small></button>
+              <button type="button" onclick="v15Go('collections')"><strong>Collections</strong><small>Schedules, receipts and allocation audit</small></button>
+              <button type="button" onclick="v15Go('recovery')"><strong>Recovery Center</strong><small>Find customer and payment history quickly</small></button>
+              <button type="button" onclick="v15Go('reports')"><strong>Reports</strong><small>Statements, due sheets and exports</small></button>
+              <button type="button" onclick="v15Go('penalties')"><strong>Penalty Control</strong><small>Loan-wise penalty and collection history</small></button>
+            </div>
+          </div>
+          <div class="v15-panel">
+            <div class="v15-panel-title">Recent Portfolio Loans</div>
+            <div class="v15-panel-sub">Latest loan contracts</div>
+            <div id="v15RecentLoans" style="margin-top:12px"></div>
+          </div>
+        </div>
+
+        <div class="v15-panel" style="margin-top:16px">
+          <div class="v15-panel-title">Portfolio by Product</div>
+          <div class="v15-panel-sub">Loan count and contractual principal by product category</div>
+          <div id="v15ProductBreakdown" style="margin-top:12px;overflow:auto"></div>
+        </div>
+      </section>
+
+      <section id="v15Module-master" class="v15-module">
+        <div class="v15-section-head"><div><div class="v15-section-title">Business & Product Masters</div><div class="v15-section-sub">Business identity, product categories and master configuration.</div></div></div>
+        <div id="v15MasterStack" class="v15-stack"></div>
+      </section>
+
+      <section id="v15Module-customers" class="v15-module">
+        <div class="v15-section-head"><div><div class="v15-section-title">Customer Management</div><div class="v15-section-sub">Customer master, guarantor snapshots and chronological loan tree.</div></div></div>
+        <div id="v15CustomerStack" class="v15-stack"></div>
+      </section>
+
+      <section id="v15Module-loans" class="v15-module">
+        <div class="v15-section-head"><div><div class="v15-section-title">Loans & Lifecycle</div><div class="v15-section-sub">Loan creation, finance setup, contract result and lifecycle controls.</div></div></div>
+        <div id="v15LoanStack" class="v15-stack"></div>
+      </section>
+
+      <section id="v15Module-collections" class="v15-module">
+        <div class="v15-section-head"><div><div class="v15-section-title">Collections & Schedules</div><div class="v15-section-sub">Loan-scoped schedules, receipts, advance allocation and audit.</div></div></div>
+        <div id="v15CollectionStack" class="v15-stack"></div>
+      </section>
+
+      <section id="v15Module-recovery" class="v15-module">
+        <div class="v15-section-head"><div><div class="v15-section-title">Recovery Center</div><div class="v15-section-sub">Advanced customer and collection search with date, month and year filters.</div></div></div>
+
+        <div class="v15-panel v15-search-center">
+          <div class="v15-filterbar">
+            <label>Search
+              <input id="v15RecoveryQuery" placeholder="Customer / Loan / Mobile / ID">
+            </label>
+            <label>From Date<input id="v15RecoveryFrom" type="date"></label>
+            <label>To Date<input id="v15RecoveryTo" type="date"></label>
+            <label>Year<input id="v15RecoveryYear" type="number" min="2000" max="2100" placeholder="YYYY"></label>
+            <label>Month
+              <select id="v15RecoveryMonth">
+                <option value="">All Months</option>
+                <option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option>
+                <option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option>
+                <option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+              </select>
+            </label>
+            <label>Payment Mode
+              <select id="v15RecoveryMode">
+                <option value="">All Modes</option>
+                <option>Cash</option><option>UPI - PhonePe</option><option>UPI - Google Pay</option><option>UPI - Other</option><option>Bank Transfer</option><option>Cheque</option>
+              </select>
+            </label>
+          </div>
+          <div class="v15-report-actions">
+            <button type="button" class="primary" onclick="v15RenderRecovery()">Search Recovery</button>
+            <button type="button" onclick="v15ClearRecovery()">Reset</button>
+            <button type="button" onclick="v15ExportRecoveryCSV()">Export Excel / CSV</button>
+            <button type="button" onclick="v15PrintRecovery()">Generate PDF / Print</button>
+          </div>
+          <div id="v15RecoverySummary" class="v15-panel-sub"></div>
+          <div id="v15RecoveryResults" class="v15-search-results" style="margin-top:10px"></div>
+        </div>
+      </section>
+
+      <section id="v15Module-reports" class="v15-module">
+        <div class="v15-section-head"><div><div class="v15-section-title">Statements & Reports</div><div class="v15-section-sub">Customer statement, due sheet and consolidated reporting workspace.</div></div></div>
+        <div id="v15ReportStack" class="v15-stack"></div>
+      </section>
+
+      <section id="v15Module-penalties" class="v15-module">
+        <div class="v15-section-head"><div><div class="v15-section-title">Penalty Management</div><div class="v15-section-sub">Independent internal penalty ledger with loan-wise history and partial collections.</div></div></div>
+        <div id="v15PenaltyStack" class="v15-stack"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div id="v15DrillModal" class="v15-drill-modal">
+  <div class="v15-drill-panel">
+    <div class="v15-modal-head">
+      <div><div id="v15DrillTitle" class="v15-modal-title">Portfolio Detail</div><div id="v15DrillSub" class="v15-panel-sub"></div></div>
+      <button type="button" onclick="v15CloseDrill()">✕</button>
+    </div>
+    <div id="v15DrillFilters" class="v15-filterbar" style="margin-top:15px"></div>
+    <div class="v15-report-actions">
+      <button type="button" class="primary" onclick="v15RenderDrill()">Apply Filters</button>
+      <button type="button" onclick="v15ResetDrill()">Reset</button>
+      <button type="button" onclick="v15ExportDrillCSV()">Export Excel / CSV</button>
+      <button type="button" onclick="v15PrintDrill()">Generate PDF / Print</button>
+    </div>
+    <div id="v15DrillSummary" class="v15-panel-sub"></div>
+    <div style="overflow:auto;margin-top:10px">
+      <table id="v15DrillTable" class="v15-report-table"></table>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
   <h1>Microfinance Core Engine — V2</h1>
   <div class="sub">Flexible finance, upfront interest, deferred interest and penalty ledger foundation.</div>
@@ -95,6 +595,212 @@ Agreed business rules through this version:
     <button class="primary" onclick="saveBusinessIdentity()">Save Business Identity</button>
     <div class="notice">Saved locally in this browser. Refreshing the GitHub-hosted app will not remove these settings on the same browser/device.</div>
   </div>
+
+
+<div class="card" id="productManagementV7">
+<h2>Product Management & Loan Categories</h2>
+<div class="grid">
+<div><label>Product Name</label><input id="v7ProductName" placeholder="e.g. Daily Loan 10K"></div>
+<div><label>Loan Amount (₹)</label><input id="v7ProductAmount" type="number" value="10000"></div>
+<div><label>Interest Rate (%)</label><input id="v7ProductRate" type="number" value="15"></div>
+<div><label>Cycle / Duration (Days)</label><input id="v7ProductDays" type="number" value="100"></div>
+<div><label>Payment Frequency</label><select id="v7ProductFrequency"><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Custom</option></select></div>
+<div><label>Total Installments</label><input id="v7ProductInstallments" type="number" value="100"></div>
+</div><br>
+<button class="primary" onclick="v7SaveProduct()">Save Product</button>
+<table><thead><tr><th>Category</th><th>Product</th><th>Amount</th><th>Rate</th><th>Cycle</th><th>Frequency</th></tr></thead>
+<tbody id="v7ProductRows"></tbody></table>
+</div>
+
+<div class="card" id="newLoanV7">
+<h2>New Loan / Customer Entry — Advanced</h2>
+<div class="grid">
+<div><h3>Customer Details</h3>
+<label>Customer Name *</label><input id="v7CustomerName">
+<label>Primary Mobile *</label><input id="v7CustomerPrimaryMobile" type="tel">
+<label>Secondary Mobile</label><input id="v7CustomerSecondaryMobile" type="tel">
+<label>Customer Address *</label><textarea id="v7CustomerAddress" rows="3"></textarea></div>
+<div><h3>Guarantor Details</h3>
+<label>Guarantor Name *</label><input id="v7GuarantorName">
+<label>Primary Mobile *</label><input id="v7GuarantorPrimaryMobile" type="tel">
+<label>Secondary Mobile</label><input id="v7GuarantorSecondaryMobile" type="tel">
+<label>Guarantor Address *</label><textarea id="v7GuarantorAddress" rows="3"></textarea></div>
+<div><h3>Loan / Product Details</h3>
+<label>Select Product</label><select id="v7LoanProduct"></select>
+<label>Disbursement Date</label><input id="v7DisbursementDate" type="date">
+<label>Payment Mode</label><select id="v7DisbursementMode">
+<option>Cash</option><option>UPI (PhonePe)</option><option>UPI (Google Pay)</option><option>UPI (Other UPI)</option><option>Bank Transfer</option><option>Cheque</option></select>
+<label>Interest Treatment</label><select id="v7InterestTreatment">
+<option value="upfront">Deduct Interest / Charges Upfront</option>
+<option value="deferred">Give Full Amount / Collect Interest Later</option>
+</select></div>
+</div>
+<div class="notice" id="v7LoanCalculation">Create a product first.</div><br>
+<button class="primary" onclick="v7CreateLoanPreview()">Preview Loan</button>
+</div>
+
+
+
+<div class="card" id="loanLifecycleV9">
+  <h2>5. Loan Identity & Lifecycle</h2>
+  <div class="notice">
+    Customer ID, Product ID and Loan ID are permanent system identifiers.
+    Mobile numbers are contact fields only and are never used as the permanent identity.
+  </div>
+
+  <div class="grid">
+    <div>
+      <label>Customer</label>
+      <select id="v9LifecycleCustomer"></select>
+    </div>
+    <div>
+      <label>Loan</label>
+      <select id="v9LifecycleLoan"></select>
+    </div>
+    <div>
+      <label>Loan Status</label>
+      <select id="v9LifecycleStatus">
+        <option value="new">New</option>
+        <option value="active">Active</option>
+        <option value="overdue">Overdue</option>
+        <option value="completed">Completed / Closed</option>
+        <option value="renewed">Renewed</option>
+        <option value="topup">Top-Up Active</option>
+      </select>
+    </div>
+  </div>
+  <br>
+  <button class="primary" onclick="v9SaveLifecycle()">Save Loan Status</button>
+
+  <div id="v9IdentityPreview" class="notice" style="margin-top:12px;"></div>
+</div>
+
+<div class="card" id="dueSheetV9">
+  <h2>6. Consolidated Due Sheet — Multi-Loan Safe</h2>
+  <div class="notice">
+    Every loan is shown as its own row/record. Customer details and guarantor
+    details come from that loan's historical snapshot, so two loans belonging
+    to the same customer can safely have different guarantors, primary
+    mobiles, secondary mobiles and addresses.
+  </div>
+
+  <div class="grid">
+    <div>
+      <label>Due Sheet Date</label>
+      <input id="v9DueDate" type="date">
+    </div>
+    <div>
+      <label>Filter Customer</label>
+      <select id="v9DueCustomerFilter">
+        <option value="">All Customers</option>
+      </select>
+    </div>
+    <div>
+      <label>Filter Status</label>
+      <select id="v9DueStatusFilter">
+        <option value="">All Statuses</option>
+        <option value="active">Active</option>
+        <option value="overdue">Overdue</option>
+        <option value="renewed">Renewed</option>
+        <option value="topup">Top-Up Active</option>
+        <option value="completed">Completed / Closed</option>
+      </select>
+    </div>
+  </div>
+  <br>
+  <button class="primary" onclick="v9RenderDueSheet()">Generate Due Sheet</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Loan ID</th>
+        <th>Customer ID</th>
+        <th>Customer</th>
+        <th>Customer Primary</th>
+        <th>Customer Secondary</th>
+        <th>Loan / Product</th>
+        <th>Guarantor</th>
+        <th>Guarantor Primary</th>
+        <th>Guarantor Secondary</th>
+        <th>Guarantor Address</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="v9DueRows"></tbody>
+  </table>
+</div>
+
+<div class="card" id="loanConsolidatedV9">
+  <h2>7. Customer Consolidated Loan History</h2>
+  <div id="v9ConsolidatedTree" class="notice"></div>
+</div>
+
+<div class="card" id="masterArchitectureV8">
+  <h2>4. Customer Master & Loan Tree</h2>
+  <div class="notice">
+    <b>Architecture:</b> Customer Master → Loan Tree → Individual Loan Contract.
+    Renewal and Top-Up remain inside the same customer's loan tree, while every
+    loan keeps its own historical customer/guarantor snapshot.
+  </div>
+
+  <div class="grid">
+    <div>
+      <h3>Customer Master</h3>
+      <label>Customer Name *</label>
+      <input id="v8MasterName" type="text">
+      <label>Primary Mobile *</label>
+      <input id="v8MasterPrimary" type="tel">
+      <label>Secondary Mobile</label>
+      <input id="v8MasterSecondary" type="tel">
+      <label>Current Address *</label>
+      <textarea id="v8MasterAddress" rows="3"></textarea>
+      <br>
+      <button class="primary" onclick="v8SaveCustomer()">Save / Update Customer Master</button>
+    </div>
+
+    <div>
+      <h3>New Loan in Customer Tree</h3>
+      <label>Customer</label>
+      <select id="v8TreeCustomer"></select>
+      <label>Loan Relationship</label>
+      <select id="v8LoanRelationship">
+        <option value="new">New Loan</option>
+        <option value="renewal">Renewal</option>
+        <option value="topup">Top-Up</option>
+      </select>
+      <label>Parent Loan (for Renewal / Top-Up)</label>
+      <select id="v8ParentLoan"></select>
+      <label>Product</label>
+      <select id="v8TreeProduct"></select>
+    </div>
+
+    <div>
+      <h3>Loan-Specific Snapshot</h3>
+      <label>Guarantor Name *</label>
+      <input id="v8LoanGuarantor" type="text">
+      <label>Guarantor Primary Mobile *</label>
+      <input id="v8LoanGuarantorPrimary" type="tel">
+      <label>Guarantor Secondary Mobile</label>
+      <input id="v8LoanGuarantorSecondary" type="tel">
+      <label>Guarantor Address *</label>
+      <textarea id="v8LoanGuarantorAddress" rows="3"></textarea>
+      <div class="notice">
+        These details belong to this specific loan snapshot. Changing the
+        customer's or guarantor's details on a later loan will not rewrite the
+        historical loan record.
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <button class="primary" onclick="v8CreateLoan()">Create Loan in Tree</button>
+
+  <h3>Customer Loan Tree</h3>
+  <div id="v8TreeView" class="notice">No customer/loan tree created yet.</div>
+</div>
+
+<div class="card"><h2>Loan Confirmation Preview</h2>
+<div id="v7LoanPreviewBox" class="notice">No loan preview generated yet.</div></div>
 
   <div class="card">
     <h2>1. Finance Setup</h2>
@@ -229,7 +935,154 @@ Agreed business rules through this version:
     </div>
   </div>
 
-  <div class="card">
+  
+<div class="card" id="repaymentEngineV10">
+  <h2>8. Loan-ID Scoped Repayment & Schedule Engine</h2>
+
+  <div class="notice">
+    <b>Data isolation rule:</b> Every schedule, EMI, deposit, penalty and advance
+    allocation belongs to exactly one Loan ID. Nothing is calculated globally
+    across a customer's other loans.
+  </div>
+
+  <div class="grid">
+    <div>
+      <label>Select Customer</label>
+      <select id="v10Customer"></select>
+    </div>
+    <div>
+      <label>Select Loan</label>
+      <select id="v10Loan"></select>
+    </div>
+    <div>
+      <label>Schedule Start Date</label>
+      <input id="v10StartDate" type="date">
+    </div>
+    <div>
+      <label>Scheduled EMI (₹)</label>
+      <input id="v10Emi" type="number" min="0" step="0.01" value="500">
+    </div>
+    <div>
+      <label>Cycle Days</label>
+      <input id="v10CycleDays" type="number" min="1" value="100">
+    </div>
+    <div>
+      <label>Frequency</label>
+      <select id="v10Frequency">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+    </div>
+  </div>
+
+  <br>
+  <button class="primary" onclick="v10GenerateSchedule()">Generate / Refresh Loan Schedule</button>
+
+  <div id="v10LoanScope" class="notice" style="margin-top:12px;"></div>
+
+  <h3>Loan-Specific Schedule</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Sr.</th>
+        <th>Loan ID</th>
+        <th>Due Date</th>
+        <th>EMI</th>
+        <th>Deposit</th>
+        <th>Advance Allocated</th>
+        <th>Penalty Due</th>
+        <th>Penalty Collected</th>
+        <th>Outstanding</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="v10ScheduleRows"></tbody>
+  </table>
+</div>
+
+<div class="card" id="repaymentTransactionV10">
+  <h2>9. Loan-Specific Repayment Transactions</h2>
+
+  <div class="grid">
+    <div>
+      <label>Loan</label>
+      <select id="v10TxnLoan"></select>
+    </div>
+    <div>
+      <label>Transaction Date</label>
+      <input id="v10TxnDate" type="date">
+    </div>
+    <div>
+      <label>Transaction Type</label>
+      <select id="v10TxnType">
+        <option value="deposit">Deposit / Collection</option>
+        <option value="penalty">Penalty</option>
+        <option value="advance">Advance Deposit</option>
+      </select>
+    </div>
+    <div>
+      <label>Amount (₹)</label>
+      <input id="v10TxnAmount" type="number" min="0" step="0.01">
+    </div>
+    <div>
+      <label>Payment Mode</label>
+      <select id="v10TxnMode">
+        <option>Cash</option>
+        <option>UPI (PhonePe)</option>
+        <option>UPI (Google Pay)</option>
+        <option>UPI (Other UPI)</option>
+        <option>Bank Transfer</option>
+        <option>Cheque</option>
+      </select>
+    </div>
+    <div>
+      <label>Reference / Note</label>
+      <input id="v10TxnNote" type="text">
+    </div>
+  </div>
+
+  <br>
+  <button class="primary" onclick="v10RecordTransaction()">Record Loan Transaction</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Transaction ID</th>
+        <th>Loan ID</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Mode</th>
+        <th>Note</th>
+      </tr>
+    </thead>
+    <tbody id="v10TransactionRows"></tbody>
+  </table>
+
+  <h3>Collection Allocation Audit</h3>
+  <div class="notice">
+    Allocation rule: first settle unpaid installments due on or before the
+    receipt date, oldest first. Any remaining amount is allocated to future
+    installments, oldest future date first. The original receipt remains
+    separately recorded with its actual receipt date.
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Transaction ID</th>
+        <th>Receipt Date</th>
+        <th>Original Amount</th>
+        <th>Previous / Current Due</th>
+        <th>Future Advance</th>
+        <th>Unallocated</th>
+      </tr>
+    </thead>
+    <tbody id="v11AllocationRows"></tbody>
+  </table>
+</div>
+
+<div class="card">
     <h2>7. Penalty Ledger</h2>
     <div class="grid">
       <div>
@@ -476,6 +1329,2009 @@ const today=new Date();document.getElementById('penaltyDate').valueAsDate=today;
   };
 
   document.addEventListener('DOMContentLoaded', window.loadBusinessIdentity);
+})();
+</script>
+
+
+<script>
+window.v7Products = JSON.parse(localStorage.getItem('microfinance_products_v7') || '[]');
+function v7Money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function v7Escape(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+function v7SaveProduct(){
+ const p={name:v7ProductName.value.trim(),amount:+v7ProductAmount.value||0,rate:+v7ProductRate.value||0,days:+v7ProductDays.value||0,frequency:v7ProductFrequency.value,installments:+v7ProductInstallments.value||0};
+ if(!p.name||p.amount<=0||p.days<=0||p.installments<=0){alert('Please complete the product details.');return;}
+ window.v7Products.push(p);localStorage.setItem('microfinance_products_v7',JSON.stringify(window.v7Products));v7RenderProducts();
+}
+function v7RenderProducts(){
+ v7ProductRows.innerHTML='';v7LoanProduct.innerHTML='';
+ window.v7Products.forEach((p,i)=>{
+  v7ProductRows.innerHTML+=`<tr><td>${v7Money(p.amount)}</td><td>${v7Escape(p.name)}</td><td>${v7Money(p.amount)}</td><td>${p.rate}%</td><td>${p.days} days</td><td>${v7Escape(p.frequency)}</td></tr>`;
+  v7LoanProduct.innerHTML+=`<option value="${i}">${v7Escape(p.name)} — ${v7Money(p.amount)}</option>`;
+ });v7UpdateLoanCalculation();
+}
+function v7UpdateLoanCalculation(){
+ const p=window.v7Products[+v7LoanProduct.value],mode=v7InterestTreatment.value;
+ if(!p){v7LoanCalculation.textContent='Create a product first.';return;}
+ const interest=p.amount*p.rate/100,net=mode==='upfront'?p.amount-interest:p.amount,total=mode==='upfront'?p.amount:p.amount+interest;
+ v7LoanCalculation.innerHTML=`<b>Loan:</b> ${v7Money(p.amount)} &nbsp; <b>Interest:</b> ${v7Money(interest)} &nbsp; <b>Net Disbursement:</b> ${v7Money(net)} &nbsp; <b>Total Collection:</b> ${v7Money(total)}`;
+}
+function v7CreateLoanPreview(){
+ const p=window.v7Products[+v7LoanProduct.value];if(!p){alert('Please create/select a product first.');return;}
+ const mode=v7InterestTreatment.value,interest=p.amount*p.rate/100,net=mode==='upfront'?p.amount-interest:p.amount;
+ v7LoanPreviewBox.innerHTML=`<b>Customer:</b> ${v7Escape(v7CustomerName.value||'—')}<br>
+ <b>Customer Mobile:</b> ${v7Escape(v7CustomerPrimaryMobile.value||'—')}${v7CustomerSecondaryMobile.value?' / '+v7Escape(v7CustomerSecondaryMobile.value):''}<br>
+ <b>Customer Address:</b> ${v7Escape(v7CustomerAddress.value||'—')}<br>
+ <b>Guarantor:</b> ${v7Escape(v7GuarantorName.value||'—')}<br>
+ <b>Guarantor Mobile:</b> ${v7Escape(v7GuarantorPrimaryMobile.value||'—')}${v7GuarantorSecondaryMobile.value?' / '+v7Escape(v7GuarantorSecondaryMobile.value):''}<br>
+ <b>Guarantor Address:</b> ${v7Escape(v7GuarantorAddress.value||'—')}<br>
+ <b>Product:</b> ${v7Escape(p.name)}<br><b>Loan Amount:</b> ${v7Money(p.amount)}<br>
+ <b>Interest:</b> ${v7Money(interest)}<br><b>Interest Treatment:</b> ${mode==='upfront'?'Upfront Deduction':'Deferred / Later Collection'}<br>
+ <b>Net Disbursement:</b> ${v7Money(net)}<br><b>Payment Mode:</b> ${v7Escape(v7DisbursementMode.value)}<br>
+ <b>Disbursement Date:</b> ${v7DisbursementDate.value||'—'}`;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+ v7RenderProducts();v7LoanProduct.addEventListener('change',v7UpdateLoanCalculation);v7InterestTreatment.addEventListener('change',v7UpdateLoanCalculation);
+ v7DisbursementDate.value=new Date().toISOString().slice(0,10);
+});
+</script>
+
+
+<script id="v8-master-tree-js">
+window.v8Customers = JSON.parse(localStorage.getItem('microfinance_customers_v8') || '[]');
+window.v8Loans = JSON.parse(localStorage.getItem('microfinance_loans_v8') || '[]');
+
+function v8Save() {
+  localStorage.setItem('microfinance_customers_v8', JSON.stringify(window.v8Customers));
+  localStorage.setItem('microfinance_loans_v8', JSON.stringify(window.v8Loans));
+}
+
+function v8Id(prefix) {
+  return prefix + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+}
+
+function v8SaveCustomer() {
+  const name = document.getElementById('v8MasterName').value.trim();
+  const primary = document.getElementById('v8MasterPrimary').value.trim();
+  const secondary = document.getElementById('v8MasterSecondary').value.trim();
+  const address = document.getElementById('v8MasterAddress').value.trim();
+
+  if (!name || !primary || !address) {
+    alert('Customer name, primary mobile and address are required.');
+    return;
+  }
+
+  // For this foundation, a primary mobile is the first practical identity key.
+  // Future versions can add a dedicated immutable customer number/search index.
+  let customer = window.v8Customers.find(c => c.primaryMobile === primary);
+
+  if (customer) {
+    customer.name = name;
+    customer.secondaryMobile = secondary;
+    customer.currentAddress = address;
+    customer.updatedAt = new Date().toISOString();
+  } else {
+    customer = {
+      id: v8Id('CUS'),
+      name,
+      primaryMobile: primary,
+      secondaryMobile: secondary,
+      currentAddress: address,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    window.v8Customers.push(customer);
+  }
+
+  v8Save();
+  v8RenderCustomers();
+  document.getElementById('v8TreeCustomer').value = customer.id;
+}
+
+function v8RenderCustomers() {
+  const customerSelect = document.getElementById('v8TreeCustomer');
+  const productSelect = document.getElementById('v8TreeProduct');
+
+  customerSelect.innerHTML = '';
+  window.v8Customers.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.id;
+    o.textContent = c.name + ' — ' + c.primaryMobile;
+    customerSelect.appendChild(o);
+  });
+
+  if (window.v7Products && productSelect) {
+    productSelect.innerHTML = '';
+    window.v7Products.forEach((p, i) => {
+      const o = document.createElement('option');
+      o.value = i;
+      o.textContent = p.name + ' — ' + v7Money(p.amount);
+      productSelect.appendChild(o);
+    });
+  }
+
+  v8RenderParentLoans();
+  v8RenderTree();
+}
+
+function v8RenderParentLoans() {
+  const customerId = document.getElementById('v8TreeCustomer').value;
+  const relationship = document.getElementById('v8LoanRelationship').value;
+  const parent = document.getElementById('v8ParentLoan');
+
+  parent.innerHTML = '';
+
+  if (relationship === 'new') {
+    const o = document.createElement('option');
+    o.value = '';
+    o.textContent = 'Not applicable — New Loan';
+    parent.appendChild(o);
+    parent.disabled = true;
+    return;
+  }
+
+  parent.disabled = false;
+
+  window.v8Loans
+    .filter(l => l.customerId === customerId)
+    .forEach(l => {
+      const o = document.createElement('option');
+      o.value = l.id;
+      o.textContent = l.loanNo + ' — ' + l.relationshipLabel + ' — ' + l.productName;
+      parent.appendChild(o);
+    });
+
+  if (!parent.options.length) {
+    const o = document.createElement('option');
+    o.value = '';
+    o.textContent = 'No previous loan available';
+    parent.appendChild(o);
+  }
+}
+
+function v8CreateLoan() {
+  const customerId = document.getElementById('v8TreeCustomer').value;
+  const customer = window.v8Customers.find(c => c.id === customerId);
+
+  if (!customer) {
+    alert('Please create/select a customer master first.');
+    return;
+  }
+
+  const relationship = document.getElementById('v8LoanRelationship').value;
+  const parentLoanId = document.getElementById('v8ParentLoan').value || null;
+  const productIndex = Number(document.getElementById('v8TreeProduct').value);
+  const product = window.v7Products?.[productIndex];
+
+  if (!product) {
+    alert('Please create/select a product first.');
+    return;
+  }
+
+  if ((relationship === 'renewal' || relationship === 'topup') && !parentLoanId) {
+    alert('Select the previous loan for Renewal / Top-Up.');
+    return;
+  }
+
+  const guarantorName = document.getElementById('v8LoanGuarantor').value.trim();
+  const guarantorPrimary = document.getElementById('v8LoanGuarantorPrimary').value.trim();
+  const guarantorSecondary = document.getElementById('v8LoanGuarantorSecondary').value.trim();
+  const guarantorAddress = document.getElementById('v8LoanGuarantorAddress').value.trim();
+
+  if (!guarantorName || !guarantorPrimary || !guarantorAddress) {
+    alert('Guarantor name, primary mobile and address are required for this loan snapshot.');
+    return;
+  }
+
+  const sequence = window.v8Loans.filter(l => l.customerId === customer.id).length + 1;
+  const relationshipLabel =
+    relationship === 'renewal' ? 'Renewal' :
+    relationship === 'topup' ? 'Top-Up' : 'New Loan';
+
+  // IMPORTANT:
+  // This snapshot deliberately copies customer + guarantor details into the loan.
+  // Future master updates therefore cannot silently rewrite historical loan data.
+  const loan = {
+    id: v8Id('LOAN'),
+    loanNo: 'LN-' + String(Date.now()).slice(-8),
+    customerId: customer.id,
+    sequence,
+    relationship,
+    relationshipLabel,
+    parentLoanId,
+    productId: product.id || null,
+    productName: product.name,
+    productAmount: product.amount,
+    customerSnapshot: {
+      name: customer.name,
+      primaryMobile: customer.primaryMobile,
+      secondaryMobile: customer.secondaryMobile,
+      address: customer.currentAddress
+    },
+    guarantorSnapshot: {
+      name: guarantorName,
+      primaryMobile: guarantorPrimary,
+      secondaryMobile: guarantorSecondary,
+      address: guarantorAddress
+    },
+    createdAt: new Date().toISOString()
+  };
+
+  window.v8Loans.push(loan);
+  v8Save();
+  v8RenderParentLoans();
+  v8RenderTree();
+
+  alert(relationshipLabel + ' created in the customer loan tree.');
+}
+
+function v8RenderTree() {
+  const box = document.getElementById('v8TreeView');
+  if (!box) return;
+
+  if (!window.v8Customers.length) {
+    box.textContent = 'No customer/loan tree created yet.';
+    return;
+  }
+
+  box.innerHTML = '';
+
+  window.v8Customers.forEach(customer => {
+    const loans = window.v8Loans.filter(l => l.customerId === customer.id);
+
+    const root = document.createElement('div');
+    root.style.cssText = 'border:1px solid #d8dde5;border-radius:10px;padding:14px;margin-bottom:12px;background:#fff;';
+
+    const loanHtml = loans.map(loan => {
+      const parent = loan.parentLoanId
+        ? window.v8Loans.find(x => x.id === loan.parentLoanId)
+        : null;
+
+      return `
+        <div style="margin:10px 0 0 18px;padding:12px;border-left:3px solid #2b6cb0;background:#f6f8fb;border-radius:6px;">
+          <b>${v8Escape(loan.relationshipLabel)} — ${v8Escape(loan.loanNo)}</b>
+          <div>Product: ${v8Escape(loan.productName)} | Amount: ${v7Money(loan.productAmount)}</div>
+          <div>Loan Sequence: #${loan.sequence}${parent ? ' | Parent: ' + v8Escape(parent.loanNo) : ''}</div>
+          <div>Customer Snapshot: ${v8Escape(loan.customerSnapshot.name)} |
+            ${v8Escape(loan.customerSnapshot.primaryMobile)} |
+            ${v8Escape(loan.customerSnapshot.address)}</div>
+          <div>Guarantor Snapshot: ${v8Escape(loan.guarantorSnapshot.name)} |
+            ${v8Escape(loan.guarantorSnapshot.primaryMobile)} |
+            ${v8Escape(loan.guarantorSnapshot.address)}</div>
+        </div>`;
+    }).join('');
+
+    root.innerHTML =
+      `<b>Customer Master: ${v8Escape(customer.name)}</b>
+       <div>Current Mobile: ${v8Escape(customer.primaryMobile)}
+       ${customer.secondaryMobile ? ' / ' + v8Escape(customer.secondaryMobile) : ''}</div>
+       <div>Current Address: ${v8Escape(customer.currentAddress)}</div>
+       ${loanHtml || '<div style="margin-top:8px;color:#657080;">No loans yet.</div>'}`;
+
+    box.appendChild(root);
+  });
+}
+
+function v8Escape(value) {
+  return String(value || '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+  }[ch]));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  v8RenderCustomers();
+
+  document.getElementById('v8TreeCustomer')?.addEventListener('change', v8RenderParentLoans);
+  document.getElementById('v8LoanRelationship')?.addEventListener('change', v8RenderParentLoans);
+});
+</script>
+
+
+<script id="v9-identity-lifecycle-js">
+(function(){
+  const PRODUCT_KEY = 'microfinance_products_v7';
+  const CUSTOMER_KEY = 'microfinance_customers_v8';
+  const LOAN_KEY = 'microfinance_loans_v8';
+
+  function stableId(prefix) {
+    const now = Date.now().toString(36);
+    const rand = Math.random().toString(36).slice(2,10);
+    return prefix + '-' + now + '-' + rand;
+  }
+
+  function loadJson(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+    catch(e) { return fallback; }
+  }
+
+  window.v9Products = loadJson(PRODUCT_KEY, []);
+  window.v9Customers = loadJson(CUSTOMER_KEY, []);
+  window.v9Loans = loadJson(LOAN_KEY, []);
+
+  // One-time migration: assign permanent Product IDs where older product records
+  // were created before Product IDs existed. Existing IDs are never regenerated.
+  let changed = false;
+  window.v9Products.forEach(p => {
+    if (!p.id) { p.id = stableId('PRD'); changed = true; }
+  });
+
+  // Link existing loan records to the permanent Product ID using the stored
+  // product name only when the old record has no Product ID.
+  window.v9Loans.forEach(l => {
+    if (!l.id) { l.id = stableId('LOAN'); changed = true; }
+    if (!l.loanNo) { l.loanNo = 'LN-' + Date.now().toString().slice(-8); changed = true; }
+    if (!l.status) { l.status = 'active'; changed = true; }
+
+    const product = window.v9Products.find(p =>
+      p.id === l.productId || p.name === l.productName
+    );
+    if (product && l.productId !== product.id) {
+      l.productId = product.id;
+      l.productName = product.name;
+      changed = true;
+    }
+
+    if (!l.lifecycle) {
+      l.lifecycle = [{
+        status: l.status,
+        changedAt: l.createdAt || new Date().toISOString()
+      }];
+      changed = true;
+    }
+  });
+
+  window.v9Customers.forEach(c => {
+    if (!c.id) { c.id = stableId('CUS'); changed = true; }
+  });
+
+  function persist() {
+    localStorage.setItem(PRODUCT_KEY, JSON.stringify(window.v9Products));
+    localStorage.setItem(CUSTOMER_KEY, JSON.stringify(window.v9Customers));
+    localStorage.setItem(LOAN_KEY, JSON.stringify(window.v9Loans));
+  }
+
+  if (changed) persist();
+
+  function esc(v) {
+    return String(v || '').replace(/[&<>"']/g, ch => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+    }[ch]));
+  }
+
+  function statusLabel(s) {
+    return ({
+      new:'New',
+      active:'Active',
+      overdue:'Overdue',
+      completed:'Completed / Closed',
+      renewed:'Renewed',
+      topup:'Top-Up Active'
+    })[s] || s || '—';
+  }
+
+  function fillLifecycleSelectors() {
+    const csel = document.getElementById('v9LifecycleCustomer');
+    const dfilter = document.getElementById('v9DueCustomerFilter');
+    if (!csel || !dfilter) return;
+
+    csel.innerHTML = '';
+    dfilter.innerHTML = '<option value="">All Customers</option>';
+
+    window.v9Customers.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c.id;
+      o.textContent = c.name + ' — ' + c.id;
+      csel.appendChild(o);
+
+      const f = document.createElement('option');
+      f.value = c.id;
+      f.textContent = c.name + ' — ' + c.id;
+      dfilter.appendChild(f);
+    });
+
+    fillLoanSelector();
+  }
+
+  function fillLoanSelector() {
+    const csel = document.getElementById('v9LifecycleCustomer');
+    const lsel = document.getElementById('v9LifecycleLoan');
+    if (!csel || !lsel) return;
+
+    lsel.innerHTML = '';
+    window.v9Loans
+      .filter(l => l.customerId === csel.value)
+      .forEach(l => {
+        const o = document.createElement('option');
+        o.value = l.id;
+        o.textContent = l.loanNo + ' — ' + (l.productName || 'Loan') +
+          ' — ' + statusLabel(l.status);
+        lsel.appendChild(o);
+      });
+
+    fillIdentityPreview();
+  }
+
+  function fillIdentityPreview() {
+    const lsel = document.getElementById('v9LifecycleLoan');
+    const box = document.getElementById('v9IdentityPreview');
+    if (!lsel || !box) return;
+
+    const loan = window.v9Loans.find(l => l.id === lsel.value);
+    if (!loan) {
+      box.textContent = 'Select a loan.';
+      return;
+    }
+
+    const c = loan.customerSnapshot || {};
+    const g = loan.guarantorSnapshot || {};
+
+    box.innerHTML =
+      '<b>Customer ID:</b> ' + esc(loan.customerId) +
+      ' &nbsp; | &nbsp; <b>Loan ID:</b> ' + esc(loan.id) +
+      ' &nbsp; | &nbsp; <b>Product ID:</b> ' + esc(loan.productId) +
+      '<br><b>Customer:</b> ' + esc(c.name) +
+      ' | Primary: ' + esc(c.primaryMobile) +
+      ' | Secondary: ' + esc(c.secondaryMobile) +
+      '<br><b>Guarantor:</b> ' + esc(g.name) +
+      ' | Primary: ' + esc(g.primaryMobile) +
+      ' | Secondary: ' + esc(g.secondaryMobile) +
+      '<br><b>Current Lifecycle:</b> ' + esc(statusLabel(loan.status));
+  }
+
+  window.v9SaveLifecycle = function() {
+    const loanId = document.getElementById('v9LifecycleLoan').value;
+    const status = document.getElementById('v9LifecycleStatus').value;
+    const loan = window.v9Loans.find(l => l.id === loanId);
+
+    if (!loan) {
+      alert('Please select a loan.');
+      return;
+    }
+
+    loan.status = status;
+    loan.lifecycle = Array.isArray(loan.lifecycle) ? loan.lifecycle : [];
+    loan.lifecycle.push({
+      status,
+      changedAt: new Date().toISOString()
+    });
+
+    persist();
+    fillLoanSelector();
+    v9RenderDueSheet();
+    v9RenderConsolidated();
+    alert('Loan lifecycle updated.');
+  };
+
+  window.v9RenderDueSheet = function() {
+    const body = document.getElementById('v9DueRows');
+    const customerFilter = document.getElementById('v9DueCustomerFilter').value;
+    const statusFilter = document.getElementById('v9DueStatusFilter').value;
+
+    body.innerHTML = '';
+
+    window.v9Loans
+      .filter(l => !customerFilter || l.customerId === customerFilter)
+      .filter(l => !statusFilter || l.status === statusFilter)
+      .forEach(l => {
+        const c = l.customerSnapshot || {};
+        const g = l.guarantorSnapshot || {};
+
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td>' + esc(l.id) + '</td>' +
+          '<td>' + esc(l.customerId) + '</td>' +
+          '<td>' + esc(c.name) + '</td>' +
+          '<td>' + esc(c.primaryMobile) + '</td>' +
+          '<td>' + esc(c.secondaryMobile) + '</td>' +
+          '<td>' + esc(l.productName) + '</td>' +
+          '<td>' + esc(g.name) + '</td>' +
+          '<td>' + esc(g.primaryMobile) + '</td>' +
+          '<td>' + esc(g.secondaryMobile) + '</td>' +
+          '<td>' + esc(g.address) + '</td>' +
+          '<td>' + esc(statusLabel(l.status)) + '</td>';
+        body.appendChild(tr);
+      });
+  };
+
+  window.v9RenderConsolidated = function() {
+    const box = document.getElementById('v9ConsolidatedTree');
+    if (!box) return;
+
+    box.innerHTML = '';
+
+    window.v9Customers.forEach(cust => {
+      const loans = window.v9Loans.filter(l => l.customerId === cust.id);
+
+      const root = document.createElement('div');
+      root.style.cssText =
+        'border:1px solid #d8dde5;border-radius:10px;padding:14px;margin-bottom:12px;background:#fff;';
+
+      let children = loans.map(l => {
+        const c = l.customerSnapshot || {};
+        const g = l.guarantorSnapshot || {};
+        return `
+          <div style="margin:10px 0 0 18px;padding:12px;border-left:3px solid #2b6cb0;background:#f6f8fb;border-radius:6px;">
+            <b>${esc(l.loanNo)} — ${esc(l.relationshipLabel || 'Loan')}</b>
+            <div>Loan ID: ${esc(l.id)} | Product ID: ${esc(l.productId)} | Status: ${esc(statusLabel(l.status))}</div>
+            <div>Customer Snapshot: ${esc(c.name)} | ${esc(c.primaryMobile)} | ${esc(c.secondaryMobile)}</div>
+            <div>Guarantor Snapshot: ${esc(g.name)} | ${esc(g.primaryMobile)} | ${esc(g.secondaryMobile)}</div>
+            <div>Guarantor Address: ${esc(g.address)}</div>
+          </div>`;
+      }).join('');
+
+      root.innerHTML =
+        '<b>Customer Master: ' + esc(cust.name) + '</b>' +
+        '<div>Customer ID: ' + esc(cust.id) + '</div>' +
+        '<div>Current Contact: ' + esc(cust.primaryMobile) +
+        (cust.secondaryMobile ? ' / ' + esc(cust.secondaryMobile) : '') + '</div>' +
+        (children || '<div style="margin-top:8px;color:#657080;">No loans.</div>');
+
+      box.appendChild(root);
+    });
+  };
+
+
+  window.v11RenderAllocationAudit = function() {
+    const body = document.getElementById('v11AllocationRows');
+    if (!body) return;
+
+    body.innerHTML = '';
+
+    const loanId = document.getElementById('v10TxnLoan')?.value;
+    window.v10Transactions
+      .filter(tx => tx.loanId === loanId && (tx.type === 'deposit' || tx.type === 'advance'))
+      .forEach(tx => {
+        const a = tx.allocation || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td>' + esc(tx.transactionId) + '</td>' +
+          '<td>' + dateDisplay(tx.date) + '</td>' +
+          '<td>' + money(tx.amount) + '</td>' +
+          '<td>' + money(a.previousCurrentDue) + '</td>' +
+          '<td>' + money(a.futureAdvance) + '</td>' +
+          '<td>' + money(a.unallocated) + '</td>';
+        body.appendChild(tr);
+      });
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    fillLifecycleSelectors();
+
+    const c = document.getElementById('v9LifecycleCustomer');
+    if (c) c.addEventListener('change', fillLoanSelector);
+
+    const l = document.getElementById('v9LifecycleLoan');
+    if (l) l.addEventListener('change', fillIdentityPreview);
+
+    document.getElementById('v9DueDate').value =
+      new Date().toISOString().slice(0,10);
+
+    v9RenderDueSheet();
+    v9RenderConsolidated();
+  });
+})();
+</script>
+
+
+<script id="v10-loan-scoped-engine-js">
+(function(){
+  const TX_KEY = 'microfinance_loan_transactions_v10';
+  const SCHEDULE_KEY = 'microfinance_loan_schedules_v10';
+
+  window.v10Transactions = JSON.parse(localStorage.getItem(TX_KEY) || '[]');
+  window.v10Schedules = JSON.parse(localStorage.getItem(SCHEDULE_KEY) || '{}');
+
+  function save() {
+    localStorage.setItem(TX_KEY, JSON.stringify(window.v10Transactions));
+    localStorage.setItem(SCHEDULE_KEY, JSON.stringify(window.v10Schedules));
+  }
+
+  function esc(v) {
+    return String(v || '').replace(/[&<>"']/g, ch => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+    }[ch]));
+  }
+
+  function money(v) {
+    return '₹' + Number(v || 0).toLocaleString('en-IN', {
+      minimumFractionDigits:2, maximumFractionDigits:2
+    });
+  }
+
+  function addDays(date, days) {
+    const d = new Date(date + 'T00:00:00');
+    d.setDate(d.getDate() + days);
+    return d.toISOString().slice(0,10);
+  }
+
+  function addMonths(date, months) {
+    const d = new Date(date + 'T00:00:00');
+    d.setMonth(d.getMonth() + months);
+    return d.toISOString().slice(0,10);
+  }
+
+  function dateDisplay(date) {
+    if (!date) return '—';
+    return new Date(date + 'T00:00:00').toLocaleDateString('en-IN');
+  }
+
+  function customerList() {
+    return window.v9Customers || [];
+  }
+
+  function loanList() {
+    return window.v9Loans || [];
+  }
+
+  function populateSelectors() {
+    const customers = customerList();
+    const loans = loanList();
+
+    const c = document.getElementById('v10Customer');
+    const t = document.getElementById('v10TxnLoan');
+    if (!c || !t) return;
+
+    c.innerHTML = '';
+    customers.forEach(x => {
+      const o = document.createElement('option');
+      o.value = x.id;
+      o.textContent = x.name + ' — ' + x.id;
+      c.appendChild(o);
+    });
+
+    updateLoanSelectors();
+
+    t.innerHTML = '';
+    loans.forEach(x => {
+      const o = document.createElement('option');
+      o.value = x.id;
+      o.textContent = x.loanNo + ' — ' + (x.productName || 'Loan');
+      t.appendChild(o);
+    });
+  }
+
+  function updateLoanSelectors() {
+    const customerId = document.getElementById('v10Customer')?.value;
+    const loanSelect = document.getElementById('v10Loan');
+    if (!loanSelect) return;
+
+    loanSelect.innerHTML = '';
+
+    loanList()
+      .filter(l => l.customerId === customerId)
+      .forEach(l => {
+        const o = document.createElement('option');
+        o.value = l.id;
+        o.textContent = l.loanNo + ' — ' + (l.productName || 'Loan');
+        loanSelect.appendChild(o);
+      });
+
+    updateLoanScope();
+  }
+
+  function updateLoanScope() {
+    const loanId = document.getElementById('v10Loan')?.value;
+    const loan = loanList().find(l => l.id === loanId);
+    const box = document.getElementById('v10LoanScope');
+    if (!box) return;
+
+    if (!loan) {
+      box.textContent = 'Select a loan.';
+      return;
+    }
+
+    box.innerHTML =
+      '<b>Active Loan Scope:</b> ' + esc(loan.id) +
+      ' | Customer ID: ' + esc(loan.customerId) +
+      ' | Product ID: ' + esc(loan.productId) +
+      ' | Product: ' + esc(loan.productName);
+  }
+
+  function getLoanTransactions(loanId) {
+    return window.v10Transactions.filter(t => t.loanId === loanId);
+  }
+
+  function ensureLoanSchedule(loanId) {
+    if (!window.v10Schedules[loanId]) window.v10Schedules[loanId] = [];
+    return window.v10Schedules[loanId];
+  }
+
+  window.v10GenerateSchedule = function() {
+    const loanId = document.getElementById('v10Loan').value;
+    const start = document.getElementById('v10StartDate').value;
+    const emi = Math.max(0, Number(document.getElementById('v10Emi').value) || 0);
+    const days = Math.max(1, Number(document.getElementById('v10CycleDays').value) || 1);
+    const frequency = document.getElementById('v10Frequency').value;
+
+    if (!loanId || !start || emi <= 0) {
+      alert('Select a loan, start date and valid EMI.');
+      return;
+    }
+
+    const schedule = [];
+    for (let i = 0; i < days; i++) {
+      let dueDate;
+
+      if (frequency === 'daily') {
+        dueDate = addDays(start, i);
+      } else if (frequency === 'weekly') {
+        dueDate = addDays(start, i * 7);
+      } else {
+        dueDate = addMonths(start, i);
+      }
+
+      schedule.push({
+        scheduleId: 'SCH-' + loanId + '-' + String(i + 1).padStart(4,'0'),
+        loanId,
+        installmentNo: i + 1,
+        dueDate,
+        scheduledEmi: emi,
+        deposit: 0,
+        advanceAllocated: 0,
+        penaltyDue: 0,
+        penaltyCollected: 0
+      });
+    }
+
+    window.v10Schedules[loanId] = schedule;
+    save();
+    v10RenderSchedule();
+  };
+
+
+  window.v10RecordTransaction = function() {
+    const loanId = document.getElementById('v10TxnLoan').value;
+    const date = document.getElementById('v10TxnDate').value;
+    const type = document.getElementById('v10TxnType').value;
+    const amount = Math.max(0, Number(document.getElementById('v10TxnAmount').value) || 0);
+    const mode = document.getElementById('v10TxnMode').value;
+    const note = document.getElementById('v10TxnNote').value.trim();
+
+    if (!loanId || !date || amount <= 0) {
+      alert('Loan, date and valid amount are required.');
+      return;
+    }
+
+    const tx = {
+      transactionId: 'TXN-' + Date.now() + '-' + Math.random().toString(36).slice(2,7),
+      loanId,
+      date,
+      type,
+      amount,
+      mode,
+      note,
+      createdAt: new Date().toISOString(),
+      allocation: {
+        previousCurrentDue: 0,
+        futureAdvance: 0,
+        unallocated: 0,
+        lines: []
+      }
+    };
+
+    window.v10Transactions.push(tx);
+
+    // Deposits and explicit advance deposits use the same collection
+    // allocation engine. The transaction itself is never lost or replaced.
+    if (type === 'deposit' || type === 'advance') {
+      v11AllocateCollection(tx);
+    } else if (type === 'penalty') {
+      v11RecordPenalty(tx);
+    }
+
+    save();
+    v10RenderTransactions();
+    v10RenderSchedule();
+    v11RenderAllocationAudit();
+  };
+
+  function v11RowOutstanding(row) {
+    return Math.max(
+      0,
+      Number(row.scheduledEmi || 0) -
+      Number(row.deposit || 0) -
+      Number(row.advanceAllocated || 0)
+    );
+  }
+
+  function v11AllocateCollection(tx) {
+    const schedule = ensureLoanSchedule(tx.loanId);
+    let remaining = Number(tx.amount || 0);
+
+    /*
+      COLLECTION RULE
+      1. Previous/current unpaid dues: dueDate <= receipt date.
+      2. Oldest due date first.
+      3. Remaining money: future dues, dueDate > receipt date.
+      4. Future dues are allocated oldest-first.
+      5. The original transaction remains intact with its actual receipt date.
+      6. Nothing from this transaction can touch another Loan ID.
+    */
+    const previousAndCurrent = schedule
+      .filter(row => row.dueDate <= tx.date && v11RowOutstanding(row) > 0)
+      .sort((a,b) => a.dueDate.localeCompare(b.dueDate));
+
+    const future = schedule
+      .filter(row => row.dueDate > tx.date && v11RowOutstanding(row) > 0)
+      .sort((a,b) => a.dueDate.localeCompare(b.dueDate));
+
+    function allocateToRow(row, bucket) {
+      if (remaining <= 0) return;
+
+      const outstanding = v11RowOutstanding(row);
+      const allocation = Math.min(outstanding, remaining);
+
+      // For a past/current due, it is treated as actual deposit against
+      // that scheduled installment. For a future date, it is advance.
+      if (bucket === 'due') {
+        row.deposit = Number(row.deposit || 0) + allocation;
+        tx.allocation.previousCurrentDue += allocation;
+      } else {
+        row.advanceAllocated = Number(row.advanceAllocated || 0) + allocation;
+        tx.allocation.futureAdvance += allocation;
+      }
+
+      tx.allocation.lines.push({
+        scheduleId: row.scheduleId,
+        loanId: tx.loanId,
+        dueDate: row.dueDate,
+        amount: allocation,
+        bucket
+      });
+
+      remaining -= allocation;
+    }
+
+    previousAndCurrent.forEach(row => allocateToRow(row, 'due'));
+    future.forEach(row => allocateToRow(row, 'future'));
+
+    tx.allocation.unallocated = Math.max(0, remaining);
+  }
+
+  function v11RecordPenalty(tx) {
+    const schedule = ensureLoanSchedule(tx.loanId);
+
+    // Penalty remains a separate ledger item. It is NOT silently mixed into
+    // EMI principal allocation unless the user later defines that rule.
+    const target = schedule
+      .filter(row => row.dueDate <= tx.date)
+      .sort((a,b) => b.dueDate.localeCompare(a.dueDate))[0];
+
+    if (target) {
+      target.penaltyDue = Number(target.penaltyDue || 0) + tx.amount;
+    }
+  }
+
+  window.v10RenderSchedule = function() {
+    const loanId = document.getElementById('v10Loan')?.value;
+    const body = document.getElementById('v10ScheduleRows');
+    if (!body || !loanId) return;
+
+    const schedule = ensureLoanSchedule(loanId);
+    const transactions = getLoanTransactions(loanId);
+
+    body.innerHTML = '';
+
+    schedule.forEach(row => {
+      const collected = row.deposit + row.advanceAllocated;
+      const outstanding = Math.max(0, row.scheduledEmi - collected);
+      const status = outstanding <= 0 ? 'Paid' : 'Due';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + row.installmentNo + '</td>' +
+        '<td>' + esc(row.loanId) + '</td>' +
+        '<td>' + dateDisplay(row.dueDate) + '</td>' +
+        '<td>' + money(row.scheduledEmi) + '</td>' +
+        '<td>' + money(row.deposit) + '</td>' +
+        '<td>' + money(row.advanceAllocated) + '</td>' +
+        '<td>' + money(row.penaltyDue) + '</td>' +
+        '<td>' + money(row.penaltyCollected) + '</td>' +
+        '<td>' + money(outstanding) + '</td>' +
+        '<td>' + status + '</td>';
+      body.appendChild(tr);
+    });
+  };
+
+  window.v10RenderTransactions = function() {
+    const body = document.getElementById('v10TransactionRows');
+    if (!body) return;
+
+    body.innerHTML = '';
+
+    const loanId = document.getElementById('v10TxnLoan')?.value;
+    getLoanTransactions(loanId).forEach(tx => {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + esc(tx.transactionId) + '</td>' +
+        '<td>' + esc(tx.loanId) + '</td>' +
+        '<td>' + dateDisplay(tx.date) + '</td>' +
+        '<td>' + esc(tx.type) + '</td>' +
+        '<td>' + money(tx.amount) + '</td>' +
+        '<td>' + esc(tx.mode) + '</td>' +
+        '<td>' + esc(tx.note) + '</td>';
+      body.appendChild(tr);
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    populateSelectors();
+
+    const today = new Date().toISOString().slice(0,10);
+    const start = document.getElementById('v10StartDate');
+    const txDate = document.getElementById('v10TxnDate');
+    if (start) start.value = today;
+    if (txDate) txDate.value = today;
+
+    document.getElementById('v10Customer')?.addEventListener('change', function(){
+      updateLoanSelectors();
+      v10RenderSchedule();
+    });
+
+    document.getElementById('v10Loan')?.addEventListener('change', function(){
+      updateLoanScope();
+      v10RenderSchedule();
+    });
+
+    document.getElementById('v10TxnLoan')?.addEventListener('change', function(){ v10RenderTransactions(); v11RenderAllocationAudit(); });
+
+    if (document.getElementById('v10Loan')?.value) {
+      v10RenderSchedule();
+    }
+    v11RenderAllocationAudit();
+  });
+})();
+</script>
+
+
+<!-- ===== V12 ADVANCED PENALTY LEDGER ===== -->
+<section id="penaltyLedgerSection" class="card" style="margin-top:20px">
+  <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+    <div>
+      <h2 style="margin:0">Penalty Ledger</h2>
+      <div class="penalty-small">Internal mechanism only — penalties never appear on customer-facing statements.</div>
+    </div>
+    <button type="button" onclick="openPenaltyModal()">+ Add Penalty</button>
+  </div>
+
+  <div id="loanPenaltyFilter" class="loan-penalty-filter">
+    <div style="font-weight:700">Loan-wise Penalty Management</div>
+    <div class="loan-penalty-filter-note">
+      Select or enter a Loan ID to view only that loan's penalties and complete collection history.
+    </div>
+    <div class="loan-penalty-filter-grid" style="margin-top:10px">
+      <label>Loan ID
+        <input id="loanPenaltyLoanId" list="loanPenaltyLoanIdList" placeholder="Enter or select Loan ID">
+        <datalist id="loanPenaltyLoanIdList"></datalist>
+      </label>
+      <div class="loan-penalty-filter-actions">
+        <button type="button" onclick="applyLoanPenaltyFilter()">View Loan</button>
+        <button type="button" onclick="clearLoanPenaltyFilter()">Show All</button>
+      </div>
+    </div>
+    <div id="loanPenaltyFilterStatus" class="loan-penalty-filter-note"></div>
+  </div>
+
+  <div id="penaltyLedgerSummary" style="margin-top:12px"></div>
+
+  <div id="loanPenaltyResult" class="loan-penalty-result" style="display:none"></div>
+
+  <div style="overflow:auto;margin-top:12px">
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr>
+          <th>Penalty ID</th>
+          <th>Loan / EMI</th>
+          <th>Due Date</th>
+          <th>Penalty</th>
+          <th>Collected</th>
+          <th>Outstanding</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="penaltyLedgerBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<div id="penaltyModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:9999;padding:20px;overflow:auto">
+  <div class="card" style="max-width:900px;margin:30px auto">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2 id="penaltyModalTitle" style="margin:0">Add Penalty</h2>
+      <button type="button" onclick="closePenaltyModal()">✕</button>
+    </div>
+
+    <form id="penaltyForm" onsubmit="savePenalty(event)">
+      <input type="hidden" id="penaltyEditId">
+
+      <div class="penalty-grid" style="margin-top:15px">
+        <label>Loan ID
+          <input id="penaltyLoanId" required placeholder="Loan ID">
+        </label>
+        <label>Schedule ID / EMI
+          <input id="penaltyScheduleId" required placeholder="Schedule ID">
+        </label>
+        <label>Penalty Due Date
+          <input id="penaltyDueDate" type="date" required>
+        </label>
+        <label>Penalty Amount
+          <input id="penaltyAmount" type="number" min="0.01" step="0.01" required>
+        </label>
+      </div>
+
+      <div style="margin-top:15px">
+        <label>Internal Note
+          <textarea id="penaltyNote" rows="2" placeholder="Optional internal note"></textarea>
+        </label>
+      </div>
+
+      <div id="penaltyCollectionsArea" style="margin-top:18px"></div>
+
+      <div class="penalty-actions" style="margin-top:18px">
+        <button type="submit">Save Penalty</button>
+        <button type="button" onclick="closePenaltyModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  const PENALTY_KEY = 'microfinance_penalty_ledger_v12';
+  const PAYMENT_MODES = ['Cash','UPI - PhonePe','UPI - Google Pay','UPI - Other','Bank Transfer','Cheque'];
+
+  function getPenalties(){
+    try { return JSON.parse(localStorage.getItem(PENALTY_KEY) || '[]'); }
+    catch(e){ return []; }
+  }
+  function savePenalties(list){
+    localStorage.setItem(PENALTY_KEY, JSON.stringify(list));
+  }
+  function nextPenaltyId(list){
+    let max = 0;
+    list.forEach(p=>{
+      const m = String(p.penaltyId||'').match(/^PEN-(\\d+)$/);
+      if(m) max = Math.max(max, Number(m[1]));
+    });
+    return 'PEN-' + String(max+1).padStart(4,'0');
+  }
+  function num(v){ const n=Number(v); return Number.isFinite(n)?n:0; }
+  function money(v){ return '₹' + num(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function esc(v){
+    return String(v??'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function today(){
+    const d=new Date(), z=n=>String(n).padStart(2,'0');
+    return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());
+  }
+
+  function getCollectionTotal(p){
+    return (p.collections||[]).reduce((s,c)=>s+num(c.amount),0);
+  }
+  function statusOf(p){
+    const total=num(p.amount), got=getCollectionTotal(p);
+    if(got<=0) return 'Due';
+    if(got<total) return 'Partial';
+    return 'Collected';
+  }
+  function outstandingOf(p){
+    return Math.max(0,num(p.amount)-getCollectionTotal(p));
+  }
+
+  function renderPenaltyLedger(){
+    const list=getPenalties();
+    const body=document.getElementById('penaltyLedgerBody');
+    const summary=document.getElementById('penaltyLedgerSummary');
+    if(!body) return;
+
+    let due=0, collected=0, outstanding=0;
+    list.forEach(p=>{
+      const got=getCollectionTotal(p), out=outstandingOf(p);
+      collected+=got; outstanding+=out;
+      if(out>0) due+=out;
+    });
+    summary.innerHTML =
+      '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
+      '<span class="badge">Penalty Entries: '+list.length+'</span>' +
+      '<span class="badge">Collected: '+money(collected)+'</span>' +
+      '<span class="badge">Outstanding: '+money(outstanding)+'</span>' +
+      '</div>';
+
+    if(!list.length){
+      body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:18px">No penalties recorded.</td></tr>';
+      return;
+    }
+
+    body.innerHTML=list.map(p=>{
+      const got=getCollectionTotal(p), out=outstandingOf(p), st=statusOf(p);
+      const cls=st==='Collected'?'penalty-collected':(st==='Partial'?'penalty-partial':'penalty-due');
+      return '<tr>' +
+        '<td>'+esc(p.penaltyId)+'</td>' +
+        '<td>'+esc(p.loanId)+' / '+esc(p.scheduleId)+'</td>' +
+        '<td>'+esc(p.dueDate)+'</td>' +
+        '<td>'+money(p.amount)+'</td>' +
+        '<td>'+money(got)+'</td>' +
+        '<td>'+money(out)+'</td>' +
+        '<td class="penalty-status '+cls+'">'+st+'</td>' +
+        '<td><div class="penalty-actions">' +
+          '<button type="button" onclick="editPenalty(\''+esc(p.penaltyId)+'\')">Edit</button>' +
+          '<button type="button" onclick="collectPenalty(\''+esc(p.penaltyId)+'\')">Collect</button>' +
+          '<button type="button" onclick="openPenaltyHistory(\''+esc(p.penaltyId)+'\')">History</button>' +
+          '<button type="button" onclick="deletePenalty(\''+esc(p.penaltyId)+'\')">Delete</button>' +
+        '</div></td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  window.openPenaltyModal=function(id){
+    const modal=document.getElementById('penaltyModal');
+    const form=document.getElementById('penaltyForm');
+    if(!modal||!form) return;
+    form.reset();
+    document.getElementById('penaltyEditId').value='';
+    document.getElementById('penaltyModalTitle').textContent='Add Penalty';
+    document.getElementById('penaltyDueDate').value=today();
+    document.getElementById('penaltyCollectionsArea').innerHTML='';
+    modal.style.display='block';
+    if(id) window.editPenalty(id);
+  };
+  window.closePenaltyModal=function(){
+    const modal=document.getElementById('penaltyModal');
+    if(modal) modal.style.display='none';
+  };
+
+  window.editPenalty=function(id){
+    const p=getPenalties().find(x=>x.penaltyId===id);
+    if(!p) return alert('Penalty not found.');
+    document.getElementById('penaltyModal').style.display='block';
+    document.getElementById('penaltyModalTitle').textContent='Edit Penalty '+p.penaltyId;
+    document.getElementById('penaltyEditId').value=p.penaltyId;
+    document.getElementById('penaltyLoanId').value=p.loanId||'';
+    document.getElementById('penaltyScheduleId').value=p.scheduleId||'';
+    document.getElementById('penaltyDueDate').value=p.dueDate||'';
+    document.getElementById('penaltyAmount').value=p.amount||'';
+    document.getElementById('penaltyNote').value=p.note||'';
+    renderCollectionsEditor(p);
+  };
+
+  function renderCollectionsEditor(p){
+    const area=document.getElementById('penaltyCollectionsArea');
+    const rows=(p.collections||[]).map(c=>
+      '<div class="penalty-card" data-collection-id="'+esc(c.collectionId)+'">' +
+      '<div class="penalty-grid">' +
+      '<label>Collection Date<input type="date" class="pc-date" value="'+esc(c.receivedDate||'')+'"></label>' +
+      '<label>Amount<input type="number" min="0.01" step="0.01" class="pc-amount" value="'+esc(c.amount||'')+'"></label>' +
+      '<label>Payment Mode<select class="pc-mode">'+PAYMENT_MODES.map(m=>'<option '+(m===c.mode?'selected':'')+'>'+esc(m)+'</option>').join('')+'</select></label>' +
+      '<label>Reference / Note<input class="pc-note" value="'+esc(c.note||'')+'"></label>' +
+      '</div></div>'
+    ).join('');
+
+    area.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">' +
+      '<h3 style="margin:0">Penalty Collections</h3>' +
+      '<button type="button" onclick="addPenaltyCollectionRow()">+ Add Collection</button>' +
+      '</div>' +
+      '<div id="penaltyCollectionRows">'+rows+'</div>' +
+      '<div class="penalty-small" style="margin-top:8px">Partial collection is allowed. Each payment has its own actual received date and payment mode.</div>';
+  }
+
+  window.addPenaltyCollectionRow=function(){
+    const area=document.getElementById('penaltyCollectionRows');
+    if(!area) return;
+    const div=document.createElement('div');
+    div.className='penalty-card';
+    div.innerHTML =
+      '<div class="penalty-grid">' +
+      '<label>Collection Date<input type="date" class="pc-date" value="'+today()+'"></label>' +
+      '<label>Amount<input type="number" min="0.01" step="0.01" class="pc-amount"></label>' +
+      '<label>Payment Mode<select class="pc-mode">'+PAYMENT_MODES.map(m=>'<option>'+esc(m)+'</option>').join('')+'</select></label>' +
+      '<label>Reference / Note<input class="pc-note"></label>' +
+      '</div>' +
+      '<button type="button" onclick="this.parentElement.remove()" style="margin-top:8px">Remove</button>';
+    area.appendChild(div);
+  };
+
+  function readCollections(){
+    return Array.from(document.querySelectorAll('#penaltyCollectionRows .penalty-card')).map((row,i)=>({
+      collectionId: 'PC-' + Date.now() + '-' + i,
+      receivedDate: row.querySelector('.pc-date')?.value || today(),
+      amount: num(row.querySelector('.pc-amount')?.value),
+      mode: row.querySelector('.pc-mode')?.value || 'Cash',
+      note: row.querySelector('.pc-note')?.value || '',
+      createdAt: new Date().toISOString()
+    })).filter(c=>c.amount>0);
+  }
+
+  window.savePenalty=function(e){
+    e.preventDefault();
+    const list=getPenalties();
+    const editId=document.getElementById('penaltyEditId').value.trim();
+    const loanId=document.getElementById('penaltyLoanId').value.trim();
+    const scheduleId=document.getElementById('penaltyScheduleId').value.trim();
+    const dueDate=document.getElementById('penaltyDueDate').value;
+    const amount=num(document.getElementById('penaltyAmount').value);
+    const note=document.getElementById('penaltyNote').value||'';
+    if(!loanId||!scheduleId||!dueDate||amount<=0) return alert('Please enter Loan ID, Schedule ID, due date and penalty amount.');
+
+    const collections=readCollections();
+    if(collections.reduce((s,c)=>s+c.amount,0)>amount){
+      return alert('Collection total cannot exceed the penalty amount.');
+    }
+
+    if(editId){
+      const idx=list.findIndex(x=>x.penaltyId===editId);
+      if(idx<0) return alert('Penalty not found.');
+      list[idx]={...list[idx],loanId,scheduleId,dueDate,amount,note,collections,updatedAt:new Date().toISOString()};
+    }else{
+      list.push({
+        penaltyId:nextPenaltyId(list),
+        loanId,scheduleId,dueDate,amount,note,
+        collections,
+        createdAt:new Date().toISOString(),
+        updatedAt:new Date().toISOString()
+      });
+    }
+    savePenalties(list);
+    closePenaltyModal();
+    renderPenaltyLedger();
+    alert('Penalty saved successfully.');
+  };
+
+  window.collectPenalty=function(id){
+    const list=getPenalties();
+    const p=list.find(x=>x.penaltyId===id);
+    if(!p) return alert('Penalty not found.');
+    const out=outstandingOf(p);
+    if(out<=0) return alert('This penalty is already fully collected.');
+
+    const date=prompt('Actual penalty received date (YYYY-MM-DD):',today());
+    if(!date) return;
+    const amt=Number(prompt('Penalty amount received:',out));
+    if(!Number.isFinite(amt)||amt<=0) return alert('Invalid collection amount.');
+    if(amt>out) return alert('Collection cannot exceed outstanding penalty.');
+
+    const modes=PAYMENT_MODES.join('\\n');
+    const modeChoice=prompt('Payment mode:\\n'+modes+'\\n\\nEnter exact mode:',PAYMENT_MODES[0]);
+    if(!modeChoice || !PAYMENT_MODES.includes(modeChoice)) return alert('Please enter one of the listed payment modes.');
+
+    const note=prompt('Reference / note (optional):','')||'';
+    p.collections=p.collections||[];
+    p.collections.push({
+      collectionId:'PC-'+Date.now(),
+      receivedDate:date,
+      amount:amt,
+      mode:modeChoice,
+      note,
+      createdAt:new Date().toISOString()
+    });
+    p.updatedAt=new Date().toISOString();
+    savePenalties(list);
+    renderPenaltyLedger();
+    alert('Penalty collection recorded.');
+  };
+
+  window.deletePenalty=function(id){
+    const list=getPenalties();
+    const p=list.find(x=>x.penaltyId===id);
+    if(!p) return alert('Penalty not found.');
+    if(!confirm('Delete penalty '+id+'? This removes its internal ledger record.')) return;
+    savePenalties(list.filter(x=>x.penaltyId!==id));
+    renderPenaltyLedger();
+  };
+
+  // Public helper for future modules/reports.
+  window.MicrofinancePenaltyLedgerV12={
+    getAll:getPenalties,
+    getByLoan:function(loanId){return getPenalties().filter(p=>p.loanId===loanId)},
+    getBySchedule:function(scheduleId){return getPenalties().filter(p=>p.scheduleId===scheduleId)},
+    total:function(p){return num(p.amount)},
+    collected:getCollectionTotal,
+    outstanding:outstandingOf,
+    status:statusOf,
+    paymentModes:PAYMENT_MODES
+  };
+
+  // Render after current page initializes.
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',renderPenaltyLedger);
+  else renderPenaltyLedger();
+})();
+</script>
+
+
+<!-- ===== V13 PENALTY COLLECTION HISTORY / AUDIT VIEW ===== -->
+<div id="penaltyHistoryModal" class="penalty-history-modal">
+  <div class="penalty-history-panel">
+    <div class="penalty-history-header">
+      <div>
+        <h2 id="penaltyHistoryTitle" style="margin:0">Penalty Collection History</h2>
+        <div id="penaltyHistoryMeta" class="penalty-small" style="margin-top:5px"></div>
+      </div>
+      <button type="button" onclick="closePenaltyHistory()">✕</button>
+    </div>
+    <div id="penaltyHistorySummary" class="penalty-history-summary"></div>
+    <div style="overflow:auto">
+      <table class="penalty-audit-table">
+        <thead><tr>
+          <th>#</th><th>Collection ID</th><th>Actual Received Date</th>
+          <th>Amount Received</th><th>Payment Mode</th><th>Reference / Note</th>
+        </tr></thead>
+        <tbody id="penaltyHistoryBody"></tbody>
+      </table>
+    </div>
+    <div id="penaltyHistoryFooter" class="penalty-small" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function getPenalties(){
+    try{return JSON.parse(localStorage.getItem('microfinance_penalty_ledger_v12')||'[]')}
+    catch(e){return []}
+  }
+  function n(v){const x=Number(v);return Number.isFinite(x)?x:0}
+  function money(v){return '₹'+n(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+  window.openPenaltyHistory=function(id){
+    const p=getPenalties().find(x=>x.penaltyId===id);
+    if(!p)return alert('Penalty not found.');
+    const rows=Array.isArray(p.collections)?p.collections:[];
+    const collected=rows.reduce((s,c)=>s+n(c.amount),0);
+    const outstanding=Math.max(0,n(p.amount)-collected);
+    const status=outstanding<=0?'Collected':(collected>0?'Partial':'Due');
+
+    document.getElementById('penaltyHistoryTitle').textContent='Penalty Collection History — '+p.penaltyId;
+    document.getElementById('penaltyHistoryMeta').innerHTML=
+      'Loan ID: <b>'+esc(p.loanId)+'</b> &nbsp;|&nbsp; Schedule / EMI: <b>'+esc(p.scheduleId)+'</b> &nbsp;|&nbsp; Penalty Due Date: <b>'+esc(p.dueDate)+'</b>';
+
+    document.getElementById('penaltyHistorySummary').innerHTML=
+      '<div class="penalty-history-stat"><div class="label">Penalty Due</div><div class="value">'+money(p.amount)+'</div></div>'+
+      '<div class="penalty-history-stat"><div class="label">Total Collected</div><div class="value">'+money(collected)+'</div></div>'+
+      '<div class="penalty-history-stat"><div class="label">Outstanding</div><div class="value">'+money(outstanding)+'</div></div>'+
+      '<div class="penalty-history-stat"><div class="label">Status / Entries</div><div class="value">'+esc(status)+' / '+rows.length+'</div></div>';
+
+    const body=document.getElementById('penaltyHistoryBody');
+    body.innerHTML=rows.length?rows.map((c,i)=>
+      '<tr><td>'+(i+1)+'</td><td>'+esc(c.collectionId||'')+'</td><td>'+esc(c.receivedDate||'')+
+      '</td><td>'+money(c.amount)+'</td><td>'+esc(c.mode||'')+'</td><td>'+esc(c.note||'')+'</td></tr>'
+    ).join(''):'<tr><td colspan="6" style="text-align:center;padding:20px">No penalty collection has been recorded yet.</td></tr>';
+
+    document.getElementById('penaltyHistoryFooter').textContent=
+      'Internal penalty audit only. This history is not included in the customer-facing statement.';
+    document.getElementById('penaltyHistoryModal').style.display='block';
+  };
+
+  window.closePenaltyHistory=function(){
+    const m=document.getElementById('penaltyHistoryModal');
+    if(m)m.style.display='none';
+  };
+})();
+</script>
+
+
+<script>
+/* ===== V14 Loan-wise Penalty Management JS ===== */
+(function(){
+  const V14_PENALTY_KEY='microfinance_penalty_ledger_v12';
+
+  function getPenalties(){
+    try{return JSON.parse(localStorage.getItem(V14_PENALTY_KEY)||'[]')}
+    catch(e){return []}
+  }
+  function n(v){const x=Number(v);return Number.isFinite(x)?x:0}
+  function money(v){
+    return '₹'+n(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})
+  }
+  function esc(v){
+    return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))
+  }
+  function collections(p){return Array.isArray(p.collections)?p.collections:[]}
+  function collected(p){return collections(p).reduce((s,c)=>s+n(c.amount),0)}
+  function outstanding(p){return Math.max(0,n(p.amount)-collected(p))}
+  function status(p){
+    const o=outstanding(p), c=collected(p);
+    return o<=0?'Collected':(c>0?'Partial':'Due')
+  }
+
+  function uniqueLoanIds(){
+    return [...new Set(getPenalties().map(p=>String(p.loanId||'').trim()).filter(Boolean))]
+      .sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))
+  }
+
+  function refreshLoanDatalist(){
+    const list=document.getElementById('loanPenaltyLoanIdList');
+    if(!list)return;
+    list.innerHTML=uniqueLoanIds().map(id=>'<option value="'+esc(id)+'"></option>').join('');
+  }
+
+  function renderLoanResult(loanId){
+    const result=document.getElementById('loanPenaltyResult');
+    if(!result)return;
+
+    const normalized=String(loanId||'').trim();
+    if(!normalized){
+      result.style.display='none';
+      return;
+    }
+
+    const rows=getPenalties().filter(p=>String(p.loanId||'').trim()===normalized);
+    result.style.display='block';
+
+    if(!rows.length){
+      result.innerHTML=
+        '<div style="font-weight:700">Loan ID: '+esc(normalized)+'</div>'+
+        '<div class="loan-penalty-filter-note" style="margin-top:8px">No penalty records found for this loan.</div>';
+      return;
+    }
+
+    let totalDue=0,totalCollected=0,totalOutstanding=0,totalCollections=0;
+    rows.forEach(p=>{
+      totalDue+=n(p.amount);
+      totalCollected+=collected(p);
+      totalOutstanding+=outstanding(p);
+      totalCollections+=collections(p).length;
+    });
+
+    result.innerHTML=
+      '<div style="font-size:18px;font-weight:800">Loan Penalty Summary — '+esc(normalized)+'</div>'+
+      '<div class="loan-penalty-result-summary">'+
+        '<div class="penalty-history-stat"><div class="label">Penalty Entries</div><div class="value">'+rows.length+'</div></div>'+
+        '<div class="penalty-history-stat"><div class="label">Total Penalty Due</div><div class="value">'+money(totalDue)+'</div></div>'+
+        '<div class="penalty-history-stat"><div class="label">Total Collected</div><div class="value">'+money(totalCollected)+'</div></div>'+
+        '<div class="penalty-history-stat"><div class="label">Outstanding</div><div class="value">'+money(totalOutstanding)+'</div></div>'+
+      '</div>'+
+      '<div class="penalty-small">Total collection entries across this loan: '+totalCollections+'</div>'+
+      rows.map(renderLoanPenaltyBlock).join('');
+  }
+
+  function renderLoanPenaltyBlock(p){
+    const cs=collections(p);
+    const got=collected(p), out=outstanding(p), st=status(p);
+    const history=cs.length ? 
+      '<div class="loan-penalty-history-body"><table class="penalty-audit-table"><thead><tr>'+
+      '<th>#</th><th>Collection ID</th><th>Actual Received Date</th><th>Amount</th><th>Payment Mode</th><th>Reference / Note</th>'+
+      '</tr></thead><tbody>'+
+      cs.map((c,i)=>
+        '<tr><td>'+(i+1)+'</td><td>'+esc(c.collectionId||'')+'</td><td>'+esc(c.receivedDate||'')+
+        '</td><td>'+money(c.amount)+'</td><td>'+esc(c.mode||'')+'</td><td>'+esc(c.note||'')+'</td></tr>'
+      ).join('')+
+      '</tbody></table></div>'
+      : '<div class="loan-penalty-history-body penalty-small">No collection recorded yet.</div>';
+
+    return '<div class="loan-penalty-history-block">'+
+      '<div class="loan-penalty-history-head">'+
+        '<div><b>'+esc(p.penaltyId)+'</b> &nbsp;|&nbsp; EMI / Schedule: <b>'+esc(p.scheduleId)+'</b> &nbsp;|&nbsp; Due Date: <b>'+esc(p.dueDate)+'</b></div>'+
+        '<div><b>Due:</b> '+money(p.amount)+' &nbsp; <b>Collected:</b> '+money(got)+' &nbsp; <b>Outstanding:</b> '+money(out)+' &nbsp; <b>'+esc(st)+'</b></div>'+
+      '</div>'+
+      history+
+      '<div style="padding:9px 12px;display:flex;gap:8px;flex-wrap:wrap">'+
+        '<button type="button" onclick="editPenalty(\''+esc(p.penaltyId)+'\')">Edit</button>'+
+        '<button type="button" onclick="collectPenalty(\''+esc(p.penaltyId)+'\')">Collect</button>'+
+        '<button type="button" onclick="openPenaltyHistory(\''+esc(p.penaltyId)+'\')">Open History</button>'+
+      '</div>'+
+    '</div>';
+  }
+
+  window.applyLoanPenaltyFilter=function(){
+    const input=document.getElementById('loanPenaltyLoanId');
+    const id=(input?.value||'').trim();
+    const statusEl=document.getElementById('loanPenaltyFilterStatus');
+    if(!id){
+      if(statusEl)statusEl.textContent='Please enter or select a Loan ID.';
+      renderLoanResult('');
+      return;
+    }
+    if(statusEl)statusEl.textContent='Showing penalty management for Loan ID: '+id;
+    renderLoanResult(id);
+  };
+
+  window.clearLoanPenaltyFilter=function(){
+    const input=document.getElementById('loanPenaltyLoanId');
+    const statusEl=document.getElementById('loanPenaltyFilterStatus');
+    if(input)input.value='';
+    if(statusEl)statusEl.textContent='Showing all penalty records.';
+    renderLoanResult('');
+  };
+
+  // Keep the Loan ID selector current whenever the penalty ledger is rendered.
+  const originalRender=window.renderPenaltyLedger;
+  if(typeof originalRender==='function'){
+    window.renderPenaltyLedger=function(){
+      originalRender();
+      refreshLoanDatalist();
+      const current=document.getElementById('loanPenaltyLoanId')?.value?.trim();
+      if(current) renderLoanResult(current);
+    };
+  }
+
+  window.MicrofinancePenaltyLoanViewV14={
+    getLoanPenalties:function(loanId){
+      const id=String(loanId||'').trim();
+      return getPenalties().filter(p=>String(p.loanId||'').trim()===id);
+    },
+    getLoanSummary:function(loanId){
+      const rows=this.getLoanPenalties(loanId);
+      return {
+        penaltyEntries:rows.length,
+        totalDue:rows.reduce((s,p)=>s+n(p.amount),0),
+        totalCollected:rows.reduce((s,p)=>s+collected(p),0),
+        totalOutstanding:rows.reduce((s,p)=>s+outstanding(p),0),
+        totalCollectionEntries:rows.reduce((s,p)=>s+collections(p).length,0)
+      };
+    }
+  };
+
+  function boot(){
+    refreshLoanDatalist();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+})();
+</script>
+
+
+<script id="v15-premium-workspace-js">
+(function(){
+  'use strict';
+
+  const KEYS = {
+    customers:'microfinance_customers_v8',
+    loans:'microfinance_loans_v8',
+    products:'microfinance_products_v7',
+    tx:'microfinance_loan_transactions_v10',
+    schedules:'microfinance_loan_schedules_v10',
+    penalties:'microfinance_penalty_ledger_v12'
+  };
+
+  const state = {
+    drillType:'portfolio',
+    drillRows:[],
+    drillColumns:[],
+    recoveryRows:[]
+  };
+
+  function read(key,fallback){
+    try{
+      const v=JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback));
+      return v ?? fallback;
+    }catch(e){return fallback}
+  }
+  function customers(){return read(KEYS.customers,[])}
+  function loans(){return read(KEYS.loans,[])}
+  function products(){return read(KEYS.products,[])}
+  function txs(){return read(KEYS.tx,[])}
+  function schedules(){return read(KEYS.schedules,{})}
+  function penalties(){return read(KEYS.penalties,[])}
+  function n(v){const x=Number(v);return Number.isFinite(x)?x:0}
+  function money(v){return '₹'+n(v).toLocaleString('en-IN',{maximumFractionDigits:2})}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function dateDisplay(v){
+    if(!v)return '—';
+    const d=new Date(v+'T00:00:00');
+    return Number.isNaN(d.getTime())?v:d.toLocaleDateString('en-IN');
+  }
+  function businessName(){
+    const b=read('microfinance_business_identity_v1',{});
+    return b.businessName || 'Microfinance Core';
+  }
+  function customerForLoan(l){
+    return customers().find(c=>c.id===l.customerId) || {};
+  }
+  function productForLoan(l){
+    return products().find(p=>p.id===l.productId || p.name===l.productName) || {};
+  }
+  function totalCollections(){
+    return txs().filter(t=>t.type==='deposit'||t.type==='advance')
+      .reduce((s,t)=>s+n(t.amount),0);
+  }
+  function totalPortfolio(){return loans().reduce((s,l)=>s+n(l.productAmount),0)}
+  function totalOutstanding(){
+    const sc=schedules();
+    return Object.values(sc).flat().reduce((s,r)=>{
+      return s+Math.max(0,n(r.scheduledEmi)-n(r.deposit)-n(r.advanceAllocated));
+    },0);
+  }
+  function totalPenaltyOutstanding(){
+    return penalties().reduce((s,p)=>{
+      const c=(p.collections||[]).reduce((x,r)=>x+n(r.amount),0);
+      return s+Math.max(0,n(p.amount)-c);
+    },0)
+  }
+
+  function setText(id,value){
+    const el=document.getElementById(id); if(el)el.textContent=value;
+  }
+
+  function refreshDashboard(){
+    const name=businessName();
+    setText('v15BrandName',name);
+    setText('v15HeroBusiness',name);
+    setText('v15Today',new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}));
+    setText('v15PortfolioState',loans().length+' loan contracts');
+
+    setText('v15KpiPortfolio',money(totalPortfolio()));
+    setText('v15KpiCollections',money(totalCollections()));
+    setText('v15KpiOutstanding',money(totalOutstanding()));
+    setText('v15KpiCustomers',customers().length);
+    setText('v15KpiLoans',loans().length);
+    setText('v15KpiPenalty',money(totalPenaltyOutstanding()));
+
+    const recent=document.getElementById('v15RecentLoans');
+    if(recent){
+      const arr=[...loans()].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,7);
+      recent.innerHTML=arr.length?arr.map(l=>{
+        const c=l.customerSnapshot||customerForLoan(l)||{};
+        return '<div style="padding:9px 0;border-bottom:1px solid #e5e7eb">'+
+          '<div style="font-weight:750">'+esc(l.loanNo||l.id)+'</div>'+
+          '<div style="font-size:11px;color:#64748b">'+esc(c.name||'—')+' · '+esc(l.productName||'Loan')+' · '+money(l.productAmount)+'</div>'+
+        '</div>'
+      }).join(''):'<div class="v15-empty">No loans recorded yet.</div>';
+    }
+
+    const map={};
+    loans().forEach(l=>{
+      const key=l.productName||'Uncategorised';
+      if(!map[key])map[key]={name:key,count:0,amount:0};
+      map[key].count++; map[key].amount+=n(l.productAmount);
+    });
+    const productBox=document.getElementById('v15ProductBreakdown');
+    if(productBox){
+      const arr=Object.values(map).sort((a,b)=>b.amount-a.amount);
+      productBox.innerHTML=arr.length?
+        '<table class="v15-report-table"><thead><tr><th>Product</th><th>Loans</th><th>Contractual Principal</th></tr></thead><tbody>'+
+        arr.map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+x.count+'</td><td>'+money(x.amount)+'</td></tr>').join('')+
+        '</tbody></table>':
+        '<div class="v15-empty">No product-linked loans yet.</div>';
+    }
+  }
+
+  function assignLegacyCards(){
+    const selectors=[
+      '#businessIdentityCard','#productManagementV7','#newLoanV7','#loanLifecycleV9',
+      '#dueSheetV9','#loanConsolidatedV9','#masterArchitectureV8',
+      '#repaymentEngineV10','#repaymentTransactionV10','#penaltyLedgerSection'
+    ];
+
+    const allCards=[];
+    selectors.forEach(sel=>{
+      const el=document.querySelector(sel);
+      if(el)allCards.push(el);
+    });
+
+    // Unidentified legacy .card blocks are classified by their first heading.
+    document.querySelectorAll('body > .wrap > .card').forEach(el=>{
+      if(!allCards.includes(el))allCards.push(el);
+    });
+
+    const stacks={
+      master:document.getElementById('v15MasterStack'),
+      customers:document.getElementById('v15CustomerStack'),
+      loans:document.getElementById('v15LoanStack'),
+      collections:document.getElementById('v15CollectionStack'),
+      reports:document.getElementById('v15ReportStack'),
+      penalties:document.getElementById('v15PenaltyStack')
+    };
+
+    function classify(el){
+      const id=el.id||'';
+      const h=el.querySelector('h2')?.textContent?.toLowerCase()||'';
+      if(id==='businessIdentityCard'||id==='productManagementV7'||id==='masterArchitectureV8')return 'master';
+      if(id==='newLoanV7'||id==='loanLifecycleV9'||h.includes('finance setup')||h.includes('contract result')||h.includes('loan confirmation'))return 'loans';
+      if(id==='repaymentEngineV10'||id==='repaymentTransactionV10'||h.includes('recovery status')||h.includes('advance deposit')||h.includes('payment / receipt'))return 'collections';
+      if(id==='dueSheetV9'||id==='loanConsolidatedV9'||h.includes('customer statement'))return 'reports';
+      if(id==='penaltyLedgerSection'||h.includes('penalty'))return 'penalties';
+      if(h.includes('customer'))return 'customers';
+      return 'loans';
+    }
+
+    allCards.forEach(el=>{
+      const group=stacks[classify(el)];
+      if(group && !group.contains(el))group.appendChild(el);
+    });
+
+    // The old wrap becomes an invisible compatibility container for any
+    // elements not explicitly moved. The existing JS can still find IDs.
+    const wrap=document.querySelector('.wrap');
+    if(wrap)wrap.style.display='none';
+  }
+
+  function navSetup(){
+    const buttons=document.querySelectorAll('[data-v15-nav]');
+    buttons.forEach(btn=>btn.addEventListener('click',()=>v15Go(btn.dataset.v15Nav)));
+  }
+
+  window.v15Go=function(name){
+    document.querySelectorAll('.v15-module').forEach(x=>x.classList.remove('active'));
+    const module=document.getElementById('v15Module-'+name);
+    if(module)module.classList.add('active');
+    document.querySelectorAll('[data-v15-nav]').forEach(x=>x.classList.toggle('active',x.dataset.v15Nav===name));
+    const titles={
+      overview:'Overview',master:'Business & Product Masters',customers:'Customer Management',
+      loans:'Loans & Lifecycle',collections:'Collections & Schedules',recovery:'Recovery Center',
+      reports:'Statements & Reports',penalties:'Penalty Management'
+    };
+    setText('v15PageTitle',titles[name]||'Workspace');
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(name==='recovery')v15RenderRecovery();
+    if(name==='penalties')refreshDashboard();
+  };
+
+  function makeDrillFilters(type){
+    const box=document.getElementById('v15DrillFilters');
+    const modes=['','Cash','UPI - PhonePe','UPI - Google Pay','UPI - Other','Bank Transfer','Cheque'];
+    box.innerHTML=
+      '<label>Customer<input id="v15DFCustomer" placeholder="Name / ID"></label>'+
+      '<label>Loan<input id="v15DFLoan" placeholder="Loan ID / No."></label>'+
+      '<label>From Date<input id="v15DFFrom" type="date"></label>'+
+      '<label>To Date<input id="v15DFTo" type="date"></label>'+
+      '<label>Year<input id="v15DFYear" type="number" placeholder="YYYY"></label>'+
+      '<label>Month<select id="v15DFMonth"><option value="">All Months</option>'+
+      Array.from({length:12},(_,i)=>'<option value="'+(i+1)+'">'+new Date(2000,i,1).toLocaleString('en-IN',{month:'long'})+'</option>').join('')+
+      '</select></label>'+
+      '<label>Payment Mode<select id="v15DFMode">'+modes.map(m=>'<option value="'+esc(m)+'">'+(m||'All Modes')+'</option>').join('')+'</select></label>';
+  }
+
+  function datePass(date,from,to,year,month){
+    if(!date)return true;
+    const d=String(date);
+    if(from&&d<from)return false;
+    if(to&&d>to)return false;
+    if(year&&d.slice(0,4)!==String(year))return false;
+    if(month&&Number(d.slice(5,7))!==Number(month))return false;
+    return true;
+  }
+
+  function openDrill(type){
+    state.drillType=type;
+    const modal=document.getElementById('v15DrillModal');
+    const title=document.getElementById('v15DrillTitle');
+    const sub=document.getElementById('v15DrillSub');
+    const titles={
+      portfolio:'Loan Portfolio Detail',
+      collections:'Collection Receipt Detail',
+      outstanding:'Outstanding EMI Detail',
+      customers:'Customer Master Detail',
+      loans:'Loan Contract Detail',
+      penalties:'Penalty Detail'
+    };
+    title.textContent=titles[type]||'Detail';
+    sub.textContent='Use date, month, year, customer, loan and payment-mode filters. Export to Excel/CSV or print to PDF.';
+    makeDrillFilters(type);
+    modal.style.display='block';
+    v15RenderDrill();
+  }
+
+  window.v15CloseDrill=function(){document.getElementById('v15DrillModal').style.display='none'}
+  window.v15RenderDrill=function(){
+    const type=state.drillType;
+    const q=(document.getElementById('v15DFCustomer')?.value||'').trim().toLowerCase();
+    const lq=(document.getElementById('v15DFLoan')?.value||'').trim().toLowerCase();
+    const from=document.getElementById('v15DFFrom')?.value||'';
+    const to=document.getElementById('v15DFTo')?.value||'';
+    const year=document.getElementById('v15DFYear')?.value||'';
+    const month=document.getElementById('v15DFMonth')?.value||'';
+    const mode=document.getElementById('v15DFMode')?.value||'';
+    const cs=customers(), ls=loans(), ts=txs(), ps=penalties(), sc=schedules();
+
+    let headers=[],rows=[],summary='';
+
+    if(type==='portfolio'||type==='loans'){
+      headers=['Loan No.','Loan ID','Customer','Product','Principal','Status','Created'];
+      rows=ls.filter(l=>{
+        const c=l.customerSnapshot||customerForLoan(l)||{};
+        const hay=(l.loanNo+' '+l.id+' '+(c.name||'')+' '+l.customerId).toLowerCase();
+        return (!q||hay.includes(q))&&(!lq||(l.loanNo+' '+l.id).toLowerCase().includes(lq))&&
+          datePass((l.createdAt||'').slice(0,10),from,to,year,month);
+      }).map(l=>{
+        const c=l.customerSnapshot||customerForLoan(l)||{};
+        return [l.loanNo||'',l.id||'',c.name||'',l.productName||'',money(l.productAmount),l.status||'New',(l.createdAt||'').slice(0,10)];
+      });
+      summary=rows.length+' loan records';
+    }else if(type==='collections'){
+      headers=['Date','Loan','Customer','Amount','Payment Mode','Type','Note'];
+      rows=ts.filter(t=>{
+        if(t.type!=='deposit'&&t.type!=='advance')return false;
+        const l=ls.find(x=>x.id===t.loanId)||{};
+        const c=l.customerSnapshot||customerForLoan(l)||{};
+        const hay=(t.loanId+' '+(l.loanNo||'')+' '+(c.name||'')+' '+(c.primaryMobile||'')).toLowerCase();
+        return (!q||hay.includes(q))&&(!lq||(t.loanId+' '+(l.loanNo||'')).toLowerCase().includes(lq))&&
+          datePass(t.date,from,to,year,month)&&(!mode||t.mode===mode);
+      }).map(t=>{
+        const l=ls.find(x=>x.id===t.loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
+        return [t.date||'',l.loanNo||t.loanId,c.name||'',money(t.amount),t.mode||'',t.type||'',t.note||''];
+      });
+      summary=rows.length+' collection records · '+money(rows.reduce((s,r)=>s+n(String(r[4]).replace(/[₹,]/g,'')),0));
+    }else if(type==='customers'){
+      headers=['Customer ID','Customer','Primary Mobile','Secondary Mobile','Address','Created'];
+      rows=cs.filter(c=>{
+        const hay=(c.id+' '+c.name+' '+(c.primaryMobile||'')+' '+(c.secondaryMobile||'')).toLowerCase();
+        return !q||hay.includes(q);
+      }).map(c=>[c.id,c.name,c.primaryMobile||'',c.secondaryMobile||'',c.currentAddress||'',(c.createdAt||'').slice(0,10)]);
+      summary=rows.length+' customer records';
+    }else if(type==='outstanding'){
+      headers=['Due Date','Loan','Customer','Installment','EMI','Received/Advance','Outstanding','Status'];
+      rows=[];
+      Object.entries(sc).forEach(([loanId,arr])=>{
+        const l=ls.find(x=>x.id===loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
+        arr.forEach(r=>{
+          const out=Math.max(0,n(r.scheduledEmi)-n(r.deposit)-n(r.advanceAllocated));
+          if(out<=0)return;
+          const hay=(loanId+' '+(l.loanNo||'')+' '+(c.name||'')).toLowerCase();
+          if(q&&!hay.includes(q))return;
+          if(lq&&!(loanId+' '+(l.loanNo||'')).toLowerCase().includes(lq))return;
+          if(!datePass(r.dueDate,from,to,year,month))return;
+          rows.push([r.dueDate,l.loanNo||loanId,c.name||'',r.installmentNo,money(r.scheduledEmi),money(n(r.deposit)+n(r.advanceAllocated)),money(out),r.dueDate<new Date().toISOString().slice(0,10)?'Overdue':'Due']);
+        });
+      });
+      rows.sort((a,b)=>String(a[0]).localeCompare(String(b[0])));
+      summary=rows.length+' outstanding installments';
+    }else if(type==='penalties'){
+      headers=['Penalty ID','Due Date','Loan','Customer','Penalty Due','Collected','Outstanding','Status'];
+      rows=ps.filter(p=>{
+        const l=ls.find(x=>x.id===p.loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
+        const hay=(p.penaltyId+' '+p.loanId+' '+(l.loanNo||'')+' '+(c.name||'')).toLowerCase();
+        return (!q||hay.includes(q))&&(!lq||(p.loanId+' '+(l.loanNo||'')).toLowerCase().includes(lq))&&
+          datePass(p.dueDate,from,to,year,month);
+      }).map(p=>{
+        const l=ls.find(x=>x.id===p.loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
+        const got=(p.collections||[]).reduce((s,x)=>s+n(x.amount),0),out=Math.max(0,n(p.amount)-got);
+        return [p.penaltyId,p.dueDate,p.loanId,c.name||'',money(p.amount),money(got),money(out),out<=0?'Collected':got>0?'Partial':'Due'];
+      });
+      summary=rows.length+' penalty records';
+    }
+
+    state.drillRows=rows;state.drillColumns=headers;
+    setText('v15DrillSummary',summary);
+    const table=document.getElementById('v15DrillTable');
+    table.innerHTML='<thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead>'+
+      '<tbody>'+ (rows.length?rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join(''):
+      '<tr><td colspan="'+headers.length+'" class="v15-empty">No matching records.</td></tr>')+'</tbody>';
+  };
+
+  window.v15ResetDrill=function(){
+    ['v15DFCustomer','v15DFLoan','v15DFFrom','v15DFTo','v15DFYear'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+    const m=document.getElementById('v15DFMonth');if(m)m.value='';
+    const mode=document.getElementById('v15DFMode');if(mode)mode.value='';
+    v15RenderDrill();
+  };
+
+  function csvCell(v){
+    const s=String(v??'');
+    return '"'+s.replace(/"/g,'""')+'"';
+  }
+  function exportCSV(filename,headers,rows){
+    const csv=[headers.map(csvCell).join(','),...rows.map(r=>r.map(csvCell).join(','))].join('\\r\\n');
+    const blob=new Blob(['\\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;
+    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500);
+  }
+  window.v15ExportDrillCSV=function(){
+    exportCSV('microfinance-'+state.drillType+'-report.csv',state.drillColumns,state.drillRows);
+  };
+  window.v15PrintDrill=function(){
+    const title=document.getElementById('v15DrillTitle').textContent;
+    const table=document.getElementById('v15DrillTable').outerHTML;
+    const w=window.open('','_blank','width=1200,height=800');
+    if(!w)return;
+    w.document.write('<html><head><title>'+esc(title)+'</title><style>body{font-family:Arial;padding:24px;color:#111}h1{font-size:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:7px;font-size:11px;text-align:left}th{background:#f2f4f7}</style></head><body><h1>'+esc(title)+'</h1><div>'+new Date().toLocaleString('en-IN')+'</div>'+table+'</body></html>');
+    w.document.close();w.focus();setTimeout(()=>w.print(),300);
+  };
+
+  function recoveryData(){
+    const ls=loans(), all=txs().filter(t=>t.type==='deposit'||t.type==='advance');
+    return all.map(t=>{
+      const l=ls.find(x=>x.id===t.loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
+      return {tx:t,loan:l,customer:c};
+    });
+  }
+  window.v15RenderRecovery=function(){
+    const q=(document.getElementById('v15RecoveryQuery')?.value||'').trim().toLowerCase();
+    const from=document.getElementById('v15RecoveryFrom')?.value||'';
+    const to=document.getElementById('v15RecoveryTo')?.value||'';
+    const year=document.getElementById('v15RecoveryYear')?.value||'';
+    const month=document.getElementById('v15RecoveryMonth')?.value||'';
+    const mode=document.getElementById('v15RecoveryMode')?.value||'';
+    const rows=recoveryData().filter(x=>{
+      const t=x.tx,l=x.loan,c=x.customer;
+      const hay=(t.loanId+' '+(l.loanNo||'')+' '+(c.name||'')+' '+(c.primaryMobile||'')+' '+(c.secondaryMobile||'')).toLowerCase();
+      return (!q||hay.includes(q))&&datePass(t.date,from,to,year,month)&&(!mode||t.mode===mode);
+    }).sort((a,b)=>String(b.tx.date).localeCompare(String(a.tx.date)));
+    state.recoveryRows=rows;
+    const total=rows.reduce((s,x)=>s+n(x.tx.amount),0);
+    setText('v15RecoverySummary',rows.length+' receipt records · Total '+money(total));
+    const box=document.getElementById('v15RecoveryResults');
+    box.innerHTML=rows.length?rows.map(x=>{
+      const t=x.tx,l=x.loan,c=x.customer;
+      return '<div class="v15-result-row">'+
+        '<div><div class="v15-result-main">'+esc(c.name||'Unknown Customer')+'</div><div class="v15-result-meta">'+esc(c.primaryMobile||'')+'</div></div>'+
+        '<div><div class="v15-result-main">'+esc(l.loanNo||t.loanId)+'</div><div class="v15-result-meta">'+esc(t.loanId)+'</div></div>'+
+        '<div><div class="v15-result-main">'+money(t.amount)+'</div><div class="v15-result-meta">'+esc(t.mode||'')+'</div></div>'+
+        '<div><div class="v15-result-main">'+dateDisplay(t.date)+'</div><div class="v15-result-meta">'+esc(t.type||'')+'</div></div>'+
+      '</div>';
+    }).join(''):'<div class="v15-empty">No recovery records match the selected filters.</div>';
+  };
+  window.v15ClearRecovery=function(){
+    ['v15RecoveryQuery','v15RecoveryFrom','v15RecoveryTo','v15RecoveryYear'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+    const m=document.getElementById('v15RecoveryMonth');if(m)m.value='';
+    const mode=document.getElementById('v15RecoveryMode');if(mode)mode.value='';
+    v15RenderRecovery();
+  };
+  window.v15ExportRecoveryCSV=function(){
+    const rows=state.recoveryRows.map(x=>{
+      const t=x.tx,l=x.loan,c=x.customer;
+      return [t.date,l.loanNo||t.loanId,t.loanId,c.name||'',c.primaryMobile||'',c.secondaryMobile||'',t.amount,t.mode||'',t.type||'',t.note||''];
+    });
+    exportCSV('microfinance-recovery-report.csv',['Date','Loan No.','Loan ID','Customer','Primary Mobile','Secondary Mobile','Amount','Payment Mode','Type','Note'],rows);
+  };
+  window.v15PrintRecovery=function(){
+    const rows=state.recoveryRows;
+    const table='<table style="width:100%;border-collapse:collapse"><thead><tr><th>Date</th><th>Loan</th><th>Customer</th><th>Amount</th><th>Mode</th></tr></thead><tbody>'+
+      rows.map(x=>'<tr><td>'+esc(x.tx.date)+'</td><td>'+esc(x.loan.loanNo||x.tx.loanId)+'</td><td>'+esc(x.customer.name||'')+'</td><td>'+money(x.tx.amount)+'</td><td>'+esc(x.tx.mode||'')+'</td></tr>').join('')+
+      '</tbody></table>';
+    const w=window.open('','_blank','width=1200,height=800');if(!w)return;
+    w.document.write('<html><head><title>Recovery Report</title><style>body{font-family:Arial;padding:24px}th,td{border:1px solid #ddd;padding:7px;font-size:11px;text-align:left}th{background:#f2f4f7}</style></head><body><h1>Recovery Report</h1><div>'+businessName()+' · '+new Date().toLocaleString('en-IN')+'</div>'+table+'</body></html>');
+    w.document.close();w.focus();setTimeout(()=>w.print(),300);
+  };
+
+  function globalSearch(q){
+    q=String(q||'').trim().toLowerCase();
+    if(!q)return;
+    const found=customers().filter(c=>(c.name+' '+c.id+' '+(c.primaryMobile||'')+' '+(c.secondaryMobile||'')).toLowerCase().includes(q));
+    if(found.length){
+      v15Go('recovery');
+      const inp=document.getElementById('v15RecoveryQuery');if(inp){inp.value=q;v15RenderRecovery()}
+      return;
+    }
+    const loan=loans().find(l=>(l.id+' '+l.loanNo+' '+(l.productName||'')).toLowerCase().includes(q));
+    if(loan){
+      v15Go('loans');
+      const inp=document.getElementById('v15RecoveryQuery');if(inp){inp.value=loan.id}
+    }else{
+      v15Go('recovery');
+      const inp=document.getElementById('v15RecoveryQuery');if(inp){inp.value=q;v15RenderRecovery()}
+    }
+  }
+
+  function addFormGuides(){
+    document.querySelectorAll('.v15-module .card').forEach(card=>{
+      const h=card.querySelector('h2');
+      if(!h)return;
+      if(card.querySelector('.v15-form-guide'))return;
+      const text=h.textContent.toLowerCase();
+      let guide='';
+      if(text.includes('customer'))guide='Customer identity is maintained as a master record. Loan-specific customer and guarantor snapshots remain historical.';
+      else if(text.includes('product'))guide='Products are master categories. Each loan contract references a product without changing historical loan data.';
+      else if(text.includes('loan'))guide='Loan operations are scoped by immutable Loan ID. Customer and guarantor details are preserved per loan.';
+      else if(text.includes('statement'))guide='Customer-facing output stays clean and banking-style; internal allocation and penalty mechanics remain hidden.';
+      else if(text.includes('penalty'))guide='Penalty is an independent internal ledger. It supports partial collections and separate actual receipt dates.';
+      if(guide){
+        const d=document.createElement('div');d.className='v15-form-guide';d.textContent=guide;
+        h.insertAdjacentElement('afterend',d);
+      }
+    });
+  }
+
+  // KPI click routing
+  document.addEventListener('click',e=>{
+    const k=e.target.closest('[data-v15-drill]');
+    if(k)openDrill(k.dataset.v15Drill);
+  });
+
+  function boot(){
+    document.body.classList.add('v15-ready');
+    assignLegacyCards();
+    navSetup();
+    addFormGuides();
+    refreshDashboard();
+    v15RenderRecovery();
+    const gs=document.getElementById('v15GlobalSearch');
+    if(gs)gs.addEventListener('keydown',e=>{if(e.key==='Enter')globalSearch(gs.value)});
+    // Keep dashboard values fresh after existing actions.
+    setInterval(refreshDashboard,1500);
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
+  else boot();
 })();
 </script>
 
