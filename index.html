@@ -142,223 +142,212 @@ Agreed business rules through this version:
 }
 
 
-/* =========================================================
-   V15 PREMIUM BANKING UI
-   Existing business logic is preserved; this layer organizes
-   the workspace and adds dashboard/report UX.
-   ========================================================= */
+/* ============================================================
+   V16 BANKING WORKSPACE — CLEAN SINGLE-NAVIGATION REDESIGN
+   ============================================================ */
 :root{
-  --v15-bg:#f4f7fb;
-  --v15-surface:#ffffff;
-  --v15-surface-2:#f8fafc;
-  --v15-border:#e2e8f0;
-  --v15-text:#0f172a;
-  --v15-muted:#64748b;
-  --v15-brand:#173a5e;
-  --v15-brand-2:#0b5cab;
-  --v15-brand-soft:#eaf2fb;
-  --v15-success:#15803d;
-  --v15-warning:#b45309;
-  --v15-danger:#b91c1c;
-  --v15-shadow:0 12px 32px rgba(15,23,42,.07);
-  --v15-radius:16px;
+  --b16-bg:#f3f6fa;
+  --b16-card:#ffffff;
+  --b16-text:#172033;
+  --b16-muted:#6b778c;
+  --b16-line:#dde4ee;
+  --b16-navy:#153a5b;
+  --b16-navy2:#0f2f4a;
+  --b16-blue:#1c65a6;
+  --b16-soft:#edf4fb;
+  --b16-green:#19734a;
+  --b16-amber:#a86412;
+  --b16-red:#af3f3f;
+  --b16-shadow:0 10px 26px rgba(22,42,68,.07);
 }
-html{scroll-behavior:smooth}
-body{
-  background:var(--v15-bg)!important;
-  color:var(--v15-text)!important;
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
-}
-body.v15-ready .wrap{max-width:none!important;width:100%!important;margin:0!important;padding:0!important}
-body.v15-ready .wrap>h1,
-body.v15-ready .wrap>.sub{display:none!important}
-body.v15-ready .card,
-body.v15-ready section.card{
-  border:1px solid var(--v15-border)!important;
-  border-radius:var(--v15-radius)!important;
-  box-shadow:var(--v15-shadow)!important;
-  background:var(--v15-surface)!important;
-}
-body.v15-ready h2{color:var(--v15-text)!important;font-weight:750!important;letter-spacing:-.02em}
-body.v15-ready h3{color:#1e293b!important}
-body.v15-ready label{color:#334155!important;font-weight:600!important}
-body.v15-ready input,
-body.v15-ready select,
-body.v15-ready textarea{
-  border:1px solid #cbd5e1!important;
-  border-radius:10px!important;
+*{box-sizing:border-box}
+html,body{margin:0!important;max-width:100%!important;overflow-x:hidden!important;background:var(--b16-bg)!important}
+body.b16-ready{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;color:var(--b16-text)!important}
+body.b16-ready>.wrap{display:none!important}
+body.b16-ready>body>.card{display:none}
+body.b16-ready .card,
+body.b16-ready section.card{
+  max-width:none!important;
+  margin:0 0 16px!important;
+  padding:18px!important;
   background:#fff!important;
-  min-height:42px;
-  box-sizing:border-box;
+  border:1px solid var(--b16-line)!important;
+  border-radius:16px!important;
+  box-shadow:var(--b16-shadow)!important;
 }
-body.v15-ready input:focus,
-body.v15-ready select:focus,
-body.v15-ready textarea:focus{
-  outline:none!important;
-  border-color:#5b8fc4!important;
-  box-shadow:0 0 0 3px rgba(11,92,171,.10)!important;
-}
-body.v15-ready button{
-  border-radius:10px!important;
+body.b16-ready h1,body.b16-ready h2,body.b16-ready h3{color:var(--b16-text)!important}
+body.b16-ready h2{font-size:18px!important;margin:0 0 14px!important}
+body.b16-ready input,
+body.b16-ready select,
+body.b16-ready textarea{
+  width:100%!important;
+  max-width:100%!important;
+  min-height:42px!important;
   border:1px solid #cbd5e1!important;
+  border-radius:10px!important;
+  padding:9px 10px!important;
+  background:#fff!important;
+}
+body.b16-ready textarea{min-height:78px!important}
+body.b16-ready input:focus,
+body.b16-ready select:focus,
+body.b16-ready textarea:focus{
+  outline:none!important;border-color:#6c9bc7!important;box-shadow:0 0 0 3px rgba(28,101,166,.10)!important;
+}
+body.b16-ready button{
+  border-radius:10px!important;
+  border:1px solid #c8d2df!important;
+  min-height:38px;
   font-weight:650!important;
-  transition:transform .12s ease,box-shadow .12s ease,background .12s ease!important;
 }
-body.v15-ready button:hover{transform:translateY(-1px);box-shadow:0 5px 15px rgba(15,23,42,.08)}
-body.v15-ready button.primary{
-  background:var(--v15-brand)!important;
-  color:#fff!important;
-  border-color:var(--v15-brand)!important;
+body.b16-ready button.primary,
+.b16-primary{
+  background:var(--b16-navy)!important;color:#fff!important;border-color:var(--b16-navy)!important;
 }
-body.v15-ready table{border-color:var(--v15-border)!important}
-body.v15-ready th{
-  background:#f8fafc!important;
-  color:#475569!important;
-  font-size:12px!important;
-  text-transform:uppercase;
-  letter-spacing:.04em;
+body.b16-ready table{width:100%!important;border-collapse:collapse!important}
+body.b16-ready th{
+  background:#f7f9fc!important;color:#526176!important;font-size:11px!important;
+  text-transform:uppercase;letter-spacing:.035em
 }
-body.v15-ready .notice{border-radius:12px!important;border-color:var(--v15-border)!important}
-body.v15-ready .metric{
-  border:1px solid var(--v15-border)!important;
-  background:#fff!important;
-  border-radius:14px!important;
+body.b16-ready th,body.b16-ready td{
+  padding:9px 8px!important;border-bottom:1px solid #e6ebf2!important;
 }
-body.v15-ready .statement-paper{
-  border:1px solid var(--v15-border)!important;
-  border-radius:14px!important;
-  box-shadow:var(--v15-shadow)!important;
+body.b16-ready .grid,
+body.b16-ready .grid-3,
+body.b16-ready .customer-grid,
+body.b16-ready .penalty-grid{
+  align-items:start!important;
 }
-
-/* Shell */
-.v15-shell{display:flex;min-height:100vh}
-.v15-sidebar{
-  width:250px;background:linear-gradient(180deg,#102f4d 0%,#0d2741 100%);
-  color:#fff;position:fixed;left:0;top:0;bottom:0;z-index:900;
-  padding:18px 14px;overflow:auto
+.b16-app{min-height:100vh;display:flex}
+.b16-sidebar{
+  width:236px;position:fixed;left:0;top:0;bottom:0;z-index:1000;
+  background:linear-gradient(180deg,var(--b16-navy2),#0b253b);
+  padding:18px 13px;color:white;overflow-y:auto
 }
-.v15-brand{padding:10px 10px 18px;border-bottom:1px solid rgba(255,255,255,.13);margin-bottom:12px}
-.v15-brand-title{font-size:19px;font-weight:800;letter-spacing:-.02em}
-.v15-brand-sub{font-size:11px;color:#bfd0e1;margin-top:4px}
-.v15-nav-label{font-size:10px;color:#8fa9c2;text-transform:uppercase;letter-spacing:.12em;padding:12px 10px 6px}
-.v15-nav button{
-  width:100%;display:flex;align-items:center;gap:10px;text-align:left;
-  color:#dce8f4;background:transparent;border:1px solid transparent!important;
-  padding:10px 11px;margin:2px 0;border-radius:10px!important;font-size:13px
+.b16-brand{padding:8px 10px 18px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:12px}
+.b16-brand-name{font-size:18px;font-weight:800;line-height:1.25}
+.b16-brand-sub{font-size:10px;color:#abc2d8;margin-top:5px;letter-spacing:.04em}
+.b16-nav-title{font-size:9px;color:#7897b2;text-transform:uppercase;letter-spacing:.13em;padding:13px 9px 6px}
+.b16-nav-btn{
+  width:100%;display:flex;align-items:center;gap:9px;padding:10px 10px!important;
+  background:transparent!important;color:#dbe8f4!important;border:1px solid transparent!important;
+  text-align:left!important;margin:2px 0;border-radius:10px!important;font-size:12px!important;
 }
-.v15-nav button:hover{background:rgba(255,255,255,.07);transform:none;box-shadow:none}
-.v15-nav button.active{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.14)!important;color:#fff}
-.v15-nav .dot{width:7px;height:7px;border-radius:50%;background:#80b8e8;flex:none}
-.v15-main{margin-left:250px;flex:1;min-width:0}
-.v15-topbar{
-  position:sticky;top:0;z-index:800;background:rgba(244,247,251,.92);
-  backdrop-filter:blur(12px);border-bottom:1px solid var(--v15-border);
-  padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px
+.b16-nav-btn:hover,.b16-nav-btn.active{background:rgba(255,255,255,.10)!important;color:#fff!important}
+.b16-nav-dot{width:7px;height:7px;border-radius:50%;background:#70aee0;flex:none}
+.b16-main{margin-left:236px;min-width:0;width:calc(100% - 236px)}
+.b16-topbar{
+  height:68px;padding:10px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  position:sticky;top:0;z-index:800;background:rgba(243,246,250,.95);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--b16-line)
 }
-.v15-top-title{font-size:17px;font-weight:800}
-.v15-top-sub{font-size:12px;color:var(--v15-muted);margin-top:2px}
-.v15-search{
-  display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--v15-border);
-  border-radius:12px;padding:5px 8px;width:min(420px,48vw)
+.b16-page-title{font-size:19px;font-weight:800}
+.b16-page-sub{font-size:11px;color:var(--b16-muted);margin-top:2px}
+.b16-top-actions{display:flex;gap:8px;align-items:center}
+.b16-search{
+  width:min(360px,34vw);display:flex;align-items:center;background:white;border:1px solid var(--b16-line);
+  border-radius:11px;padding:3px 8px
 }
-.v15-search input{border:0!important;box-shadow:none!important;min-height:34px!important;flex:1}
-.v15-content{padding:24px;max-width:1600px;margin:auto}
-.v15-module{display:none}
-.v15-module.active{display:block}
-.v15-section-head{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:15px;
-  margin:0 0 16px
+.b16-search input{border:0!important;box-shadow:none!important;min-height:34px!important}
+.b16-newloan{
+  background:var(--b16-navy)!important;color:white!important;border-color:var(--b16-navy)!important;
+  padding:0 14px!important;white-space:nowrap
 }
-.v15-section-title{font-size:24px;font-weight:800;letter-spacing:-.03em}
-.v15-section-sub{font-size:13px;color:var(--v15-muted);margin-top:4px}
-.v15-stack>*{margin-bottom:16px}
-
-/* Dashboard */
-.v15-hero{
-  background:linear-gradient(135deg,#173a5e 0%,#0b5cab 100%);
-  border-radius:20px;padding:22px;color:#fff;box-shadow:0 16px 40px rgba(16,58,94,.18);
-  margin-bottom:18px
+.b16-content{max-width:1580px;margin:0 auto;padding:20px}
+.b16-module{display:none}
+.b16-module.active{display:block}
+.b16-module-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:2px 0 16px}
+.b16-module-title{font-size:25px;font-weight:820;letter-spacing:-.03em}
+.b16-module-desc{font-size:12px;color:var(--b16-muted);margin-top:4px}
+.b16-dashboard-hero{
+  padding:21px;border-radius:18px;color:white;
+  background:linear-gradient(135deg,#153a5b,#1c65a6);box-shadow:0 15px 35px rgba(21,58,91,.16)
 }
-.v15-hero-row{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}
-.v15-hero h2{color:#fff!important;margin:0;font-size:25px}
-.v15-hero p{margin:5px 0 0;color:#d8e7f5;font-size:13px}
-.v15-hero-meta{display:flex;gap:8px;flex-wrap:wrap}
-.v15-pill{padding:7px 10px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.10);font-size:11px}
-.v15-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
-.v15-kpi{
-  background:#fff;border:1px solid var(--v15-border);border-radius:15px;padding:15px;
-  box-shadow:0 8px 22px rgba(15,23,42,.05);cursor:pointer
+.b16-dashboard-hero h2{color:white!important;font-size:24px!important;margin:0!important}
+.b16-dashboard-hero p{margin:6px 0 0;color:#dceaf6;font-size:12px}
+.b16-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:11px;margin-top:14px}
+.b16-kpi{
+  background:white;border:1px solid var(--b16-line);border-radius:14px;padding:14px;box-shadow:var(--b16-shadow);cursor:pointer
 }
-.v15-kpi:hover{border-color:#9fb9d3;transform:translateY(-2px);transition:.15s}
-.v15-kpi-label{font-size:11px;color:var(--v15-muted);text-transform:uppercase;letter-spacing:.06em}
-.v15-kpi-value{font-size:23px;font-weight:800;margin-top:7px;letter-spacing:-.03em}
-.v15-kpi-note{font-size:11px;color:var(--v15-muted);margin-top:5px}
-.v15-dashboard-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:16px;margin-top:16px}
-.v15-panel{background:#fff;border:1px solid var(--v15-border);border-radius:16px;padding:16px;box-shadow:var(--v15-shadow)}
-.v15-panel-title{font-weight:800;font-size:15px}
-.v15-panel-sub{font-size:12px;color:var(--v15-muted);margin-top:3px}
-.v15-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.v15-quick button{min-height:64px;background:#f8fafc!important;text-align:left}
-.v15-quick strong{display:block}
-.v15-quick small{display:block;color:var(--v15-muted);margin-top:3px}
-
-/* Filters & drilldown */
-.v15-filterbar{
-  display:grid;grid-template-columns:repeat(6,minmax(120px,1fr));gap:9px;
-  padding:12px;background:#f8fafc;border:1px solid var(--v15-border);border-radius:13px;
-  margin-bottom:12px
+.b16-kpi:hover{border-color:#a8bfd5}
+.b16-kpi-label{font-size:10px;color:var(--b16-muted);text-transform:uppercase;letter-spacing:.06em}
+.b16-kpi-value{font-size:22px;font-weight:800;margin-top:6px;letter-spacing:-.03em}
+.b16-kpi-note{font-size:10px;color:#8692a4;margin-top:4px}
+.b16-dashboard-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}
+.b16-panel{background:#fff;border:1px solid var(--b16-line);border-radius:15px;padding:16px;box-shadow:var(--b16-shadow)}
+.b16-panel-title{font-size:14px;font-weight:800}
+.b16-panel-sub{font-size:11px;color:var(--b16-muted);margin-top:3px}
+.b16-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
+.b16-action{
+  text-align:left!important;padding:12px!important;min-height:68px!important;background:#f8fafc!important;
 }
-.v15-filterbar label{font-size:11px}
-.v15-filterbar input,.v15-filterbar select{min-height:38px!important;font-size:12px}
-.v15-report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.v15-drill-modal{display:none;position:fixed;inset:0;background:rgba(2,6,23,.62);z-index:12000;padding:18px;overflow:auto}
-.v15-drill-panel{max-width:1250px;margin:20px auto;background:#fff;border-radius:18px;padding:18px;box-shadow:0 25px 80px rgba(0,0,0,.25)}
-.v15-modal-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.v15-modal-title{font-size:20px;font-weight:800}
-.v15-report-table{width:100%;border-collapse:collapse}
-.v15-report-table th,.v15-report-table td{padding:9px 8px;border-bottom:1px solid #e5e7eb;text-align:left;white-space:nowrap}
-.v15-report-table td{font-size:12px}
-
-/* Search center */
-.v15-search-center{margin-bottom:16px}
-.v15-search-results{max-height:520px;overflow:auto;border:1px solid var(--v15-border);border-radius:12px}
-.v15-result-row{padding:12px;border-bottom:1px solid #e5e7eb;display:grid;grid-template-columns:1.2fr 1fr 1fr .8fr;gap:10px}
-.v15-result-row:last-child{border-bottom:0}
-.v15-result-main{font-weight:750}.v15-result-meta{font-size:11px;color:var(--v15-muted);margin-top:3px}
-.v15-badge{display:inline-block;padding:4px 7px;border-radius:999px;background:#eef2f7;color:#475569;font-size:10px;font-weight:700}
-.v15-empty{padding:28px;text-align:center;color:var(--v15-muted)}
-
-/* Form grouping */
-.v15-form-guide{
-  padding:10px 12px;background:#f8fafc;border-left:3px solid #5b8fc4;
-  border-radius:8px;color:#475569;font-size:12px;margin-bottom:12px
+.b16-action strong{display:block;color:#1f2d40}
+.b16-action span{display:block;font-size:10px;color:var(--b16-muted);margin-top:4px}
+.b16-toolbar{
+  display:grid;grid-template-columns:2fr repeat(4,1fr);gap:8px;padding:12px;
+  background:#f8fafc;border:1px solid var(--b16-line);border-radius:12px;margin-bottom:12px
 }
-.v15-mobile-nav{display:none}
-@media(max-width:1200px){
-  .v15-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .v15-dashboard-grid{grid-template-columns:1fr}
-  .v15-filterbar{grid-template-columns:repeat(3,minmax(120px,1fr))}
+.b16-toolbar label{font-size:10px;color:#526176;font-weight:700}
+.b16-toolbar input,.b16-toolbar select{min-height:37px!important;font-size:12px}
+.b16-tablewrap{overflow:auto;border:1px solid var(--b16-line);border-radius:12px;background:#fff}
+.b16-empty{text-align:center;padding:28px;color:var(--b16-muted);font-size:12px}
+.b16-chip{display:inline-block;padding:4px 7px;border-radius:999px;background:#edf2f7;color:#526176;font-size:10px;font-weight:700}
+.b16-mobilebar{display:none}
+.b16-modal{
+  display:none;position:fixed;inset:0;background:rgba(8,20,34,.62);z-index:15000;
+  padding:18px;overflow:auto
 }
-@media(max-width:850px){
-  .v15-sidebar{display:none}
-  .v15-main{margin-left:0}
-  .v15-mobile-nav{display:flex;gap:7px;overflow:auto;padding:8px 12px;background:#102f4d}
-  .v15-mobile-nav button{white-space:nowrap;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:8px 11px;border-radius:9px}
-  .v15-content{padding:14px}
-  .v15-topbar{padding:10px 14px}
-  .v15-topbar .v15-search{display:none}
-  .v15-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .v15-quick{grid-template-columns:1fr 1fr}
-  .v15-filterbar{grid-template-columns:1fr 1fr}
-  .v15-result-row{grid-template-columns:1fr 1fr}
+.b16-modal-panel{
+  width:min(1180px,96vw);margin:14px auto;background:var(--b16-bg);border-radius:18px;
+  box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden
+}
+.b16-modal-head{
+  position:sticky;top:0;z-index:4;background:#fff;border-bottom:1px solid var(--b16-line);
+  padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px
+}
+.b16-modal-title{font-size:18px;font-weight:800}
+.b16-modal-sub{font-size:11px;color:var(--b16-muted);margin-top:2px}
+.b16-modal-body{padding:16px}
+.b16-modal-body>.card{margin-bottom:14px!important}
+.b16-close{background:#fff!important;min-width:38px}
+.b16-note{
+  padding:10px 12px;border-left:3px solid #5f91bd;background:#f5f9fd;border-radius:8px;
+  font-size:11px;color:#526176;margin-bottom:12px
+}
+.b16-report-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+@media(max-width:1180px){
+  .b16-kpis{grid-template-columns:repeat(3,1fr)}
+  .b16-toolbar{grid-template-columns:repeat(3,1fr)}
+  .b16-dashboard-grid{grid-template-columns:1fr}
+}
+@media(max-width:820px){
+  .b16-sidebar{display:none}
+  .b16-main{margin-left:0;width:100%}
+  .b16-mobilebar{
+    display:flex;gap:7px;overflow-x:auto;background:var(--b16-navy2);padding:8px 10px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none
+  }
+  .b16-mobilebar::-webkit-scrollbar{display:none}
+  .b16-mobilebar button{
+    flex:0 0 auto;background:rgba(255,255,255,.08)!important;color:white!important;
+    border-color:rgba(255,255,255,.12)!important;padding:7px 10px!important;white-space:nowrap;font-size:11px!important
+  }
+  .b16-topbar{padding:9px 12px;height:auto;min-height:62px}
+  .b16-search{display:none}
+  .b16-content{padding:12px}
+  .b16-kpis{grid-template-columns:repeat(2,1fr)}
+  .b16-actions{grid-template-columns:1fr 1fr}
+  .b16-toolbar{grid-template-columns:1fr 1fr}
 }
 @media(max-width:520px){
-  .v15-kpis{grid-template-columns:1fr 1fr}
-  .v15-kpi-value{font-size:19px}
-  .v15-filterbar{grid-template-columns:1fr}
-  .v15-quick{grid-template-columns:1fr}
-  .v15-section-title{font-size:20px}
-  .v15-hero h2{font-size:21px}
+  .b16-module-title{font-size:21px}
+  .b16-kpis{grid-template-columns:1fr 1fr}
+  .b16-kpi-value{font-size:18px}
+  .b16-actions{grid-template-columns:1fr}
+  .b16-toolbar{grid-template-columns:1fr}
+  .b16-top-actions .b16-newloan{font-size:11px!important;padding:0 10px!important}
+  .b16-modal{padding:6px}
+  .b16-modal-panel{width:100%;margin:2px auto;border-radius:12px}
 }
 
 </style>
@@ -374,194 +363,189 @@ body.v15-ready .statement-paper{
         </head>
 <body>
 
-<!-- =========================================================
-     V15 PREMIUM BANKING WORKSPACE
-     ========================================================= -->
-<div id="v15Shell" class="v15-shell">
-  <aside class="v15-sidebar">
-    <div class="v15-brand">
-      <div class="v15-brand-title" id="v15BrandName">Microfinance Core</div>
-      <div class="v15-brand-sub">Loan & Collection Management</div>
+<!-- ================= V16 CLEAN BANKING WORKSPACE ================= -->
+<div id="b16App" class="b16-app">
+  <aside class="b16-sidebar">
+    <div class="b16-brand">
+      <div id="b16BrandName" class="b16-brand-name">Microfinance Core</div>
+      <div class="b16-brand-sub">LOAN • RECOVERY • PORTFOLIO</div>
     </div>
-    <div class="v15-nav">
-      <div class="v15-nav-label">Workspace</div>
-      <button data-v15-nav="overview" class="active"><span class="dot"></span>Overview</button>
+    <div class="b16-nav-title">Dashboard</div>
+    <button class="b16-nav-btn active" data-b16-nav="overview"><span class="b16-nav-dot"></span>Overview</button>
 
-      <div class="v15-nav-label">Masters</div>
-      <button data-v15-nav="master"><span class="dot"></span>Business & Products</button>
-      <button data-v15-nav="customers"><span class="dot"></span>Customers</button>
+    <div class="b16-nav-title">Master Data</div>
+    <button class="b16-nav-btn" data-b16-nav="masters"><span class="b16-nav-dot"></span>Business & Products</button>
+    <button class="b16-nav-btn" data-b16-nav="customers"><span class="b16-nav-dot"></span>Customers</button>
 
-      <div class="v15-nav-label">Operations</div>
-      <button data-v15-nav="loans"><span class="dot"></span>Loans & Lifecycle</button>
-      <button data-v15-nav="collections"><span class="dot"></span>Collections & Schedules</button>
-      <button data-v15-nav="recovery"><span class="dot"></span>Recovery Search</button>
+    <div class="b16-nav-title">Loan Operations</div>
+    <button class="b16-nav-btn" data-b16-nav="loans"><span class="b16-nav-dot"></span>Loans & Lifecycle</button>
+    <button class="b16-nav-btn" data-b16-nav="collections"><span class="b16-nav-dot"></span>Collections</button>
+    <button class="b16-nav-btn" data-b16-nav="recovery"><span class="b16-nav-dot"></span>Recovery Search</button>
 
-      <div class="v15-nav-label">Reports</div>
-      <button data-v15-nav="reports"><span class="dot"></span>Statements & Reports</button>
-      <button data-v15-nav="penalties"><span class="dot"></span>Penalty Management</button>
-    </div>
+    <div class="b16-nav-title">Control & Reports</div>
+    <button class="b16-nav-btn" data-b16-nav="reports"><span class="b16-nav-dot"></span>Reports & Statements</button>
+    <button class="b16-nav-btn" data-b16-nav="penalties"><span class="b16-nav-dot"></span>Penalty Management</button>
   </aside>
 
-  <main class="v15-main">
-    <div class="v15-topbar">
+  <main class="b16-main">
+    <header class="b16-topbar">
       <div>
-        <div class="v15-top-title" id="v15PageTitle">Overview</div>
-        <div class="v15-top-sub">Professional loan portfolio workspace</div>
+        <div id="b16PageTitle" class="b16-page-title">Overview</div>
+        <div class="b16-page-sub">Professional loan portfolio workspace</div>
       </div>
-      <div class="v15-search">
-        <span style="font-size:13px">⌕</span>
-        <input id="v15GlobalSearch" placeholder="Search customer, loan, mobile or transaction...">
+      <div class="b16-top-actions">
+        <div class="b16-search"><input id="b16GlobalSearch" placeholder="Search customer / loan / mobile"></div>
+        <button type="button" class="b16-newloan" onclick="b16OpenNewLoan()">+ New Loan / Client</button>
       </div>
+    </header>
+
+    <div class="b16-mobilebar">
+      <button data-b16-nav="overview">Overview</button>
+      <button data-b16-nav="masters">Masters</button>
+      <button data-b16-nav="customers">Customers</button>
+      <button data-b16-nav="loans">Loans</button>
+      <button data-b16-nav="collections">Collections</button>
+      <button data-b16-nav="recovery">Recovery</button>
+      <button data-b16-nav="reports">Reports</button>
+      <button data-b16-nav="penalties">Penalties</button>
     </div>
 
-    <div class="v15-mobile-nav">
-      <button data-v15-nav="overview">Overview</button>
-      <button data-v15-nav="master">Masters</button>
-      <button data-v15-nav="customers">Customers</button>
-      <button data-v15-nav="loans">Loans</button>
-      <button data-v15-nav="collections">Collections</button>
-      <button data-v15-nav="recovery">Recovery</button>
-      <button data-v15-nav="reports">Reports</button>
-      <button data-v15-nav="penalties">Penalties</button>
-    </div>
+    <div class="b16-content">
+      <section id="b16-overview" class="b16-module active">
+        <div class="b16-dashboard-hero">
+          <h2 id="b16HeroBusiness">Microfinance Core</h2>
+          <p>Portfolio, collection, recovery and loan controls in one organized workspace.</p>
+        </div>
 
-    <div class="v15-content">
-      <section id="v15Module-overview" class="v15-module active">
-        <div class="v15-hero">
-          <div class="v15-hero-row">
-            <div>
-              <h2 id="v15HeroBusiness">Microfinance Core</h2>
-              <p>Banking-style portfolio overview, collections, recovery and reporting.</p>
+        <div class="b16-kpis">
+          <div class="b16-kpi" onclick="b16OpenRegister('portfolio')"><div class="b16-kpi-label">Loan Portfolio</div><div id="b16Portfolio" class="b16-kpi-value">₹0</div><div class="b16-kpi-note">Total contractual principal</div></div>
+          <div class="b16-kpi" onclick="b16OpenRegister('collections')"><div class="b16-kpi-label">Collections</div><div id="b16Collections" class="b16-kpi-value">₹0</div><div class="b16-kpi-note">Total recorded receipts</div></div>
+          <div class="b16-kpi" onclick="b16OpenRegister('outstanding')"><div class="b16-kpi-label">Outstanding EMI</div><div id="b16Outstanding" class="b16-kpi-value">₹0</div><div class="b16-kpi-note">Unpaid scheduled amount</div></div>
+          <div class="b16-kpi" onclick="b16Go('customers')"><div class="b16-kpi-label">Customers</div><div id="b16Customers" class="b16-kpi-value">0</div><div class="b16-kpi-note">Master customer records</div></div>
+          <div class="b16-kpi" onclick="b16Go('loans')"><div class="b16-kpi-label">Loans</div><div id="b16Loans" class="b16-kpi-value">0</div><div class="b16-kpi-note">Loan contracts</div></div>
+          <div class="b16-kpi" onclick="b16Go('penalties')"><div class="b16-kpi-label">Penalty Outstanding</div><div id="b16Penalty" class="b16-kpi-value">₹0</div><div class="b16-kpi-note">Internal only</div></div>
+        </div>
+
+        <div class="b16-dashboard-grid">
+          <div class="b16-panel">
+            <div class="b16-panel-title">Quick Operations</div>
+            <div class="b16-panel-sub">Common actions without searching through the page.</div>
+            <div class="b16-actions">
+              <button class="b16-action" onclick="b16OpenNewLoan()"><strong>New Loan / Client</strong><span>Customer, guarantor and loan setup</span></button>
+              <button class="b16-action" onclick="b16Go('recovery')"><strong>Customer Recovery</strong><span>Search receipts with advanced filters</span></button>
+              <button class="b16-action" onclick="b16Go('collections')"><strong>Receive Payment</strong><span>Loan-scoped transaction and allocation</span></button>
+              <button class="b16-action" onclick="b16Go('reports')"><strong>Reports</strong><span>Statement, due sheet and registers</span></button>
+              <button class="b16-action" onclick="b16Go('customers')"><strong>Customer Master</strong><span>Customer and loan tree</span></button>
+              <button class="b16-action" onclick="b16Go('penalties')"><strong>Penalty Control</strong><span>Loan-wise internal penalty ledger</span></button>
             </div>
-            <div class="v15-hero-meta">
-              <span class="v15-pill" id="v15Today">Today</span>
-              <span class="v15-pill" id="v15PortfolioState">Portfolio</span>
-            </div>
+          </div>
+          <div class="b16-panel">
+            <div class="b16-panel-title">Recent Loans</div>
+            <div class="b16-panel-sub">Latest loan contracts</div>
+            <div id="b16RecentLoans" style="margin-top:10px"></div>
           </div>
         </div>
 
-        <div class="v15-kpis">
-          <div class="v15-kpi" data-v15-drill="portfolio"><div class="v15-kpi-label">Loan Portfolio</div><div id="v15KpiPortfolio" class="v15-kpi-value">₹0</div><div class="v15-kpi-note">Contractual principal</div></div>
-          <div class="v15-kpi" data-v15-drill="collections"><div class="v15-kpi-label">Collections</div><div id="v15KpiCollections" class="v15-kpi-value">₹0</div><div class="v15-kpi-note">Recorded receipts</div></div>
-          <div class="v15-kpi" data-v15-drill="outstanding"><div class="v15-kpi-label">Outstanding EMI</div><div id="v15KpiOutstanding" class="v15-kpi-value">₹0</div><div class="v15-kpi-note">Scheduled unpaid amount</div></div>
-          <div class="v15-kpi" data-v15-drill="customers"><div class="v15-kpi-label">Customers</div><div id="v15KpiCustomers" class="v15-kpi-value">0</div><div class="v15-kpi-note">Customer master</div></div>
-          <div class="v15-kpi" data-v15-drill="loans"><div class="v15-kpi-label">Loans</div><div id="v15KpiLoans" class="v15-kpi-value">0</div><div class="v15-kpi-note">Loan contracts</div></div>
-          <div class="v15-kpi" data-v15-drill="penalties"><div class="v15-kpi-label">Penalty Outstanding</div><div id="v15KpiPenalty" class="v15-kpi-value">₹0</div><div class="v15-kpi-note">Internal penalty ledger</div></div>
-        </div>
-
-        <div class="v15-dashboard-grid">
-          <div class="v15-panel">
-            <div class="v15-panel-title">Portfolio Activity</div>
-            <div class="v15-panel-sub">Click a metric above to open its detailed, filterable register.</div>
-            <div class="v15-quick">
-              <button type="button" onclick="v15Go('customers')"><strong>Customer Master</strong><small>Search and maintain customer records</small></button>
-              <button type="button" onclick="v15Go('loans')"><strong>Loan Contracts</strong><small>Products, lifecycle and snapshots</small></button>
-              <button type="button" onclick="v15Go('collections')"><strong>Collections</strong><small>Schedules, receipts and allocation audit</small></button>
-              <button type="button" onclick="v15Go('recovery')"><strong>Recovery Center</strong><small>Find customer and payment history quickly</small></button>
-              <button type="button" onclick="v15Go('reports')"><strong>Reports</strong><small>Statements, due sheets and exports</small></button>
-              <button type="button" onclick="v15Go('penalties')"><strong>Penalty Control</strong><small>Loan-wise penalty and collection history</small></button>
-            </div>
-          </div>
-          <div class="v15-panel">
-            <div class="v15-panel-title">Recent Portfolio Loans</div>
-            <div class="v15-panel-sub">Latest loan contracts</div>
-            <div id="v15RecentLoans" style="margin-top:12px"></div>
-          </div>
-        </div>
-
-        <div class="v15-panel" style="margin-top:16px">
-          <div class="v15-panel-title">Portfolio by Product</div>
-          <div class="v15-panel-sub">Loan count and contractual principal by product category</div>
-          <div id="v15ProductBreakdown" style="margin-top:12px;overflow:auto"></div>
+        <div class="b16-panel" style="margin-top:14px">
+          <div class="b16-panel-title">Product-wise Portfolio</div>
+          <div class="b16-panel-sub">Categorized by product / loan amount</div>
+          <div id="b16ProductPortfolio" class="b16-tablewrap" style="margin-top:10px"></div>
         </div>
       </section>
 
-      <section id="v15Module-master" class="v15-module">
-        <div class="v15-section-head"><div><div class="v15-section-title">Business & Product Masters</div><div class="v15-section-sub">Business identity, product categories and master configuration.</div></div></div>
-        <div id="v15MasterStack" class="v15-stack"></div>
+      <section id="b16-masters" class="b16-module">
+        <div class="b16-module-head"><div><div class="b16-module-title">Business & Product Masters</div><div class="b16-module-desc">Business identity and loan product configuration.</div></div></div>
+        <div id="b16MastersStack"></div>
       </section>
 
-      <section id="v15Module-customers" class="v15-module">
-        <div class="v15-section-head"><div><div class="v15-section-title">Customer Management</div><div class="v15-section-sub">Customer master, guarantor snapshots and chronological loan tree.</div></div></div>
-        <div id="v15CustomerStack" class="v15-stack"></div>
+      <section id="b16-customers" class="b16-module">
+        <div class="b16-module-head"><div><div class="b16-module-title">Customer Management</div><div class="b16-module-desc">Customer master, historical snapshots and loan tree.</div></div></div>
+        <div class="b16-note">Customer is the permanent master record. Each loan keeps its own customer/guarantor snapshot so older contracts do not change when master data is updated.</div>
+        <div id="b16CustomersStack"></div>
       </section>
 
-      <section id="v15Module-loans" class="v15-module">
-        <div class="v15-section-head"><div><div class="v15-section-title">Loans & Lifecycle</div><div class="v15-section-sub">Loan creation, finance setup, contract result and lifecycle controls.</div></div></div>
-        <div id="v15LoanStack" class="v15-stack"></div>
+      <section id="b16-loans" class="b16-module">
+        <div class="b16-module-head"><div><div class="b16-module-title">Loans & Lifecycle</div><div class="b16-module-desc">Contract identity, lifecycle, renewals and top-ups.</div></div><button class="b16-primary" onclick="b16OpenNewLoan()">+ New Loan</button></div>
+        <div id="b16LoansStack"></div>
       </section>
 
-      <section id="v15Module-collections" class="v15-module">
-        <div class="v15-section-head"><div><div class="v15-section-title">Collections & Schedules</div><div class="v15-section-sub">Loan-scoped schedules, receipts, advance allocation and audit.</div></div></div>
-        <div id="v15CollectionStack" class="v15-stack"></div>
+      <section id="b16-collections" class="b16-module">
+        <div class="b16-module-head"><div><div class="b16-module-title">Collections & Repayment</div><div class="b16-module-desc">Schedule, receipts, advance allocation and loan-specific repayment audit.</div></div></div>
+        <div id="b16CollectionsStack"></div>
       </section>
 
-      <section id="v15Module-recovery" class="v15-module">
-        <div class="v15-section-head"><div><div class="v15-section-title">Recovery Center</div><div class="v15-section-sub">Advanced customer and collection search with date, month and year filters.</div></div></div>
-
-        <div class="v15-panel v15-search-center">
-          <div class="v15-filterbar">
-            <label>Search
-              <input id="v15RecoveryQuery" placeholder="Customer / Loan / Mobile / ID">
-            </label>
-            <label>From Date<input id="v15RecoveryFrom" type="date"></label>
-            <label>To Date<input id="v15RecoveryTo" type="date"></label>
-            <label>Year<input id="v15RecoveryYear" type="number" min="2000" max="2100" placeholder="YYYY"></label>
+      <section id="b16-recovery" class="b16-module">
+        <div class="b16-module-head"><div><div class="b16-module-title">Customer Recovery Search</div><div class="b16-module-desc">Search by customer, loan, mobile, date, month, year and payment mode.</div></div></div>
+        <div class="b16-panel">
+          <div class="b16-toolbar">
+            <label>Search<input id="b16RecoveryQ" placeholder="Customer / Loan / Mobile"></label>
+            <label>From<input id="b16RecoveryFrom" type="date"></label>
+            <label>To<input id="b16RecoveryTo" type="date"></label>
+            <label>Year<input id="b16RecoveryYear" type="number" placeholder="YYYY"></label>
             <label>Month
-              <select id="v15RecoveryMonth">
-                <option value="">All Months</option>
-                <option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option>
-                <option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option>
-                <option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
-              </select>
-            </label>
-            <label>Payment Mode
-              <select id="v15RecoveryMode">
-                <option value="">All Modes</option>
-                <option>Cash</option><option>UPI - PhonePe</option><option>UPI - Google Pay</option><option>UPI - Other</option><option>Bank Transfer</option><option>Cheque</option>
+              <select id="b16RecoveryMonth"><option value="">All</option>
+                <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option>
+                <option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option>
+                <option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
               </select>
             </label>
           </div>
-          <div class="v15-report-actions">
-            <button type="button" class="primary" onclick="v15RenderRecovery()">Search Recovery</button>
-            <button type="button" onclick="v15ClearRecovery()">Reset</button>
-            <button type="button" onclick="v15ExportRecoveryCSV()">Export Excel / CSV</button>
-            <button type="button" onclick="v15PrintRecovery()">Generate PDF / Print</button>
+          <div class="b16-report-actions">
+            <button class="b16-primary" onclick="b16RenderRecovery()">Search</button>
+            <button onclick="b16ClearRecovery()">Reset</button>
+            <button onclick="b16ExportRecoveryExcel()">Export Excel</button>
+            <button onclick="b16PrintRecovery()">PDF / Print</button>
           </div>
-          <div id="v15RecoverySummary" class="v15-panel-sub"></div>
-          <div id="v15RecoveryResults" class="v15-search-results" style="margin-top:10px"></div>
+          <div id="b16RecoverySummary" class="b16-panel-sub"></div>
+          <div id="b16RecoveryTable" class="b16-tablewrap" style="margin-top:10px"></div>
         </div>
       </section>
 
-      <section id="v15Module-reports" class="v15-module">
-        <div class="v15-section-head"><div><div class="v15-section-title">Statements & Reports</div><div class="v15-section-sub">Customer statement, due sheet and consolidated reporting workspace.</div></div></div>
-        <div id="v15ReportStack" class="v15-stack"></div>
+      <section id="b16-reports" class="b16-module">
+        <div class="b16-module-head"><div><div class="b16-module-title">Reports & Statements</div><div class="b16-module-desc">Customer statement, due sheet and consolidated loan history.</div></div></div>
+        <div id="b16ReportsStack"></div>
       </section>
 
-      <section id="v15Module-penalties" class="v15-module">
-        <div class="v15-section-head"><div><div class="v15-section-title">Penalty Management</div><div class="v15-section-sub">Independent internal penalty ledger with loan-wise history and partial collections.</div></div></div>
-        <div id="v15PenaltyStack" class="v15-stack"></div>
+      <section id="b16-penalties" class="b16-module">
+        <div class="b16-module-head"><div><div class="b16-module-title">Penalty Management</div><div class="b16-module-desc">Independent internal ledger with partial collections and loan-wise history.</div></div></div>
+        <div id="b16PenaltiesStack"></div>
       </section>
     </div>
   </main>
 </div>
 
-<div id="v15DrillModal" class="v15-drill-modal">
-  <div class="v15-drill-panel">
-    <div class="v15-modal-head">
-      <div><div id="v15DrillTitle" class="v15-modal-title">Portfolio Detail</div><div id="v15DrillSub" class="v15-panel-sub"></div></div>
-      <button type="button" onclick="v15CloseDrill()">✕</button>
+<div id="b16NewLoanModal" class="b16-modal">
+  <div class="b16-modal-panel">
+    <div class="b16-modal-head">
+      <div><div class="b16-modal-title">New Loan / New Client</div><div class="b16-modal-sub">Customer, guarantor, product and loan details in one workflow</div></div>
+      <button class="b16-close" onclick="b16CloseNewLoan()">✕</button>
     </div>
-    <div id="v15DrillFilters" class="v15-filterbar" style="margin-top:15px"></div>
-    <div class="v15-report-actions">
-      <button type="button" class="primary" onclick="v15RenderDrill()">Apply Filters</button>
-      <button type="button" onclick="v15ResetDrill()">Reset</button>
-      <button type="button" onclick="v15ExportDrillCSV()">Export Excel / CSV</button>
-      <button type="button" onclick="v15PrintDrill()">Generate PDF / Print</button>
+    <div id="b16NewLoanBody" class="b16-modal-body"></div>
+  </div>
+</div>
+
+<div id="b16RegisterModal" class="b16-modal">
+  <div class="b16-modal-panel">
+    <div class="b16-modal-head">
+      <div><div id="b16RegisterTitle" class="b16-modal-title">Portfolio Register</div><div class="b16-modal-sub">Filterable register with Excel and PDF/print export</div></div>
+      <button class="b16-close" onclick="b16CloseRegister()">✕</button>
     </div>
-    <div id="v15DrillSummary" class="v15-panel-sub"></div>
-    <div style="overflow:auto;margin-top:10px">
-      <table id="v15DrillTable" class="v15-report-table"></table>
+    <div class="b16-modal-body">
+      <div class="b16-toolbar">
+        <label>Search<input id="b16RegQ" placeholder="Customer / Loan / Product"></label>
+        <label>From<input id="b16RegFrom" type="date"></label>
+        <label>To<input id="b16RegTo" type="date"></label>
+        <label>Year<input id="b16RegYear" type="number" placeholder="YYYY"></label>
+        <label>Month<select id="b16RegMonth"><option value="">All</option><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select></label>
+      </div>
+      <div class="b16-report-actions">
+        <button class="b16-primary" onclick="b16RenderRegister()">Apply Filters</button>
+        <button onclick="b16ResetRegister()">Reset</button>
+        <button onclick="b16ExportRegisterExcel()">Export Excel</button>
+        <button onclick="b16PrintRegister()">PDF / Print</button>
+      </div>
+      <div id="b16RegisterSummary" class="b16-panel-sub"></div>
+      <div id="b16RegisterTable" class="b16-tablewrap" style="margin-top:10px"></div>
     </div>
   </div>
 </div>
@@ -2870,11 +2854,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
-<script id="v15-premium-workspace-js">
+<script id="b16-redesign-js">
 (function(){
-  'use strict';
-
-  const KEYS = {
+  const K={
     customers:'microfinance_customers_v8',
     loans:'microfinance_loans_v8',
     products:'microfinance_products_v7',
@@ -2882,456 +2864,198 @@ document.addEventListener('DOMContentLoaded', function() {
     schedules:'microfinance_loan_schedules_v10',
     penalties:'microfinance_penalty_ledger_v12'
   };
-
-  const state = {
-    drillType:'portfolio',
-    drillRows:[],
-    drillColumns:[],
-    recoveryRows:[]
-  };
-
-  function read(key,fallback){
-    try{
-      const v=JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback));
-      return v ?? fallback;
-    }catch(e){return fallback}
-  }
-  function customers(){return read(KEYS.customers,[])}
-  function loans(){return read(KEYS.loans,[])}
-  function products(){return read(KEYS.products,[])}
-  function txs(){return read(KEYS.tx,[])}
-  function schedules(){return read(KEYS.schedules,{})}
-  function penalties(){return read(KEYS.penalties,[])}
+  const S={registerType:'portfolio',registerRows:[],registerHeaders:[],recoveryRows:[]};
+  function read(k,f=[]){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))??f}catch(e){return f}}
+  function customers(){return read(K.customers,[])}
+  function loans(){return read(K.loans,[])}
+  function products(){return read(K.products,[])}
+  function txs(){return read(K.tx,[])}
+  function schedules(){return read(K.schedules,{})}
+  function penalties(){return read(K.penalties,[])}
   function n(v){const x=Number(v);return Number.isFinite(x)?x:0}
   function money(v){return '₹'+n(v).toLocaleString('en-IN',{maximumFractionDigits:2})}
   function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-  function dateDisplay(v){
-    if(!v)return '—';
-    const d=new Date(v+'T00:00:00');
-    return Number.isNaN(d.getTime())?v:d.toLocaleDateString('en-IN');
+  function biz(){const x=read('microfinance_business_identity_v1',{});return x.businessName||'Microfinance Core'}
+  function loanCustomer(l){return l.customerSnapshot||customers().find(c=>c.id===l.customerId)||{}}
+  function dpass(date,from,to,year,month){
+    const d=String(date||'').slice(0,10);
+    if(!d)return !from&&!to&&!year&&!month;
+    if(from&&d<from)return false;if(to&&d>to)return false;
+    if(year&&d.slice(0,4)!==String(year))return false;
+    if(month&&Number(d.slice(5,7))!==Number(month))return false;
+    return true
   }
-  function businessName(){
-    const b=read('microfinance_business_identity_v1',{});
-    return b.businessName || 'Microfinance Core';
-  }
-  function customerForLoan(l){
-    return customers().find(c=>c.id===l.customerId) || {};
-  }
-  function productForLoan(l){
-    return products().find(p=>p.id===l.productId || p.name===l.productName) || {};
-  }
-  function totalCollections(){
-    return txs().filter(t=>t.type==='deposit'||t.type==='advance')
-      .reduce((s,t)=>s+n(t.amount),0);
-  }
-  function totalPortfolio(){return loans().reduce((s,l)=>s+n(l.productAmount),0)}
-  function totalOutstanding(){
-    const sc=schedules();
-    return Object.values(sc).flat().reduce((s,r)=>{
-      return s+Math.max(0,n(r.scheduledEmi)-n(r.deposit)-n(r.advanceAllocated));
-    },0);
-  }
-  function totalPenaltyOutstanding(){
-    return penalties().reduce((s,p)=>{
-      const c=(p.collections||[]).reduce((x,r)=>x+n(r.amount),0);
-      return s+Math.max(0,n(p.amount)-c);
-    },0)
-  }
+  function set(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
 
-  function setText(id,value){
-    const el=document.getElementById(id); if(el)el.textContent=value;
-  }
-
-  function refreshDashboard(){
-    const name=businessName();
-    setText('v15BrandName',name);
-    setText('v15HeroBusiness',name);
-    setText('v15Today',new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}));
-    setText('v15PortfolioState',loans().length+' loan contracts');
-
-    setText('v15KpiPortfolio',money(totalPortfolio()));
-    setText('v15KpiCollections',money(totalCollections()));
-    setText('v15KpiOutstanding',money(totalOutstanding()));
-    setText('v15KpiCustomers',customers().length);
-    setText('v15KpiLoans',loans().length);
-    setText('v15KpiPenalty',money(totalPenaltyOutstanding()));
-
-    const recent=document.getElementById('v15RecentLoans');
-    if(recent){
-      const arr=[...loans()].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,7);
-      recent.innerHTML=arr.length?arr.map(l=>{
-        const c=l.customerSnapshot||customerForLoan(l)||{};
-        return '<div style="padding:9px 0;border-bottom:1px solid #e5e7eb">'+
-          '<div style="font-weight:750">'+esc(l.loanNo||l.id)+'</div>'+
-          '<div style="font-size:11px;color:#64748b">'+esc(c.name||'—')+' · '+esc(l.productName||'Loan')+' · '+money(l.productAmount)+'</div>'+
-        '</div>'
-      }).join(''):'<div class="v15-empty">No loans recorded yet.</div>';
-    }
-
-    const map={};
-    loans().forEach(l=>{
-      const key=l.productName||'Uncategorised';
-      if(!map[key])map[key]={name:key,count:0,amount:0};
-      map[key].count++; map[key].amount+=n(l.productAmount);
-    });
-    const productBox=document.getElementById('v15ProductBreakdown');
-    if(productBox){
-      const arr=Object.values(map).sort((a,b)=>b.amount-a.amount);
-      productBox.innerHTML=arr.length?
-        '<table class="v15-report-table"><thead><tr><th>Product</th><th>Loans</th><th>Contractual Principal</th></tr></thead><tbody>'+
-        arr.map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+x.count+'</td><td>'+money(x.amount)+'</td></tr>').join('')+
-        '</tbody></table>':
-        '<div class="v15-empty">No product-linked loans yet.</div>';
-    }
-  }
-
-  function assignLegacyCards(){
-    const selectors=[
-      '#businessIdentityCard','#productManagementV7','#newLoanV7','#loanLifecycleV9',
-      '#dueSheetV9','#loanConsolidatedV9','#masterArchitectureV8',
-      '#repaymentEngineV10','#repaymentTransactionV10','#penaltyLedgerSection'
-    ];
-
-    const allCards=[];
-    selectors.forEach(sel=>{
-      const el=document.querySelector(sel);
-      if(el)allCards.push(el);
-    });
-
-    // Unidentified legacy .card blocks are classified by their first heading.
-    document.querySelectorAll('body > .wrap > .card').forEach(el=>{
-      if(!allCards.includes(el))allCards.push(el);
-    });
+  function classifyAndMove(){
+    const wrap=document.querySelector('body>.wrap');
+    const cards=[];
+    if(wrap)wrap.querySelectorAll(':scope > .card').forEach(x=>cards.push(x));
+    document.querySelectorAll('body > .card, body > section.card').forEach(x=>cards.push(x));
 
     const stacks={
-      master:document.getElementById('v15MasterStack'),
-      customers:document.getElementById('v15CustomerStack'),
-      loans:document.getElementById('v15LoanStack'),
-      collections:document.getElementById('v15CollectionStack'),
-      reports:document.getElementById('v15ReportStack'),
-      penalties:document.getElementById('v15PenaltyStack')
+      masters:document.getElementById('b16MastersStack'),
+      customers:document.getElementById('b16CustomersStack'),
+      loans:document.getElementById('b16LoansStack'),
+      collections:document.getElementById('b16CollectionsStack'),
+      reports:document.getElementById('b16ReportsStack'),
+      penalties:document.getElementById('b16PenaltiesStack')
     };
+    const modal=document.getElementById('b16NewLoanBody');
 
-    function classify(el){
-      const id=el.id||'';
-      const h=el.querySelector('h2')?.textContent?.toLowerCase()||'';
-      if(id==='businessIdentityCard'||id==='productManagementV7'||id==='masterArchitectureV8')return 'master';
-      if(id==='newLoanV7'||id==='loanLifecycleV9'||h.includes('finance setup')||h.includes('contract result')||h.includes('loan confirmation'))return 'loans';
-      if(id==='repaymentEngineV10'||id==='repaymentTransactionV10'||h.includes('recovery status')||h.includes('advance deposit')||h.includes('payment / receipt'))return 'collections';
-      if(id==='dueSheetV9'||id==='loanConsolidatedV9'||h.includes('customer statement'))return 'reports';
-      if(id==='penaltyLedgerSection'||h.includes('penalty'))return 'penalties';
-      if(h.includes('customer'))return 'customers';
-      return 'loans';
-    }
+    cards.forEach(card=>{
+      const id=card.id||'';
+      const h=(card.querySelector('h2,h3')?.textContent||'').toLowerCase();
 
-    allCards.forEach(el=>{
-      const group=stacks[classify(el)];
-      if(group && !group.contains(el))group.appendChild(el);
+      if(id==='newLoanV7'||h.includes('loan confirmation preview')){
+        modal.appendChild(card);return;
+      }
+      if(id==='businessIdentityCard'||id==='productManagementV7'){
+        stacks.masters.appendChild(card);return;
+      }
+      if(id==='masterArchitectureV8'){
+        stacks.customers.appendChild(card);return;
+      }
+      if(id==='loanLifecycleV9'||h.includes('finance setup')||h.includes('contract result')){
+        stacks.loans.appendChild(card);return;
+      }
+      if(id==='repaymentEngineV10'||id==='repaymentTransactionV10'||h.includes('recovery status')||h.includes('advance deposit')||h.includes('payment / receipt')){
+        stacks.collections.appendChild(card);return;
+      }
+      if(id==='dueSheetV9'||id==='loanConsolidatedV9'||h.includes('customer statement')){
+        stacks.reports.appendChild(card);return;
+      }
+      if(id==='penaltyLedgerSection'||h.includes('penalty ledger')||h.includes('current ledger summary')){
+        stacks.penalties.appendChild(card);return;
+      }
+      stacks.loans.appendChild(card);
     });
 
-    // The old wrap becomes an invisible compatibility container for any
-    // elements not explicitly moved. The existing JS can still find IDs.
-    const wrap=document.querySelector('.wrap');
     if(wrap)wrap.style.display='none';
   }
 
-  function navSetup(){
-    const buttons=document.querySelectorAll('[data-v15-nav]');
-    buttons.forEach(btn=>btn.addEventListener('click',()=>v15Go(btn.dataset.v15Nav)));
-  }
-
-  window.v15Go=function(name){
-    document.querySelectorAll('.v15-module').forEach(x=>x.classList.remove('active'));
-    const module=document.getElementById('v15Module-'+name);
-    if(module)module.classList.add('active');
-    document.querySelectorAll('[data-v15-nav]').forEach(x=>x.classList.toggle('active',x.dataset.v15Nav===name));
-    const titles={
-      overview:'Overview',master:'Business & Product Masters',customers:'Customer Management',
-      loans:'Loans & Lifecycle',collections:'Collections & Schedules',recovery:'Recovery Center',
-      reports:'Statements & Reports',penalties:'Penalty Management'
-    };
-    setText('v15PageTitle',titles[name]||'Workspace');
+  window.b16Go=function(name){
+    document.querySelectorAll('.b16-module').forEach(x=>x.classList.remove('active'));
+    document.getElementById('b16-'+name)?.classList.add('active');
+    document.querySelectorAll('[data-b16-nav]').forEach(x=>x.classList.toggle('active',x.dataset.b16Nav===name));
+    const titles={overview:'Overview',masters:'Business & Product Masters',customers:'Customer Management',loans:'Loans & Lifecycle',collections:'Collections & Repayment',recovery:'Customer Recovery Search',reports:'Reports & Statements',penalties:'Penalty Management'};
+    set('b16PageTitle',titles[name]||'Workspace');
+    if(name==='recovery')b16RenderRecovery();
     window.scrollTo({top:0,behavior:'smooth'});
-    if(name==='recovery')v15RenderRecovery();
-    if(name==='penalties')refreshDashboard();
   };
 
-  function makeDrillFilters(type){
-    const box=document.getElementById('v15DrillFilters');
-    const modes=['','Cash','UPI - PhonePe','UPI - Google Pay','UPI - Other','Bank Transfer','Cheque'];
-    box.innerHTML=
-      '<label>Customer<input id="v15DFCustomer" placeholder="Name / ID"></label>'+
-      '<label>Loan<input id="v15DFLoan" placeholder="Loan ID / No."></label>'+
-      '<label>From Date<input id="v15DFFrom" type="date"></label>'+
-      '<label>To Date<input id="v15DFTo" type="date"></label>'+
-      '<label>Year<input id="v15DFYear" type="number" placeholder="YYYY"></label>'+
-      '<label>Month<select id="v15DFMonth"><option value="">All Months</option>'+
-      Array.from({length:12},(_,i)=>'<option value="'+(i+1)+'">'+new Date(2000,i,1).toLocaleString('en-IN',{month:'long'})+'</option>').join('')+
-      '</select></label>'+
-      '<label>Payment Mode<select id="v15DFMode">'+modes.map(m=>'<option value="'+esc(m)+'">'+(m||'All Modes')+'</option>').join('')+'</select></label>';
+  window.b16OpenNewLoan=function(){
+    document.getElementById('b16NewLoanModal').style.display='block';
+    document.body.style.overflow='hidden';
+  };
+  window.b16CloseNewLoan=function(){
+    document.getElementById('b16NewLoanModal').style.display='none';
+    document.body.style.overflow='';
+  };
+
+  function dashboard(){
+    set('b16BrandName',biz());set('b16HeroBusiness',biz());
+    const ls=loans(),cs=customers(),ts=txs(),sc=schedules(),ps=penalties();
+    const portfolio=ls.reduce((s,l)=>s+n(l.productAmount),0);
+    const collection=ts.filter(t=>t.type==='deposit'||t.type==='advance').reduce((s,t)=>s+n(t.amount),0);
+    const outstanding=Object.values(sc).flat().reduce((s,r)=>s+Math.max(0,n(r.scheduledEmi)-n(r.deposit)-n(r.advanceAllocated)),0);
+    const pen=ps.reduce((s,p)=>s+Math.max(0,n(p.amount)-(p.collections||[]).reduce((a,c)=>a+n(c.amount),0)),0);
+    set('b16Portfolio',money(portfolio));set('b16Collections',money(collection));set('b16Outstanding',money(outstanding));
+    set('b16Customers',cs.length);set('b16Loans',ls.length);set('b16Penalty',money(pen));
+
+    const recent=[...ls].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,6);
+    document.getElementById('b16RecentLoans').innerHTML=recent.length?recent.map(l=>{
+      const c=loanCustomer(l);return '<div style="padding:9px 0;border-bottom:1px solid #e7ecf2"><div style="font-size:12px;font-weight:750">'+esc(c.name||'Customer')+'</div><div style="font-size:10px;color:#6b778c">'+esc(l.loanNo||l.id)+' · '+esc(l.productName||'Loan')+' · '+money(l.productAmount)+'</div></div>'
+    }).join(''):'<div class="b16-empty">No loans yet.</div>';
+
+    const map={};ls.forEach(l=>{const k=l.productName||'Uncategorised';if(!map[k])map[k]={c:0,a:0};map[k].c++;map[k].a+=n(l.productAmount)});
+    const arr=Object.entries(map).sort((a,b)=>b[1].a-a[1].a);
+    document.getElementById('b16ProductPortfolio').innerHTML=arr.length?
+      '<table><thead><tr><th>Product</th><th>Loans</th><th>Principal</th></tr></thead><tbody>'+
+      arr.map(([k,v])=>'<tr><td>'+esc(k)+'</td><td>'+v.c+'</td><td>'+money(v.a)+'</td></tr>').join('')+'</tbody></table>':
+      '<div class="b16-empty">No product-wise portfolio data yet.</div>';
   }
 
-  function datePass(date,from,to,year,month){
-    if(!date)return true;
-    const d=String(date);
-    if(from&&d<from)return false;
-    if(to&&d>to)return false;
-    if(year&&d.slice(0,4)!==String(year))return false;
-    if(month&&Number(d.slice(5,7))!==Number(month))return false;
-    return true;
-  }
-
-  function openDrill(type){
-    state.drillType=type;
-    const modal=document.getElementById('v15DrillModal');
-    const title=document.getElementById('v15DrillTitle');
-    const sub=document.getElementById('v15DrillSub');
-    const titles={
-      portfolio:'Loan Portfolio Detail',
-      collections:'Collection Receipt Detail',
-      outstanding:'Outstanding EMI Detail',
-      customers:'Customer Master Detail',
-      loans:'Loan Contract Detail',
-      penalties:'Penalty Detail'
-    };
-    title.textContent=titles[type]||'Detail';
-    sub.textContent='Use date, month, year, customer, loan and payment-mode filters. Export to Excel/CSV or print to PDF.';
-    makeDrillFilters(type);
-    modal.style.display='block';
-    v15RenderDrill();
-  }
-
-  window.v15CloseDrill=function(){document.getElementById('v15DrillModal').style.display='none'}
-  window.v15RenderDrill=function(){
-    const type=state.drillType;
-    const q=(document.getElementById('v15DFCustomer')?.value||'').trim().toLowerCase();
-    const lq=(document.getElementById('v15DFLoan')?.value||'').trim().toLowerCase();
-    const from=document.getElementById('v15DFFrom')?.value||'';
-    const to=document.getElementById('v15DFTo')?.value||'';
-    const year=document.getElementById('v15DFYear')?.value||'';
-    const month=document.getElementById('v15DFMonth')?.value||'';
-    const mode=document.getElementById('v15DFMode')?.value||'';
-    const cs=customers(), ls=loans(), ts=txs(), ps=penalties(), sc=schedules();
-
-    let headers=[],rows=[],summary='';
-
-    if(type==='portfolio'||type==='loans'){
-      headers=['Loan No.','Loan ID','Customer','Product','Principal','Status','Created'];
-      rows=ls.filter(l=>{
-        const c=l.customerSnapshot||customerForLoan(l)||{};
-        const hay=(l.loanNo+' '+l.id+' '+(c.name||'')+' '+l.customerId).toLowerCase();
-        return (!q||hay.includes(q))&&(!lq||(l.loanNo+' '+l.id).toLowerCase().includes(lq))&&
-          datePass((l.createdAt||'').slice(0,10),from,to,year,month);
-      }).map(l=>{
-        const c=l.customerSnapshot||customerForLoan(l)||{};
-        return [l.loanNo||'',l.id||'',c.name||'',l.productName||'',money(l.productAmount),l.status||'New',(l.createdAt||'').slice(0,10)];
-      });
-      summary=rows.length+' loan records';
-    }else if(type==='collections'){
-      headers=['Date','Loan','Customer','Amount','Payment Mode','Type','Note'];
-      rows=ts.filter(t=>{
-        if(t.type!=='deposit'&&t.type!=='advance')return false;
-        const l=ls.find(x=>x.id===t.loanId)||{};
-        const c=l.customerSnapshot||customerForLoan(l)||{};
-        const hay=(t.loanId+' '+(l.loanNo||'')+' '+(c.name||'')+' '+(c.primaryMobile||'')).toLowerCase();
-        return (!q||hay.includes(q))&&(!lq||(t.loanId+' '+(l.loanNo||'')).toLowerCase().includes(lq))&&
-          datePass(t.date,from,to,year,month)&&(!mode||t.mode===mode);
-      }).map(t=>{
-        const l=ls.find(x=>x.id===t.loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
-        return [t.date||'',l.loanNo||t.loanId,c.name||'',money(t.amount),t.mode||'',t.type||'',t.note||''];
-      });
-      summary=rows.length+' collection records · '+money(rows.reduce((s,r)=>s+n(String(r[4]).replace(/[₹,]/g,'')),0));
-    }else if(type==='customers'){
-      headers=['Customer ID','Customer','Primary Mobile','Secondary Mobile','Address','Created'];
-      rows=cs.filter(c=>{
-        const hay=(c.id+' '+c.name+' '+(c.primaryMobile||'')+' '+(c.secondaryMobile||'')).toLowerCase();
-        return !q||hay.includes(q);
-      }).map(c=>[c.id,c.name,c.primaryMobile||'',c.secondaryMobile||'',c.currentAddress||'',(c.createdAt||'').slice(0,10)]);
-      summary=rows.length+' customer records';
-    }else if(type==='outstanding'){
-      headers=['Due Date','Loan','Customer','Installment','EMI','Received/Advance','Outstanding','Status'];
-      rows=[];
-      Object.entries(sc).forEach(([loanId,arr])=>{
-        const l=ls.find(x=>x.id===loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
-        arr.forEach(r=>{
-          const out=Math.max(0,n(r.scheduledEmi)-n(r.deposit)-n(r.advanceAllocated));
-          if(out<=0)return;
-          const hay=(loanId+' '+(l.loanNo||'')+' '+(c.name||'')).toLowerCase();
-          if(q&&!hay.includes(q))return;
-          if(lq&&!(loanId+' '+(l.loanNo||'')).toLowerCase().includes(lq))return;
-          if(!datePass(r.dueDate,from,to,year,month))return;
-          rows.push([r.dueDate,l.loanNo||loanId,c.name||'',r.installmentNo,money(r.scheduledEmi),money(n(r.deposit)+n(r.advanceAllocated)),money(out),r.dueDate<new Date().toISOString().slice(0,10)?'Overdue':'Due']);
-        });
-      });
-      rows.sort((a,b)=>String(a[0]).localeCompare(String(b[0])));
-      summary=rows.length+' outstanding installments';
-    }else if(type==='penalties'){
-      headers=['Penalty ID','Due Date','Loan','Customer','Penalty Due','Collected','Outstanding','Status'];
-      rows=ps.filter(p=>{
-        const l=ls.find(x=>x.id===p.loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
-        const hay=(p.penaltyId+' '+p.loanId+' '+(l.loanNo||'')+' '+(c.name||'')).toLowerCase();
-        return (!q||hay.includes(q))&&(!lq||(p.loanId+' '+(l.loanNo||'')).toLowerCase().includes(lq))&&
-          datePass(p.dueDate,from,to,year,month);
-      }).map(p=>{
-        const l=ls.find(x=>x.id===p.loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
-        const got=(p.collections||[]).reduce((s,x)=>s+n(x.amount),0),out=Math.max(0,n(p.amount)-got);
-        return [p.penaltyId,p.dueDate,p.loanId,c.name||'',money(p.amount),money(got),money(out),out<=0?'Collected':got>0?'Partial':'Due'];
-      });
-      summary=rows.length+' penalty records';
+  function registerFilters(){
+    return {
+      q:(document.getElementById('b16RegQ')?.value||'').trim().toLowerCase(),
+      from:document.getElementById('b16RegFrom')?.value||'',
+      to:document.getElementById('b16RegTo')?.value||'',
+      year:document.getElementById('b16RegYear')?.value||'',
+      month:document.getElementById('b16RegMonth')?.value||''
     }
-
-    state.drillRows=rows;state.drillColumns=headers;
-    setText('v15DrillSummary',summary);
-    const table=document.getElementById('v15DrillTable');
-    table.innerHTML='<thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead>'+
-      '<tbody>'+ (rows.length?rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join(''):
-      '<tr><td colspan="'+headers.length+'" class="v15-empty">No matching records.</td></tr>')+'</tbody>';
-  };
-
-  window.v15ResetDrill=function(){
-    ['v15DFCustomer','v15DFLoan','v15DFFrom','v15DFTo','v15DFYear'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
-    const m=document.getElementById('v15DFMonth');if(m)m.value='';
-    const mode=document.getElementById('v15DFMode');if(mode)mode.value='';
-    v15RenderDrill();
-  };
-
-  function csvCell(v){
-    const s=String(v??'');
-    return '"'+s.replace(/"/g,'""')+'"';
   }
-  function exportCSV(filename,headers,rows){
-    const csv=[headers.map(csvCell).join(','),...rows.map(r=>r.map(csvCell).join(','))].join('\\r\\n');
-    const blob=new Blob(['\\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;
-    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500);
-  }
-  window.v15ExportDrillCSV=function(){
-    exportCSV('microfinance-'+state.drillType+'-report.csv',state.drillColumns,state.drillRows);
+
+  window.b16OpenRegister=function(type){
+    S.registerType=type;document.getElementById('b16RegisterModal').style.display='block';document.body.style.overflow='hidden';
+    const t={portfolio:'Loan Portfolio Register',collections:'Collection Register',outstanding:'Outstanding EMI Register'}[type]||'Register';
+    set('b16RegisterTitle',t);b16ResetRegister();
   };
-  window.v15PrintDrill=function(){
-    const title=document.getElementById('v15DrillTitle').textContent;
-    const table=document.getElementById('v15DrillTable').outerHTML;
-    const w=window.open('','_blank','width=1200,height=800');
-    if(!w)return;
-    w.document.write('<html><head><title>'+esc(title)+'</title><style>body{font-family:Arial;padding:24px;color:#111}h1{font-size:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:7px;font-size:11px;text-align:left}th{background:#f2f4f7}</style></head><body><h1>'+esc(title)+'</h1><div>'+new Date().toLocaleString('en-IN')+'</div>'+table+'</body></html>');
-    w.document.close();w.focus();setTimeout(()=>w.print(),300);
+  window.b16CloseRegister=function(){document.getElementById('b16RegisterModal').style.display='none';document.body.style.overflow=''}
+  window.b16ResetRegister=function(){
+    ['b16RegQ','b16RegFrom','b16RegTo','b16RegYear'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+    const m=document.getElementById('b16RegMonth');if(m)m.value='';b16RenderRegister()
+  };
+  window.b16RenderRegister=function(){
+    const f=registerFilters(),ls=loans(),ts=txs(),sc=schedules();let h=[],rows=[];
+    if(S.registerType==='portfolio'){
+      h=['Loan No.','Loan ID','Customer','Product','Principal','Status','Created'];
+      rows=ls.filter(l=>{const c=loanCustomer(l),hay=(l.loanNo+' '+l.id+' '+(c.name||'')+' '+(l.productName||'')).toLowerCase();return (!f.q||hay.includes(f.q))&&dpass(l.createdAt,f.from,f.to,f.year,f.month)})
+        .map(l=>{const c=loanCustomer(l);return [l.loanNo||'',l.id||'',c.name||'',l.productName||'',money(l.productAmount),l.status||'New',String(l.createdAt||'').slice(0,10)]});
+    }else if(S.registerType==='collections'){
+      h=['Date','Loan','Customer','Amount','Mode','Type','Note'];
+      rows=ts.filter(t=>(t.type==='deposit'||t.type==='advance')).filter(t=>{const l=ls.find(x=>x.id===t.loanId)||{},c=loanCustomer(l),hay=(t.loanId+' '+(l.loanNo||'')+' '+(c.name||'')).toLowerCase();return (!f.q||hay.includes(f.q))&&dpass(t.date,f.from,f.to,f.year,f.month)})
+        .map(t=>{const l=ls.find(x=>x.id===t.loanId)||{},c=loanCustomer(l);return [t.date||'',l.loanNo||t.loanId,c.name||'',money(t.amount),t.mode||'',t.type||'',t.note||'']});
+    }else{
+      h=['Due Date','Loan','Customer','Installment','EMI','Received','Outstanding'];
+      rows=[];Object.entries(sc).forEach(([loanId,a])=>{const l=ls.find(x=>x.id===loanId)||{},c=loanCustomer(l);a.forEach(r=>{const out=Math.max(0,n(r.scheduledEmi)-n(r.deposit)-n(r.advanceAllocated));const hay=(loanId+' '+(l.loanNo||'')+' '+(c.name||'')).toLowerCase();if(out>0&&(!f.q||hay.includes(f.q))&&dpass(r.dueDate,f.from,f.to,f.year,f.month))rows.push([r.dueDate,l.loanNo||loanId,c.name||'',r.installmentNo,money(r.scheduledEmi),money(n(r.deposit)+n(r.advanceAllocated)),money(out)])})});
+    }
+    S.registerHeaders=h;S.registerRows=rows;
+    set('b16RegisterSummary',rows.length+' matching records');
+    document.getElementById('b16RegisterTable').innerHTML='<table><thead><tr>'+h.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+
+      (rows.length?rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join(''):'<tr><td colspan="'+h.length+'" class="b16-empty">No matching records</td></tr>')+'</tbody></table>';
   };
 
-  function recoveryData(){
-    const ls=loans(), all=txs().filter(t=>t.type==='deposit'||t.type==='advance');
-    return all.map(t=>{
-      const l=ls.find(x=>x.id===t.loanId)||{},c=l.customerSnapshot||customerForLoan(l)||{};
-      return {tx:t,loan:l,customer:c};
-    });
+  function excelDownload(filename,headers,rows){
+    const table='<table><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+    const blob=new Blob(['<html><meta charset="utf-8"><body>'+table+'</body></html>'],{type:'application/vnd.ms-excel'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename+'.xls';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500)
   }
-  window.v15RenderRecovery=function(){
-    const q=(document.getElementById('v15RecoveryQuery')?.value||'').trim().toLowerCase();
-    const from=document.getElementById('v15RecoveryFrom')?.value||'';
-    const to=document.getElementById('v15RecoveryTo')?.value||'';
-    const year=document.getElementById('v15RecoveryYear')?.value||'';
-    const month=document.getElementById('v15RecoveryMonth')?.value||'';
-    const mode=document.getElementById('v15RecoveryMode')?.value||'';
-    const rows=recoveryData().filter(x=>{
-      const t=x.tx,l=x.loan,c=x.customer;
-      const hay=(t.loanId+' '+(l.loanNo||'')+' '+(c.name||'')+' '+(c.primaryMobile||'')+' '+(c.secondaryMobile||'')).toLowerCase();
-      return (!q||hay.includes(q))&&datePass(t.date,from,to,year,month)&&(!mode||t.mode===mode);
-    }).sort((a,b)=>String(b.tx.date).localeCompare(String(a.tx.date)));
-    state.recoveryRows=rows;
-    const total=rows.reduce((s,x)=>s+n(x.tx.amount),0);
-    setText('v15RecoverySummary',rows.length+' receipt records · Total '+money(total));
-    const box=document.getElementById('v15RecoveryResults');
-    box.innerHTML=rows.length?rows.map(x=>{
-      const t=x.tx,l=x.loan,c=x.customer;
-      return '<div class="v15-result-row">'+
-        '<div><div class="v15-result-main">'+esc(c.name||'Unknown Customer')+'</div><div class="v15-result-meta">'+esc(c.primaryMobile||'')+'</div></div>'+
-        '<div><div class="v15-result-main">'+esc(l.loanNo||t.loanId)+'</div><div class="v15-result-meta">'+esc(t.loanId)+'</div></div>'+
-        '<div><div class="v15-result-main">'+money(t.amount)+'</div><div class="v15-result-meta">'+esc(t.mode||'')+'</div></div>'+
-        '<div><div class="v15-result-main">'+dateDisplay(t.date)+'</div><div class="v15-result-meta">'+esc(t.type||'')+'</div></div>'+
-      '</div>';
-    }).join(''):'<div class="v15-empty">No recovery records match the selected filters.</div>';
-  };
-  window.v15ClearRecovery=function(){
-    ['v15RecoveryQuery','v15RecoveryFrom','v15RecoveryTo','v15RecoveryYear'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
-    const m=document.getElementById('v15RecoveryMonth');if(m)m.value='';
-    const mode=document.getElementById('v15RecoveryMode');if(mode)mode.value='';
-    v15RenderRecovery();
-  };
-  window.v15ExportRecoveryCSV=function(){
-    const rows=state.recoveryRows.map(x=>{
-      const t=x.tx,l=x.loan,c=x.customer;
-      return [t.date,l.loanNo||t.loanId,t.loanId,c.name||'',c.primaryMobile||'',c.secondaryMobile||'',t.amount,t.mode||'',t.type||'',t.note||''];
-    });
-    exportCSV('microfinance-recovery-report.csv',['Date','Loan No.','Loan ID','Customer','Primary Mobile','Secondary Mobile','Amount','Payment Mode','Type','Note'],rows);
-  };
-  window.v15PrintRecovery=function(){
-    const rows=state.recoveryRows;
-    const table='<table style="width:100%;border-collapse:collapse"><thead><tr><th>Date</th><th>Loan</th><th>Customer</th><th>Amount</th><th>Mode</th></tr></thead><tbody>'+
-      rows.map(x=>'<tr><td>'+esc(x.tx.date)+'</td><td>'+esc(x.loan.loanNo||x.tx.loanId)+'</td><td>'+esc(x.customer.name||'')+'</td><td>'+money(x.tx.amount)+'</td><td>'+esc(x.tx.mode||'')+'</td></tr>').join('')+
-      '</tbody></table>';
+  function printTable(title,headers,rows){
     const w=window.open('','_blank','width=1200,height=800');if(!w)return;
-    w.document.write('<html><head><title>Recovery Report</title><style>body{font-family:Arial;padding:24px}th,td{border:1px solid #ddd;padding:7px;font-size:11px;text-align:left}th{background:#f2f4f7}</style></head><body><h1>Recovery Report</h1><div>'+businessName()+' · '+new Date().toLocaleString('en-IN')+'</div>'+table+'</body></html>');
-    w.document.close();w.focus();setTimeout(()=>w.print(),300);
+    const table='<table><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+    w.document.write('<html><head><title>'+esc(title)+'</title><style>body{font-family:Arial;padding:24px;color:#172033}h1{font-size:20px}table{width:100%;border-collapse:collapse;margin-top:14px}th,td{border:1px solid #d8dee8;padding:7px;font-size:10px;text-align:left}th{background:#f4f6f9}</style></head><body><h1>'+esc(title)+'</h1><div>'+esc(biz())+' · '+new Date().toLocaleString('en-IN')+'</div>'+table+'</body></html>');w.document.close();w.focus();setTimeout(()=>w.print(),250)
+  }
+  window.b16ExportRegisterExcel=function(){excelDownload('microfinance-'+S.registerType,S.registerHeaders,S.registerRows)}
+  window.b16PrintRegister=function(){printTable(document.getElementById('b16RegisterTitle').textContent,S.registerHeaders,S.registerRows)}
+
+  function recoveryRows(){
+    const ls=loans();return txs().filter(t=>t.type==='deposit'||t.type==='advance').map(t=>{const l=ls.find(x=>x.id===t.loanId)||{};return {t,l,c:loanCustomer(l)}})
+  }
+  window.b16RenderRecovery=function(){
+    const q=(document.getElementById('b16RecoveryQ')?.value||'').trim().toLowerCase(),from=document.getElementById('b16RecoveryFrom')?.value||'',to=document.getElementById('b16RecoveryTo')?.value||'',year=document.getElementById('b16RecoveryYear')?.value||'',month=document.getElementById('b16RecoveryMonth')?.value||'';
+    const rows=recoveryRows().filter(x=>{const hay=(x.t.loanId+' '+(x.l.loanNo||'')+' '+(x.c.name||'')+' '+(x.c.primaryMobile||'')+' '+(x.c.secondaryMobile||'')).toLowerCase();return (!q||hay.includes(q))&&dpass(x.t.date,from,to,year,month)}).sort((a,b)=>String(b.t.date).localeCompare(String(a.t.date)));
+    S.recoveryRows=rows;set('b16RecoverySummary',rows.length+' receipts · '+money(rows.reduce((s,x)=>s+n(x.t.amount),0)));
+    document.getElementById('b16RecoveryTable').innerHTML='<table><thead><tr><th>Date</th><th>Customer</th><th>Loan</th><th>Amount</th><th>Payment Mode</th><th>Type</th></tr></thead><tbody>'+
+      (rows.length?rows.map(x=>'<tr><td>'+esc(x.t.date||'')+'</td><td>'+esc(x.c.name||'')+'<div style="font-size:10px;color:#6b778c">'+esc(x.c.primaryMobile||'')+'</div></td><td>'+esc(x.l.loanNo||x.t.loanId)+'</td><td>'+money(x.t.amount)+'</td><td>'+esc(x.t.mode||'')+'</td><td>'+esc(x.t.type||'')+'</td></tr>').join(''):'<tr><td colspan="6" class="b16-empty">No recovery records found</td></tr>')+'</tbody></table>';
   };
+  window.b16ClearRecovery=function(){['b16RecoveryQ','b16RecoveryFrom','b16RecoveryTo','b16RecoveryYear'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});const m=document.getElementById('b16RecoveryMonth');if(m)m.value='';b16RenderRecovery()}
+  window.b16ExportRecoveryExcel=function(){excelDownload('microfinance-recovery',['Date','Customer','Loan','Amount','Payment Mode','Type'],S.recoveryRows.map(x=>[x.t.date,x.c.name||'',x.l.loanNo||x.t.loanId,x.t.amount,x.t.mode||'',x.t.type||'']))}
+  window.b16PrintRecovery=function(){printTable('Customer Recovery Report',['Date','Customer','Loan','Amount','Payment Mode','Type'],S.recoveryRows.map(x=>[x.t.date,x.c.name||'',x.l.loanNo||x.t.loanId,money(x.t.amount),x.t.mode||'',x.t.type||'']))}
 
   function globalSearch(q){
-    q=String(q||'').trim().toLowerCase();
-    if(!q)return;
-    const found=customers().filter(c=>(c.name+' '+c.id+' '+(c.primaryMobile||'')+' '+(c.secondaryMobile||'')).toLowerCase().includes(q));
-    if(found.length){
-      v15Go('recovery');
-      const inp=document.getElementById('v15RecoveryQuery');if(inp){inp.value=q;v15RenderRecovery()}
-      return;
-    }
-    const loan=loans().find(l=>(l.id+' '+l.loanNo+' '+(l.productName||'')).toLowerCase().includes(q));
-    if(loan){
-      v15Go('loans');
-      const inp=document.getElementById('v15RecoveryQuery');if(inp){inp.value=loan.id}
-    }else{
-      v15Go('recovery');
-      const inp=document.getElementById('v15RecoveryQuery');if(inp){inp.value=q;v15RenderRecovery()}
-    }
+    q=String(q||'').trim();if(!q)return;b16Go('recovery');const e=document.getElementById('b16RecoveryQ');e.value=q;b16RenderRecovery()
   }
-
-  function addFormGuides(){
-    document.querySelectorAll('.v15-module .card').forEach(card=>{
-      const h=card.querySelector('h2');
-      if(!h)return;
-      if(card.querySelector('.v15-form-guide'))return;
-      const text=h.textContent.toLowerCase();
-      let guide='';
-      if(text.includes('customer'))guide='Customer identity is maintained as a master record. Loan-specific customer and guarantor snapshots remain historical.';
-      else if(text.includes('product'))guide='Products are master categories. Each loan contract references a product without changing historical loan data.';
-      else if(text.includes('loan'))guide='Loan operations are scoped by immutable Loan ID. Customer and guarantor details are preserved per loan.';
-      else if(text.includes('statement'))guide='Customer-facing output stays clean and banking-style; internal allocation and penalty mechanics remain hidden.';
-      else if(text.includes('penalty'))guide='Penalty is an independent internal ledger. It supports partial collections and separate actual receipt dates.';
-      if(guide){
-        const d=document.createElement('div');d.className='v15-form-guide';d.textContent=guide;
-        h.insertAdjacentElement('afterend',d);
-      }
-    });
-  }
-
-  // KPI click routing
-  document.addEventListener('click',e=>{
-    const k=e.target.closest('[data-v15-drill]');
-    if(k)openDrill(k.dataset.v15Drill);
-  });
 
   function boot(){
-    document.body.classList.add('v15-ready');
-    assignLegacyCards();
-    navSetup();
-    addFormGuides();
-    refreshDashboard();
-    v15RenderRecovery();
-    const gs=document.getElementById('v15GlobalSearch');
-    if(gs)gs.addEventListener('keydown',e=>{if(e.key==='Enter')globalSearch(gs.value)});
-    // Keep dashboard values fresh after existing actions.
-    setInterval(refreshDashboard,1500);
+    document.body.classList.add('b16-ready');
+    classifyAndMove();
+    document.querySelectorAll('[data-b16-nav]').forEach(b=>b.addEventListener('click',()=>b16Go(b.dataset.b16Nav)));
+    document.getElementById('b16GlobalSearch')?.addEventListener('keydown',e=>{if(e.key==='Enter')globalSearch(e.target.value)});
+    dashboard();b16RenderRecovery();
+    setInterval(dashboard,2000);
   }
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
-  else boot();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
 
