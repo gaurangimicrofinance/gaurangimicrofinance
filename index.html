@@ -43,7 +43,7 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><div class="brandmark">₹</div><span>MicroFinance Pro</span></div>
+  <div class="brand"><div class="brandmark">₹</div><span id="brandName">MicroFinance Pro</span></div>
   <div class="nav">
     <button class="active" data-view="dashboard"><span class="ico">⌂</span><span class="txt">Dashboard</span></button>
     <button data-view="customers"><span class="ico">♙</span><span class="txt">Customers</span></button>
@@ -81,6 +81,7 @@ const addDays = (date,n)=>{const d=new Date(date+"T00:00:00");d.setDate(d.getDat
 const diffDays = (a,b)=>Math.max(0,Math.floor((new Date(b+"T00:00:00")-new Date(a+"T00:00:00"))/86400000));
 const money = v => Number(v||0);
 const defaultState = {
+  companyName:"MicroFinance Pro",
   products:[{id:"PRD001",name:"Daily 10K — 100 Days",type:"Daily Collection",loanAmount:10000,interestRate:5,interestAmount:1500,interestMethod:"upfront",frequency:"Daily",termDays:100,processing:0,documentation:0,penaltyPerDay:100,foreclosure:0,active:true}],
   customers:[{
     id:"C0001245",name:"Rahul Sharma",primary:"9876543210",secondary:"9123456780",address:"Main Bazar, Indore",
@@ -88,16 +89,20 @@ const defaultState = {
     loans:[{id:"L0005687",productId:"PRD001",disbursement:(()=>{const d=new Date();d.setDate(d.getDate()-45);return d.toISOString().slice(0,10)})(),principal:10000,netDisbursed:8500,interestMethod:"upfront",interestTotal:1500,termDays:100,frequency:"Daily",status:"Active",payments:[],penalties:[],extraCharges:0}]
   }]
 };
-let state = JSON.parse(localStorage.getItem("mfProState")||"null") || defaultState;
+let state = JSON.parse(localStorage.getItem("mfProState")||"null") || structuredClone(defaultState);
+state.companyName = state.companyName || "MicroFinance Pro";
+state.products = Array.isArray(state.products) ? state.products : [];
+state.customers = Array.isArray(state.customers) ? state.customers : [];
 let currentCustomer = state.customers[0], currentLoan = currentCustomer.loans[0], currentView="dashboard";
 function save(){localStorage.setItem("mfProState",JSON.stringify(state))}
 function product(id){return state.products.find(p=>p.id===id)}
-function activeLoans(){return state.customers.flatMap(c=>c.loans.map(l=>({...l,customer:c}))).filter(x=>x.status==="Active")}
+function activeLoans(){return state.customers.flatMap(c=>(c.loans||[]).filter(l=>l.status==="Active").map(l=>{Object.defineProperty(l,"customer",{value:c,writable:true,configurable:true,enumerable:false});return l;}))}
 function fullTermMonths(loan){return Math.max(1,Math.round((loan.termDays||100)/30))}
 function chargeMonths(loan, days){
   const full=fullTermMonths(loan), d=Math.max(1,Math.floor(days));
   if(d<=loan.termDays) return Math.min(full,Math.ceil(d/30));
-  return full + Math.ceil((d-loan.termDays)/30);
+  const overdue=d-loan.termDays;
+  return full + Math.floor(Math.max(0,overdue-1)/30);
 }
 function totalPrincipalRecovered(loan){return (loan.payments||[]).reduce((s,p)=>s+num(p.principal),0)}
 function totalInterestReceived(loan){return (loan.payments||[]).reduce((s,p)=>s+num(p.interest),0)}
@@ -141,13 +146,20 @@ function revenueTotals(){
   return {interest,penalty,principal};
 }
 function openModal(html){document.getElementById("modalBox").innerHTML=html;document.getElementById("modal").classList.add("open")}
-function closeModal(){document.getElementById("modal").classList.remove("open")}
-document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+function closeModal(){document.getElementById("modal").classList.remove("open");document.getElementById("modalBox").innerHTML="";window.__penMode=null;window.__penNow=null}
+const modalEl=document.getElementById("modal");
+modalEl.addEventListener("click",e=>{
+  if(e.target.id==="modal" || e.target.closest("[data-close]")){closeModal();return;}
+  const b=e.target.closest("[data-action]"); if(!b)return;
+  handleAction(b);
+});
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
 function render(){
   const root=document.getElementById("appView");
   const fn={dashboard:renderDashboard,customers:renderCustomers,products:renderProducts,collection:renderCollection,penalty:renderPenalty,reports:renderReports,accounting:renderAccounting,settings:renderSettings}[currentView]||renderDashboard;
   root.innerHTML=fn();
+  document.querySelector("#brandName")?.replaceChildren(document.createTextNode(state.companyName||"MicroFinance Pro"));
+  document.title=(state.companyName||"MicroFinance Pro")+" — Daily Collection";
   document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===currentView));
   bindView();
 }
@@ -189,14 +201,15 @@ function renderCustomers(){
  +`<div class="card"><div class="searchbox"><input id="customerSearch" placeholder="Search name, surname, mobile, Customer ID, Loan ID..." value="${esc(document.getElementById("globalSearch")?.value||"")}"><button class="btn primary" data-action="searchCustomers">Search</button></div><div id="customerResults" style="margin-top:14px">${customerResults("")}</div></div>`;
 }
 function customerResults(q){
- const s=q.toLowerCase().trim(); let arr=[];
- for(const c of state.customers){const hay=[c.name,c.primary,c.secondary,c.id,c.address,...c.loans.map(l=>l.id)].join(" ").toLowerCase();if(!s||hay.includes(s))arr.push(c)}
- return `<div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Customer ID</th><th>Primary</th><th>Secondary</th><th>Loans</th><th>Active</th><th></th></tr></thead><tbody>${arr.slice(0,50).map(c=>`<tr><td>${esc(c.name)}</td><td>${c.id}</td><td>${c.primary}</td><td>${c.secondary}</td><td>${c.loans.length}</td><td>${c.loans.filter(l=>l.status==="Active").length}</td><td><button class="btn sm" data-action="openCustomer" data-customer="${c.id}">Open</button></td></tr>`).join("")||`<tr><td colspan="7" class="center muted">No matching customers.</td></tr>`}</tbody></table></div><div class="mini" style="margin-top:8px">Performance mode: results are capped; the UI never renders an unnecessary giant customer list.</div>`;
+ const s=q.toLowerCase().trim(); let arr=[]; const tokens=s.split(/\s+/).filter(Boolean);
+ for(const c of state.customers){const hay=[c.name,c.primary,c.secondary,c.id,c.address,...c.loans.map(l=>l.id)].join(" ").toLowerCase();const ok=!s||tokens.every(t=>hay.includes(t));if(ok)arr.push(c)}
+ return `<div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Customer ID</th><th>Primary</th><th>Secondary</th><th>Loans</th><th>Active</th><th></th></tr></thead><tbody>${arr.slice(0,50).map(c=>`<tr><td>${esc(c.name)}</td><td>${c.id}</td><td>${c.primary}</td><td>${c.secondary}</td><td>${c.loans.length}</td><td>${c.loans.filter(l=>l.status==="Active").length}</td><td><button class="btn sm" data-action="openCustomer" data-customer="${c.id}">Open</button> <button class="btn sm" data-action="editCustomer" data-customer="${c.id}">Edit</button> <button class="btn sm danger" data-action="deleteCustomer" data-customer="${c.id}">Delete</button></td></tr>`).join("")||`<tr><td colspan="7" class="center muted">No matching customers.</td></tr>`}</tbody></table></div><div class="mini" style="margin-top:8px">Performance mode: results are capped; the UI never renders an unnecessary giant customer list.</div>`;
 }
 function renderProducts(){
  return header("Product Design","Daily Collection product engine",`<button class="btn primary" data-action="newProduct">＋ New Product</button>`)
- +`<div class="grid two"><div class="card"><div class="section-title"><h2>Active Products</h2><span>Interest rule lives here</span></div>${state.products.map(p=>`<div class="metric"><span><strong>${esc(p.name)}</strong><br><span class="mini">${p.type} • ${p.termDays} days • ${p.interestMethod==="upfront"?"Upfront":"Later"}</span></span><span><strong>${INR(p.loanAmount)}</strong><br><button class="btn sm" data-action="editProduct" data-id="${p.id}">Edit</button></span></div>`).join("")}</div><div class="card"><div class="section-title"><h2>Product Rules</h2><span>Current vertical</span></div><div class="notice">Daily Collection is active. Grace period is not used. GST is not applied. Processing/File Charge, Documentation Charge and Penalty per Day are supported. Foreclosure calculation remains configurable later.</div></div></div>`;
+ +`<div class="grid two"><div class="card"><div class="section-title"><h2>Active Products</h2><span>Interest rule lives here</span></div>${state.products.length?state.products.map(p=>`<div class="metric"><span><strong>${esc(p.name)}</strong><br><span class="mini">${p.type} • ${p.termDays} days • ${p.interestMethod==="upfront"?"Upfront":"Later"}</span></span><span class="right"><strong>${INR(p.loanAmount)}</strong><br><button class="btn sm" data-action="editProduct" data-id="${p.id}">Edit</button> <button class="btn sm danger" data-action="deleteProduct" data-id="${p.id}">Delete</button></span></div>`).join(""):`<div class="notice">No products exist. Create the first Daily Collection product.</div>`}</div><div class="card"><div class="section-title"><h2>Product Rules</h2><span>Current vertical</span></div><div class="notice">Daily Collection is active. Grace period is not used. GST is not applied. Processing/File Charge, Documentation Charge and Penalty per Day are supported. Foreclosure calculation remains configurable later.</div></div></div>`;
 }
+
 function renderCollection(){
  const today=isoToday(); return header("Recovery Center","Customer-first collection, automatic allocation and actual-date tracking",`<button class="btn primary" data-action="newCollection">＋ Record Payment</button>`)
  +`<div class="grid two"><div class="card"><div class="section-title"><h2>Search Customer / Loan</h2><span>Fast, indexed-style filtering</span></div><div class="searchbox"><input id="recoverySearch" placeholder="Name, mobile, Customer ID or Loan ID"><button class="btn primary" data-action="recoverySearch">Find</button></div><div id="recoveryResults" style="margin-top:12px">${customerResults("")}</div></div><div class="card"><div class="section-title"><h2>Today</h2><span>${today}</span></div><div class="metric"><span>Active loans</span><strong>${activeLoans().length}</strong></div><div class="metric"><span>Penalty due</span><strong>${INR(activeLoans().reduce((s,l)=>s+totalPenaltyDue(l),0))}</strong></div><div class="metric"><span>Interest recognized</span><strong>${INR(revenueTotals().interest)}</strong></div><div class="notice">A payment has an actual received date. Allocation to scheduled dates is stored separately, so late/advance payments do not overwrite the real receipt date.</div></div></div>`;
@@ -220,9 +233,11 @@ function renderAccounting(){
  <div class="card" style="margin-top:16px"><div class="notice">Every future transaction should carry its own transaction ID, actual date, payment mode, source loan, allocation and recognition category. This prototype already keeps principal, interest and penalty separately in local data.</div></div>`;
 }
 function renderSettings(){
- return header("Settings","Prototype controls and business defaults")
- +`<div class="grid two"><div class="card"><div class="section-title"><h2>Business Defaults</h2></div><div class="metric"><span>Vertical</span><strong>Daily Collection</strong></div><div class="metric"><span>GST</span><strong>Not applied</strong></div><div class="metric"><span>Grace Period</span><strong>Not used</strong></div><div class="metric"><span>Collection frequency</span><strong>Daily</strong></div></div><div class="card"><div class="section-title"><h2>Local Data</h2></div><button class="btn danger" data-action="resetDemo">Reset Demo Data</button><p class="mini">This is a browser-local prototype. Do not use it as production accounting or as the sole backup.</p></div></div>`;
+ return header("Settings","Company identity, business defaults and local data controls")
+ +`<div class="grid two"><div class="card"><div class="section-title"><h2>Company Identity</h2><span>Saved locally in this browser</span></div><div class="field"><label>Company / Business Name</label><input id="companyNameSetting" value="${esc(state.companyName)}"></div><div class="actions" style="margin-top:10px"><button class="btn primary" data-action="saveCompanyName">Save Company Name</button></div></div><div class="card"><div class="section-title"><h2>Business Defaults</h2></div><div class="metric"><span>Vertical</span><strong>Daily Collection</strong></div><div class="metric"><span>GST</span><strong>Not applied</strong></div><div class="metric"><span>Grace Period</span><strong>Not used</strong></div><div class="metric"><span>Collection frequency</span><strong>Daily</strong></div></div></div>
+ <div class="card" style="margin-top:16px"><div class="section-title"><h2>Local Data Controls</h2><span>Separate demo restore from full wipe</span></div><div class="actions"><button class="btn warn" data-action="resetDemo">↻ Restore Demo Data</button><button class="btn danger" data-action="clearAllData">⌫ Clear All Local Data</button></div><p class="mini" style="margin-top:10px">Restore Demo Data replaces the browser state with the sample portfolio. Clear All Local Data removes customers, loans, products and transactions from this browser; the screen will then show an empty system.</p></div>`;
 }
+
 function newProductModal(){
  openModal(`<div class="modal-head blue"><div><h3>Product Creation</h3><div class="mini" style="color:#dbeafe">Daily Collection • no grace period • GST not applied</div></div><button class="close" data-close>×</button></div>
 <div class="modal-body"><div class="formgrid">
@@ -243,11 +258,13 @@ function newProductModal(){
  bindInterestLink();
 }
 function bindInterestLink(){
- const rate=document.getElementById("pRate"), amt=document.getElementById("pInterest"), loan=document.getElementById("pLoan");
+ const rate=document.getElementById("pRate"), amt=document.getElementById("pInterest"), loan=document.getElementById("pLoan"), term=document.getElementById("pTerm");
  if(!rate||!amt||!loan)return;
- rate.addEventListener("input",()=>{amt.value=(num(loan.value)*num(rate.value)/100*3).toFixed(2)});
- amt.addEventListener("input",()=>{rate.value=(num(amt.value)/num(loan.value)/3*100).toFixed(2)});
- loan.addEventListener("input",()=>{amt.value=(num(loan.value)*num(rate.value)/100*3).toFixed(2)});
+ const months=()=>Math.max(1,Math.round(num(term?.value||100)/30));
+ rate.addEventListener("input",()=>{amt.value=(num(loan.value)*num(rate.value)/100*months()).toFixed(2)});
+ amt.addEventListener("input",()=>{rate.value=(num(amt.value)/num(loan.value)/months()*100).toFixed(2)});
+ loan.addEventListener("input",()=>{amt.value=(num(loan.value)*num(rate.value)/100*months()).toFixed(2)});
+ term?.addEventListener("input",()=>{amt.value=(num(loan.value)*num(rate.value)/100*months()).toFixed(2)});
 }
 function newCustomerModal(){
  openModal(`<div class="modal-head blue"><div><h3>New Customer</h3><div class="mini" style="color:#dbeafe">Interest rule is inherited from Product Design</div></div><button class="close" data-close>×</button></div>
@@ -316,9 +333,10 @@ function settlementModal(c,l){
  ["stCharge","stWaiver"].forEach(id=>document.getElementById(id).addEventListener("input",()=>settlementModal(c,l)));
 }
 function openCustomer(c,l){
+ if(!c || !(c.loans||[]).length){toast("This customer has no loan account yet.");return}
  currentCustomer=c;currentLoan=l||c.loans[0];
  const t=loanTotals(currentLoan), p=product(currentLoan.productId), rows=allocations(currentLoan);
- openModal(`<div class="modal-head blue"><div><h3>${esc(c.name)} • Customer Profile</h3><div class="mini" style="color:#dbeafe">${c.id} • ${currentLoan.id}</div></div><button class="close" data-close>×</button></div>
+ openModal(`<div class="modal-head blue"><div><h3>${esc(c.name)} • Customer Profile</h3><div class="mini" style="color:#dbeafe">${c.id} • ${currentLoan.id}</div></div><div class="actions"><button class="close" data-action="editCustomer" data-customer="${c.id}">Edit</button><button class="close" data-action="deleteCustomer" data-customer="${c.id}">Delete</button><button class="close" data-close>×</button></div></div>
  <div class="modal-body"><div class="customer-card"><div class="card"><div class="customer-head"><div class="photo">${esc(c.name[0]||"C")}</div><div><strong>${esc(c.name)}</strong><div class="mini">${c.primary} • ${c.secondary}</div><div class="mini">${esc(c.address)}</div></div></div></div><div class="card"><div class="metric"><span>Product</span><strong>${esc(p?.name||"")}</strong></div><div class="metric"><span>Loan ID</span><strong>${currentLoan.id}</strong></div><div class="metric"><span>Disbursement</span><strong>${currentLoan.disbursement}</strong></div><div class="metric"><span>Interest</span><strong>${currentLoan.interestMethod==="upfront"?"Upfront":"Later"} • ${INR(currentLoan.interestTotal)}</strong></div></div></div>
  <div class="tabs" style="margin-top:14px"><button class="tab active">Loan Overview</button><button class="tab" data-action="preclose" data-customer="${c.id}" data-loan="${currentLoan.id}">Pre-Closure</button><button class="tab" data-action="settlement" data-customer="${c.id}" data-loan="${currentLoan.id}">Settlement</button><button class="tab" data-action="collect" data-customer="${c.id}" data-loan="${currentLoan.id}">Collect</button><button class="tab" data-action="penalty" data-customer="${c.id}" data-loan="${currentLoan.id}">Penalty</button></div>
  <div class="grid four"><div class="card"><div class="mini">Principal</div><strong>${INR(currentLoan.principal)}</strong></div><div class="card"><div class="mini">Recovered</div><strong>${INR(t.principalRecovered)}</strong></div><div class="card"><div class="mini">Outstanding</div><strong>${INR(t.principalOutstanding)}</strong></div><div class="card"><div class="mini">Interest Received</div><strong>${INR(t.interestReceived)}</strong></div></div>
@@ -326,19 +344,29 @@ function openCustomer(c,l){
  <div class="card" style="margin-top:14px"><div class="section-title"><h2>Guarantor</h2></div><div class="metric"><span>${esc(c.guarantor?.name||"—")}</span><strong>${c.guarantor?.primary||"—"} / ${c.guarantor?.secondary||"—"}</strong></div><div class="mini">${esc(c.guarantor?.address||"")}</div></div>
  </div>`);
 }
-function saveProduct(){
- const loan=num(document.getElementById("pLoan").value),rate=num(document.getElementById("pRate").value),interest=num(document.getElementById("pInterest").value);
- const p={id:"PRD"+String(state.products.length+1).padStart(3,"0"),name:document.getElementById("pName").value.trim()||"Daily Product",type:"Daily Collection",loanAmount:loan,interestRate:rate,interestAmount:interest,interestMethod:document.getElementById("pMethod").value,frequency:"Daily",termDays:Math.max(1,Math.floor(num(document.getElementById("pTerm").value))),processing:num(document.getElementById("pProc").value),documentation:num(document.getElementById("pDoc").value),penaltyPerDay:num(document.getElementById("pPenalty").value),foreclosure:num(document.getElementById("pForeclose").value),active:true};
- state.products.push(p);save();closeModal();render();toast("Product saved successfully.");
+function saveProduct(editId=null){
+ const loan=num(document.getElementById("pLoan").value),rate=num(document.getElementById("pRate").value),interest=num(document.getElementById("pInterest").value),term=Math.max(1,Math.floor(num(document.getElementById("pTerm").value)));
+ const name=document.getElementById("pName").value.trim();
+ if(!name||!loan||!term||!interest){toast("Product name, loan amount, term and interest are required.");return}
+ const payload={name,type:"Daily Collection",loanAmount:loan,interestRate:rate,interestAmount:interest,interestMethod:document.getElementById("pMethod").value,frequency:"Daily",termDays:term,processing:num(document.getElementById("pProc").value),documentation:num(document.getElementById("pDoc").value),penaltyPerDay:num(document.getElementById("pPenalty").value),foreclosure:num(document.getElementById("pForeclose").value),active:true};
+ if(editId){const p=product(editId);if(!p)return;p.name=payload.name;Object.assign(p,payload);toast("Product updated successfully.")}else{payload.id="PRD"+String(Date.now()).slice(-7);state.products.push(payload);toast("Product saved successfully.")}
+ save();closeModal();render();
 }
+function editProduct(id){const p=product(id);if(!p)return;openModal(`<div class="modal-head blue"><div><h3>Edit Product</h3><div class="mini" style="color:#dbeafe">${esc(p.id)} • Daily Collection</div></div><button class="close" data-close>×</button></div><div class="modal-body"><div class="formgrid"><div class="field"><label>Product Name *</label><input id="pName" value="${esc(p.name)}"></div><div class="field"><label>Product Type</label><input value="Daily Collection" disabled></div><div class="field"><label>Loan Amount (₹) *</label><input id="pLoan" type="number" value="${p.loanAmount}"></div><div class="field"><label>Interest Method *</label><select id="pMethod"><option value="upfront" ${p.interestMethod==="upfront"?"selected":""}>Upfront Deduction</option><option value="later" ${p.interestMethod==="later"?"selected":""}>Interest Later</option></select></div><div class="field"><label>Interest Percentage (%)</label><input id="pRate" type="number" step="0.01" value="${p.interestRate}"></div><div class="field"><label>Interest Amount (₹)</label><input id="pInterest" type="number" step="0.01" value="${p.interestAmount}"></div><div class="field"><label>Frequency</label><input value="Daily" disabled></div><div class="field"><label>Term / Total Days *</label><input id="pTerm" type="number" value="${p.termDays}"></div><div class="field"><label>Processing / File Charge (₹)</label><input id="pProc" type="number" value="${p.processing||0}"></div><div class="field"><label>Documentation Charge (₹)</label><input id="pDoc" type="number" value="${p.documentation||0}"></div><div class="field"><label>Penalty per Day (₹)</label><input id="pPenalty" type="number" value="${p.penaltyPerDay||0}"></div><div class="field"><label>Foreclosure Charge (₹) — optional</label><input id="pForeclose" type="number" value="${p.foreclosure||0}"></div><div class="full notice">No Grace Period and no GST. Interest percentage and amount are linked.</div></div></div><div class="modal-foot"><button class="btn" data-close>Cancel</button><button class="btn primary" data-action="saveProductEdit" data-id="${p.id}">Save Changes</button></div>`);bindInterestLink();}
+function deleteProduct(id){const p=product(id);if(!p)return;if(state.customers.some(c=>c.loans.some(l=>l.productId===id))){toast("This product is already used by a loan and cannot be deleted.");return}if(confirm(`Delete product ${p.name}?`)){state.products=state.products.filter(x=>x.id!==id);save();render();toast("Product deleted.")}}
+
 function saveCustomer(){
  const c={id:"C"+String(Date.now()).slice(-7),name:document.getElementById("cName").value.trim(),primary:document.getElementById("cPrimary").value.trim(),secondary:document.getElementById("cSecondary").value.trim(),address:document.getElementById("cAddress").value.trim(),guarantor:{name:document.getElementById("gName").value.trim(),primary:document.getElementById("gPrimary").value.trim(),secondary:document.getElementById("gSecondary").value.trim(),address:document.getElementById("gAddress").value.trim()},loans:[]};
  const p=product(document.getElementById("cProduct").value), date=document.getElementById("cDate").value;
- if(!c.name||!c.primary)return toast("Customer name and primary mobile are required.");
+ if(!c.name||!c.primary||!p||!date){toast("Customer name, primary mobile, product and disbursement date are required.");return}
  const interest=p.interestAmount, net=p.interestMethod==="upfront"?p.loanAmount-interest:p.loanAmount;
  const l={id:"L"+String(Date.now()).slice(-7),productId:p.id,disbursement:date,principal:p.loanAmount,netDisbursed:net,interestMethod:p.interestMethod,interestTotal:interest,termDays:p.termDays,frequency:"Daily",status:"Active",payments:[],penalties:[],extraCharges:0,disbursementMode:document.getElementById("cMode").value};
  c.loans.push(l);state.customers.push(c);save();closeModal();currentCustomer=c;currentLoan=l;render();toast("Customer and loan created.");
 }
+function editCustomer(id){const c=state.customers.find(x=>x.id===id);if(!c)return;openModal(`<div class="modal-head blue"><div><h3>Edit Customer</h3><div class="mini" style="color:#dbeafe">${esc(c.id)} • Existing loans are preserved</div></div><button class="close" data-close>×</button></div><div class="modal-body"><div class="formgrid"><div class="field"><label>Customer Name *</label><input id="eName" value="${esc(c.name)}"></div><div class="field"><label>Primary Mobile *</label><input id="ePrimary" value="${esc(c.primary)}"></div><div class="field"><label>Secondary Mobile</label><input id="eSecondary" value="${esc(c.secondary||"")}"></div><div class="field full"><label>Customer Address</label><textarea id="eAddress">${esc(c.address||"")}</textarea></div><div class="field"><label>Guarantor Name</label><input id="egName" value="${esc(c.guarantor?.name||"")}"></div><div class="field"><label>Guarantor Primary Mobile</label><input id="egPrimary" value="${esc(c.guarantor?.primary||"")}"></div><div class="field"><label>Guarantor Secondary Mobile</label><input id="egSecondary" value="${esc(c.guarantor?.secondary||"")}"></div><div class="field full"><label>Guarantor Address</label><textarea id="egAddress">${esc(c.guarantor?.address||"")}</textarea></div></div></div><div class="modal-foot"><button class="btn" data-close>Cancel</button><button class="btn primary" data-action="saveCustomerEdit" data-id="${c.id}">Save Changes</button></div>`)}
+function saveCustomerEdit(id){const c=state.customers.find(x=>x.id===id);if(!c)return;const name=document.getElementById("eName").value.trim(),primary=document.getElementById("ePrimary").value.trim();if(!name||!primary){toast("Customer name and primary mobile are required.");return}Object.assign(c,{name,primary,secondary:document.getElementById("eSecondary").value.trim(),address:document.getElementById("eAddress").value.trim(),guarantor:{name:document.getElementById("egName").value.trim(),primary:document.getElementById("egPrimary").value.trim(),secondary:document.getElementById("egSecondary").value.trim(),address:document.getElementById("egAddress").value.trim()}});save();closeModal();render();toast("Customer updated successfully.")}
+function deleteCustomer(id){const c=state.customers.find(x=>x.id===id);if(!c)return;if(confirm(`Delete ${c.name} and all of this customer's local loan data?`)){state.customers=state.customers.filter(x=>x.id!==id);save();closeModal();currentCustomer=state.customers[0]||null;currentLoan=currentCustomer?.loans[0]||null;render();toast("Customer and linked local data deleted.")}}
+
 function savePayment(c,l){
  const amount=num(document.getElementById("payAmount").value), date=document.getElementById("payDate").value; if(!amount)return toast("Enter a payment amount.");
  const alreadyPrincipal=(l.payments||[]).reduce((s,p)=>s+num(p.principal),0);
@@ -367,22 +395,38 @@ function confirmSettlement(c,l){
 function receivePenalty(c,l,pid){const p=(l.penalties||[]).find(x=>x.id===pid);if(!p)return;penaltyModal(c,l,p.attractedDate)}
 function newPenalty(){const x=activeLoans()[0];if(x)penaltyModal(x.customer,x,addDays(isoToday(),-1));else toast("No active loan available.")}
 function exportCSV(){const rows=[["Customer","Loan ID","Date","Amount","Principal","Interest","Penalty"]];state.customers.forEach(c=>c.loans.forEach(l=>{(l.payments||[]).forEach(p=>rows.push([c.name,l.id,p.date,p.amount,p.principal,p.interest,0]));(l.penalties||[]).forEach(p=>rows.push([c.name,l.id,p.receivedDate||p.attractedDate,p.receivedAmount||p.amount,0,0,p.status==="Received"?p.amount:0]))}));const csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="microfinance-ledger.csv";a.click();URL.revokeObjectURL(a.href)}
+function showLedger(){
+ const rows=[];
+ state.customers.forEach(c=>c.loans.forEach(l=>{
+  (l.payments||[]).forEach(p=>rows.push({date:p.date,id:p.id,customer:c.name,loan:l.id,category:"Principal / Interest",amount:p.amount,mode:p.mode,remark:p.remark||""}));
+  (l.penalties||[]).forEach(p=>rows.push({date:p.receivedDate||p.attractedDate,id:p.id,customer:c.name,loan:l.id,category:p.status==="Received"?"Penalty Revenue":"Penalty Due",amount:p.status==="Received"?(p.receivedAmount||p.amount):p.amount,mode:p.mode||"—",remark:p.remark||p.reason||""}));
+ }));
+ rows.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+ openModal(`<div class="modal-head blue"><div><h3>Transaction Ledger</h3><div class="mini" style="color:#dbeafe">Actual transaction dates • principal, interest and penalty kept distinct</div></div><button class="close" data-close>×</button></div><div class="modal-body"><div class="table-wrap"><table class="table"><thead><tr><th>Date</th><th>Transaction ID</th><th>Customer</th><th>Loan ID</th><th>Category</th><th>Amount</th><th>Mode</th><th>Remarks</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.date}</td><td>${r.id}</td><td>${esc(r.customer)}</td><td>${r.loan}</td><td>${r.category}</td><td>${INR(r.amount)}</td><td>${esc(r.mode)}</td><td>${esc(r.remark)}</td></tr>`).join("")||`<tr><td colspan="8" class="center muted">No transactions recorded yet.</td></tr>`}</tbody></table></div></div><div class="modal-foot"><button class="btn" data-close>Close</button><button class="btn primary" data-action="exportCSV">Export CSV</button></div>`);
+}
+function handleAction(b){
+ const a=b.dataset.action,cid=b.dataset.customer,lid=b.dataset.loan,c=state.customers.find(x=>x.id===cid),l=c?.loans.find(x=>x.id===lid);
+ if(a==="newProduct")newProductModal(); else if(a==="newCustomer")newCustomerModal(); else if(a==="newLoan")newCustomerModal(); else if(a==="newCollection"){const x=activeLoans()[0];x?collectModal(x.customer,x):toast("Create a customer/loan first.")}
+ else if(a==="collect"&&c&&l)collectModal(c,l); else if(a==="openCustomer"&&c)openCustomer(c,l);
+ else if(a==="editCustomer"&&c)editCustomer(c.id); else if(a==="deleteCustomer"&&c)deleteCustomer(c.id);
+ else if(a==="editProduct")editProduct(b.dataset.id); else if(a==="deleteProduct")deleteProduct(b.dataset.id);
+ else if(a==="preclose"&&c&&l)precloseModal(c,l); else if(a==="settlement"&&c&&l)settlementModal(c,l); else if(a==="penalty"&&c&&l)penaltyModal(c,l);
+ else if(a==="newPenalty")newPenalty(); else if(a==="receivePenalty"&&c&&l)receivePenalty(c,l,b.dataset.penalty);
+ else if(a==="saveProduct")saveProduct(); else if(a==="saveProductEdit")saveProduct(b.dataset.id); else if(a==="saveCustomer")saveCustomer(); else if(a==="saveCustomerEdit")saveCustomerEdit(b.dataset.id); else if(a==="savePayment"&&c&&l)savePayment(c,l); else if(a==="savePenalty"&&c&&l)savePenalty(c,l);
+ else if(a==="confirmPreclose"&&c&&l)confirmPreclose(c,l); else if(a==="confirmSettlement"&&c&&l)confirmSettlement(c,l);
+ else if(a==="exportCSV")exportCSV(); else if(a==="showLedger")showLedger();
+ else if(a==="resetDemo"){if(confirm("Restore the original demo portfolio? This replaces current local data.")){state=structuredClone(defaultState);state.companyName="MicroFinance Pro";save();currentCustomer=state.customers[0];currentLoan=currentCustomer?.loans[0];render();toast("Demo data restored.")}}
+ else if(a==="clearAllData"){if(confirm("Clear ALL local customers, loans, products and transactions from this browser?")){state={companyName:state.companyName||"MicroFinance Pro",products:[],customers:[]};save();currentCustomer=null;currentLoan=null;render();toast("All local data cleared.")}}
+ else if(a==="saveCompanyName"){const v=document.getElementById("companyNameSetting")?.value.trim();if(!v)return toast("Enter a company name.");state.companyName=v;save();render();toast("Company name updated.")}
+ else if(a==="recoverySearch"){const q=document.getElementById("recoverySearch").value;document.getElementById("recoveryResults").innerHTML=customerResults(q)}
+ else if(a==="searchCustomers"){const q=document.getElementById("customerSearch").value;document.getElementById("customerResults").innerHTML=customerResults(q)}
+ else if(a==="printSettlement")window.print();
+}
 function bindView(){
  document.querySelectorAll("[data-view-link]").forEach(b=>b.onclick=()=>{currentView=b.dataset.viewLink;render()});
- document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>{
-  const a=b.dataset.action,cid=b.dataset.customer,lid=b.dataset.loan,c=state.customers.find(x=>x.id===cid),l=c?.loans.find(x=>x.id===lid);
-  if(a==="newProduct")newProductModal(); else if(a==="newCustomer")newCustomerModal(); else if(a==="newLoan")newCustomerModal(); else if(a==="newCollection"){const x=activeLoans()[0];x?collectModal(x.customer,x):toast("Create a customer/loan first.");}
-  else if(a==="collect"&&c&&l)collectModal(c,l); else if(a==="openCustomer"&&c)openCustomer(c,l);
-  else if(a==="preclose"&&c&&l)precloseModal(c,l); else if(a==="settlement"&&c&&l)settlementModal(c,l); else if(a==="penalty"&&c&&l)penaltyModal(c,l);
-  else if(a==="newPenalty")newPenalty(); else if(a==="receivePenalty"&&c&&l)receivePenalty(c,l,b.dataset.penalty);
-  else if(a==="saveProduct")saveProduct(); else if(a==="saveCustomer")saveCustomer(); else if(a==="savePayment"&&c&&l)savePayment(c,l); else if(a==="savePenalty"&&c&&l)savePenalty(c,l);
-  else if(a==="confirmPreclose"&&c&&l)confirmPreclose(c,l); else if(a==="confirmSettlement"&&c&&l)confirmSettlement(c,l);
-  else if(a==="exportCSV")exportCSV(); else if(a==="resetDemo"){if(confirm("Reset all local demo data?")){localStorage.removeItem("mfProState");location.reload()}}
-  else if(a==="recoverySearch"){const q=document.getElementById("recoverySearch").value;document.getElementById("recoveryResults").innerHTML=customerResults(q)}
-  else if(a==="searchCustomers"){const q=document.getElementById("customerSearch").value;document.getElementById("customerResults").innerHTML=customerResults(q)}
- });
- document.querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);
+ document.querySelectorAll("[data-action]").forEach(b=>{if(!b.closest("#modal"))b.onclick=()=>handleAction(b)});
 }
+
 document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{currentView=b.dataset.view;render()});
 document.getElementById("globalSearchBtn").onclick=()=>{currentView="customers";render();setTimeout(()=>{const i=document.getElementById("customerSearch");if(i){i.value=document.getElementById("globalSearch").value;document.querySelector('[data-action="searchCustomers"]').click()}},0)};
 document.getElementById("globalSearch").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("globalSearchBtn").click()});
