@@ -20,7 +20,7 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}
 .top h1{font-size:19px;margin:0}.top .right{display:flex;align-items:center;gap:10px}.pill{padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:12px}
 .content{padding:20px;max-width:1500px;margin:auto}.page{display:none}.page.active{display:block}
 .grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}.card h3{margin:0 0 12px;font-size:14px}.section-title{font-size:18px;margin:0 0 14px}.muted{color:var(--muted)}.tiny{font-size:11px}.metric{font-size:25px;font-weight:800;margin-top:5px}.metric.green{color:var(--green)}.metric.red{color:var(--red)}.metric.amber{color:var(--amber)}
+.dashlink{cursor:pointer;transition:.18s}.dashlink:hover{transform:translateY(-2px);border-color:#9dbbf2}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}.card h3{margin:0 0 12px;font-size:14px}.section-title{font-size:18px;margin:0 0 14px}.muted{color:var(--muted)}.tiny{font-size:11px}.metric{font-size:25px;font-weight:800;margin-top:5px}.metric.green{color:var(--green)}.metric.red{color:var(--red)}.metric.amber{color:var(--amber)}
 .btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 13px;border-radius:9px;font-weight:650}.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}.btn.green{background:var(--green);border-color:var(--green);color:#fff}.btn.red{background:#fff0ef;border-color:#f5c5c1;color:var(--red)}.btn.sm{padding:6px 9px;font-size:12px}.btn:disabled{opacity:.5;cursor:not-allowed}
 .toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.toolbar .grow{flex:1}
 label{font-size:12px;font-weight:700;color:#344054;display:block;margin-bottom:6px}.field{margin-bottom:11px}input,select,textarea{width:100%;border:1px solid #cfd6e2;border-radius:8px;padding:9px 10px;background:#fff;color:var(--ink);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(23,92,211,.1)}textarea{min-height:70px;resize:vertical}
@@ -43,7 +43,7 @@ label{font-size:12px;font-weight:700;color:#344054;display:block;margin-bottom:6
 <body>
 <div class="app">
 <aside class="side">
-  <div class="brand">MicroFinance Pro<span>Daily Collection Core</span><small>Working Prototype</small></div>
+  <div class="brand"><span id="brandCompany">My Company</span><small>Daily Collection</small></div>
   <nav class="nav">
     <button class="active" data-page="dashboard"><span class="ico">⌂</span><span>Dashboard</span></button>
     <button data-page="customers"><span class="ico">♙</span><span>Customers</span></button>
@@ -63,10 +63,10 @@ label{font-size:12px;font-weight:700;color:#344054;display:block;margin-bottom:6
 <section id="page-dashboard" class="page active">
   <div class="toolbar"><div class="grow"><h2 class="section-title">Collection Overview</h2></div><button class="btn primary" onclick="go('newloan')">＋ New Loan</button></div>
   <div class="grid g4">
-    <div class="card"><div class="muted tiny">Active Loans</div><div class="metric" id="mLoans">0</div></div>
-    <div class="card"><div class="muted tiny">Principal Outstanding</div><div class="metric" id="mPrincipal">₹0</div></div>
-    <div class="card"><div class="muted tiny">Interest Received</div><div class="metric green" id="mInterest">₹0</div></div>
-    <div class="card"><div class="muted tiny">Penalty Received</div><div class="metric amber" id="mPenalty">₹0</div></div>
+    <div class="card dashlink" onclick="goDrill('loans','active')"><div class="muted tiny">Active Loans</div><div class="metric" id="mLoans">0</div><div class="tiny muted">Click to open loans</div></div>
+    <div class="card dashlink" onclick="goDrill('principal')"><div class="muted tiny">Principal Outstanding</div><div class="metric" id="mPrincipal">₹0</div><div class="tiny muted">Click to view outstanding loans</div></div>
+    <div class="card dashlink" onclick="goDrill('interest')"><div class="muted tiny">Interest Received</div><div class="metric green" id="mInterest">₹0</div><div class="tiny muted">Click to view revenue receipts</div></div>
+    <div class="card dashlink" onclick="go('penalty')"><div class="muted tiny">Penalty Received</div><div class="metric amber" id="mPenalty">₹0</div><div class="tiny muted">Click to open penalty ledger</div></div>
   </div>
   <div class="grid g2" style="margin-top:14px">
     <div class="card"><h3>Today’s Due</h3><div id="todayDue"></div></div>
@@ -113,7 +113,7 @@ label{font-size:12px;font-weight:700;color:#344054;display:block;margin-bottom:6
 
 <section id="page-customers" class="page">
  <div class="toolbar"><div class="grow"><h2 class="section-title">Customers</h2></div><button class="btn primary" onclick="go('newloan')">＋ New Customer / Loan</button></div>
- <div class="card"><div class="searchbox" style="margin-bottom:12px"><span>⌕</span><input id="customerSearch" placeholder="Search name, mobile, Customer ID..." oninput="renderCustomers()"></div><div class="table-wrap"><table class="table"><thead><tr><th>Customer ID</th><th>Name</th><th>Mobile</th><th>Loans</th><th>Outstanding</th><th></th></tr></thead><tbody id="customerTable"></tbody></table></div></div>
+ <div class="card"><div class="searchbox" style="margin-bottom:12px"><span>⌕</span><input id="customerSearch" placeholder="Search name / surname / mobile / Customer ID..." oninput="renderCustomers()"></div><div class="table-wrap"><table class="table"><thead><tr><th>Customer ID</th><th>Name</th><th>Mobile</th><th>Loans</th><th>Outstanding</th><th></th></tr></thead><tbody id="customerTable"></tbody></table></div></div>
 </section>
 
 <section id="page-collection" class="page">
@@ -141,14 +141,18 @@ label{font-size:12px;font-weight:700;color:#344054;display:block;margin-bottom:6
 </section>
 
 <section id="page-reports" class="page">
- <div class="toolbar"><div class="grow"><h2 class="section-title">Financial Reports</h2></div><input type="month" id="reportMonth" onchange="renderReports()"></div>
+ <div class="toolbar"><div class="grow"><h2 class="section-title">Reports & Accounts</h2><div class="muted tiny">Collections, revenue recognition and P&L are based on recorded transactions—not calculated interest alone.</div></div><input type="month" id="reportMonth" onchange="renderReports()"></div>
  <div class="grid g4">
   <div class="card"><div class="muted tiny">Principal Received</div><div class="metric" id="rPrincipal">₹0</div></div>
   <div class="card"><div class="muted tiny">Interest Received</div><div class="metric green" id="rInterest">₹0</div></div>
   <div class="card"><div class="muted tiny">Penalty Income</div><div class="metric amber" id="rPenalty">₹0</div></div>
   <div class="card"><div class="muted tiny">Total Collections</div><div class="metric" id="rTotal">₹0</div></div>
  </div>
- <div class="card" style="margin-top:14px"><h3>Transaction Ledger</h3><div class="table-wrap"><table class="table"><thead><tr><th>Received Date</th><th>Customer</th><th>Loan</th><th>Amount</th><th>Principal</th><th>Interest</th><th>Penalty</th><th>Mode</th><th>Remarks</th></tr></thead><tbody id="reportTable"></tbody></table></div></div>
+ <div class="grid g2" style="margin-top:14px">
+  <div class="card"><h3>Revenue Recognition</h3><div class="table-wrap"><table class="table"><thead><tr><th>Revenue Head</th><th>Calculated</th><th>Actually Received</th><th>Recognized</th></tr></thead><tbody id="revenueTable"></tbody></table></div></div>
+  <div class="card"><h3>P&L Snapshot</h3><div class="kpis"><div class="kpi"><div class="l">Interest Revenue</div><div class="v" id="plInterest">₹0</div></div><div class="kpi"><div class="l">Penalty Revenue</div><div class="v" id="plPenalty">₹0</div></div><div class="kpi"><div class="l">Operating Revenue</div><div class="v" id="plRevenue">₹0</div></div><div class="kpi"><div class="l">Principal (not income)</div><div class="v">₹0</div></div></div><div class="alert blue" style="margin-top:12px">Principal collections are recovery of principal, not revenue. Interest and recovered penalty are revenue heads.</div></div>
+ </div>
+ <div class="card" style="margin-top:14px"><h3>Transaction Ledger</h3><div class="table-wrap"><table class="table"><thead><tr><th>Received Date</th><th>Customer</th><th>Loan</th><th>Amount</th><th>Principal</th><th>Interest Revenue</th><th>Penalty</th><th>Mode</th><th>Remarks</th></tr></thead><tbody id="reportTable"></tbody></table></div></div>
 </section>
 
 <section id="page-settings" class="page">
@@ -164,10 +168,10 @@ label{font-size:12px;font-weight:700;color:#344054;display:block;margin-bottom:6
 
 <script>
 const KEY='mfpro_v1';
-let S=JSON.parse(localStorage.getItem(KEY)||'null')||{company:'MicroFinance Pro',products:[],customers:[],loans:[],payments:[],penalties:[],seq:{c:1,l:1,p:1,t:1}};
+let S=JSON.parse(localStorage.getItem(KEY)||'null')||{company:'My Company',products:[],customers:[],loans:[],payments:[],penalties:[],seq:{c:1,l:1,p:1,t:1}};
 let currentLoanId=null;
 S.products.forEach(p=>{ if(!p.method)p.method='Upfront Deduction'; if(p.totalRecovery==null)p.totalRecovery=p.method==='Upfront Deduction'?p.amount:p.amount+p.interest; if(p.netDisbursement==null)p.netDisbursement=p.method==='Upfront Deduction'?Math.max(0,p.amount-p.interest-(p.file||0)-(p.doc||0)):p.amount; if(!p.emi)p.emi=p.totalRecovery/Math.max(1,p.days||100); });
-S.loans.forEach(l=>{ if(l.principalBase==null) l.principalBase=l.method==='Upfront Deduction'?(l.netDisbursement??l.faceAmount):l.faceAmount; if(!l.emi)l.emi=l.totalRecovery/Math.max(1,l.days||100); });
+S.loans.forEach(l=>{ if(l.principalBase==null) l.principalBase=l.faceAmount; if(!l.emi)l.emi=l.totalRecovery/Math.max(1,l.days||100); });
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
 const num=v=>Math.max(0,Number(v)||0);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -194,7 +198,7 @@ function paymentAllocation(l,amount){
  return {principal:pr,interest:ir,penalty:0,excess:remaining};
 }
 function refresh(){
- document.getElementById('companyPill').textContent=S.company||'MicroFinance Pro';
+ document.getElementById('companyPill').textContent=S.company||'My Company'; document.getElementById('brandCompany').textContent=S.company||'My Company';
  document.getElementById('companyName').value=S.company||'';
  document.getElementById('today').textContent=fmt(today());
  renderDashboard();renderProducts();renderCustomers();renderLoans();renderPenalty();renderReports();populateProducts();refreshLoanPreview();
@@ -219,6 +223,11 @@ function renderDashboard(){
  document.getElementById('todayDue').innerHTML=due.length?'<div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Amount</th><th></th></tr></thead><tbody>'+due.map(o=>`<tr><td>${esc(getCustomer(o.l.customerId)?.name)}</td><td>${money(o.x.amount)}</td><td><button class="btn sm primary" onclick="openRecovery('${o.l.id}')">Collect</button></td></tr>`).join('')+'</tbody></table></div>':'<div class="empty">No due installment today.</div>';
  const ps=S.payments.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,7);
  document.getElementById('recentPayments').innerHTML=ps.length?'<div class="table-wrap"><table class="table"><thead><tr><th>Date</th><th>Customer</th><th>Amount</th></tr></thead><tbody>'+ps.map(p=>`<tr><td>${fmt(p.date)}</td><td>${esc(getCustomer(getLoan(p.loanId)?.customerId)?.name)}</td><td>${money(p.amount)}</td></tr>`).join('')+'</tbody></table></div>':'<div class="empty">No payments recorded.</div>';
+}
+function goDrill(type,filter){
+ if(type==='loans'){go('loans');document.getElementById('loanFilter').value=filter||'all';renderLoans();return;}
+ if(type==='principal'){openModal('Principal Outstanding — Loan Drill Down',`<div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Loan</th><th>Principal Outstanding</th><th>Action</th></tr></thead><tbody>${S.loans.filter(l=>l.status==='Active').map(l=>{const os=Math.max(0,l.faceAmount-allocations(l.id).principal);return os>0?`<tr><td>${esc(getCustomer(l.customerId)?.name)}</td><td>${l.id}</td><td>${money(os)}</td><td><button class="btn sm primary" onclick="closeModal();openRecovery('${l.id}')">Open Recovery</button></td></tr>`:''}).join('')||'<tr><td colspan="4">No principal outstanding.</td></tr>'}</tbody></table></div>`);return;}
+ if(type==='interest'){go('reports');return;}
 }
 function renderProducts(){
  const tb=document.getElementById('productTable');const rows=S.products;
@@ -283,13 +292,15 @@ function saveLoan(){
  S.customers.push({id:cid,name,mobile:mob,mobile2:document.getElementById('cMob2').value.trim(),address:document.getElementById('cAddr').value.trim(),guarantor:{name:document.getElementById('gName').value.trim(),mobile:document.getElementById('gMob').value.trim(),mobile2:document.getElementById('gMob2').value.trim(),address:document.getElementById('gAddr').value.trim()}});
  const total=p.totalRecovery,emi=p.emi;const schedule=Array.from({length:p.days},(_,i)=>({no:i+1,date:addDays(date,i+1),amount:emi,received:0,status:'Due',remarks:''}));
  const net=p.method==='Upfront Deduction'?Math.max(0,p.amount-p.interest-p.file-p.doc):p.amount;
- const principalBase=p.method==='Upfront Deduction'?net:p.amount;
+ const principalBase=p.amount;
  S.loans.push({id:lid,customerId:cid,productId:p.id,disbursementDate:date,mode:document.getElementById('loanMode').value,faceAmount:p.amount,principalBase,interestAmount:p.interest,method:p.method,totalRecovery:total,netDisbursement:net,file:p.file,doc:p.doc,penaltyPerDay:p.penalty,fore:p.fore,days:p.days,emi,schedule,status:'Active'});
  save();document.getElementById('cName').value='';document.getElementById('cMob').value='';go('collection');document.getElementById('recoverySearch').value=lid;renderRecoverySearch();
 }
 function renderCustomers(){
- const q=(document.getElementById('customerSearch').value||'').toLowerCase();const rows=S.customers.filter(c=>(c.name+' '+c.mobile+' '+c.id).toLowerCase().includes(q));
- document.getElementById('customerTable').innerHTML=rows.map(c=>{const ls=S.loans.filter(l=>l.customerId===c.id);return `<tr><td>${c.id}</td><td><strong>${esc(c.name)}</strong></td><td>${esc(c.mobile)}</td><td>${ls.length}</td><td>${money(ls.reduce((a,l)=>a+outstanding(l),0))}</td><td>${ls[0]?`<button class="btn sm primary" onclick="openRecovery('${ls[0].id}')">Open Recovery</button>`:''}</td></tr>`}).join('')||'<tr><td colspan="6" class="muted">No customers found.</td></tr>';
+ const q=(document.getElementById('customerSearch').value||'').trim().toLowerCase();
+ if(!q){document.getElementById('customerTable').innerHTML='<tr><td colspan="6"><div class="empty">Search by customer name, surname, mobile or Customer ID to view customers.</div></td></tr>';return;}
+ const rows=S.customers.filter(c=>(c.name+' '+c.mobile+' '+c.mobile2+' '+c.id).toLowerCase().includes(q));
+ document.getElementById('customerTable').innerHTML=rows.map(c=>{const ls=S.loans.filter(l=>l.customerId===c.id);return `<tr><td>${c.id}</td><td><strong>${esc(c.name)}</strong></td><td>${esc(c.mobile)}</td><td>${ls.length}</td><td>${money(ls.reduce((a,l)=>a+outstanding(l),0))}</td><td>${ls[0]?`<button class="btn sm primary" onclick="openRecovery('${ls[0].id}')">Open Recovery</button>`:''}</td></tr>`}).join('')||'<tr><td colspan="6" class="muted">No matching customers.</td></tr>';
 }
 function renderLoans(){
  const f=document.getElementById('loanFilter').value;let rows=S.loans;if(f!=='all')rows=rows.filter(l=>l.status.toLowerCase()===f);
@@ -371,12 +382,19 @@ function confirmClosure(lid,amount,type){if(!confirm(`${type} amount ${money(amo
 function confirmSettlement(lid,base){const l=getLoan(lid),a=allocations(lid),principalOS=Math.max(0,(l.principalBase??l.netDisbursement??l.faceAmount)-a.principal),baseInterest=Math.max(0,l.interestAmount-a.interest),waiver=num(document.getElementById('settleWaiver').value);const extra=Math.max(0,base-principalOS-baseInterest);const amount=Math.max(0,base-waiver);if(!confirm('Settlement amount '+money(amount)+' will be recorded and the loan will be closed. Continue?'))return;S.payments.push({id:'TXN'+String(S.seq.t++).padStart(7,'0'),loanId:lid,date:today(),amount,principal:Math.min(principalOS,amount),interest:Math.max(0,amount-Math.min(principalOS,amount)),penalty:0,mode:'Cash',remarks:'Settlement closing collection; includes post-maturity interest '+money(Math.max(0,extra-waiver))});recalcSchedule(lid);l.status='Closed';save();closeModal();openRecovery(lid);refresh()}
 function printLoanCard(lid){const l=getLoan(lid),c=getCustomer(l.customerId),p=getProduct(l.productId);const w=window.open('','_blank');if(!w){alert('Allow popups to print.');return}w.document.write(`<html><head><title>Loan Card ${l.id}</title><style>body{font-family:Arial;padding:25px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:7px;font-size:12px}h2{margin-bottom:3px}</style></head><body><h2>${esc(S.company)}</h2><h3>Loan Card — ${l.id}</h3><p><b>Customer:</b> ${esc(c.name)} &nbsp; <b>Primary:</b> ${esc(c.mobile)} &nbsp; <b>Secondary:</b> ${esc(c.mobile2||'-')}</p><p><b>Guarantor:</b> ${esc(c.guarantor?.name||'-')} &nbsp; <b>Primary:</b> ${esc(c.guarantor?.mobile||'-')} &nbsp; <b>Secondary:</b> ${esc(c.guarantor?.mobile2||'-')}</p><table><tr><th>#</th><th>Scheduled Date</th><th>EMI</th><th>Actual Received Date</th><th>Received</th><th>Status</th><th>Remarks</th></tr>${l.schedule.map(x=>`<tr><td>${x.no}</td><td>${fmt(x.date)}</td><td>${money(x.amount)}</td><td>${x.receivedDate?fmt(x.receivedDate):'-'}</td><td>${money(x.received)}</td><td>${x.status}</td><td>${esc(x.remarks)}</td></tr>`).join('')}</table><script>window.print()<\/script></body></html>`);w.document.close()}
 function renderReports(){
- const month=document.getElementById('reportMonth').value;const ps=S.payments.filter(p=>!month||p.date.startsWith(month));const pr=ps.reduce((a,p)=>a+p.principal,0),ir=ps.reduce((a,p)=>a+p.interest,0),pe=ps.reduce((a,p)=>a+p.penalty,0),tot=ps.reduce((a,p)=>a+p.amount,0)+S.penalties.filter(x=>x.status==='Received'&&(!month||x.receivedDate.startsWith(month))).reduce((a,x)=>a+x.amount,0);
+ const month=document.getElementById('reportMonth').value;
+ const ps=S.payments.filter(p=>!month||p.date.startsWith(month));
+ const pen=S.penalties.filter(x=>x.status==='Received'&&(!month||x.receivedDate.startsWith(month)));
+ const pr=ps.reduce((a,p)=>a+p.principal,0),ir=ps.reduce((a,p)=>a+p.interest,0),pe=pen.reduce((a,p)=>a+p.amount,0),tot=ps.reduce((a,p)=>a+p.amount,0)+pe;
+ const calcInterest=S.loans.reduce((a,l)=>a+l.interestAmount,0);
  document.getElementById('rPrincipal').textContent=money(pr);document.getElementById('rInterest').textContent=money(ir);document.getElementById('rPenalty').textContent=money(pe);document.getElementById('rTotal').textContent=money(tot);
+ document.getElementById('plInterest').textContent=money(ir);document.getElementById('plPenalty').textContent=money(pe);document.getElementById('plRevenue').textContent=money(ir+pe);
+ document.getElementById('revenueTable').innerHTML=`<tr><td>Interest</td><td>${money(calcInterest)}</td><td>${money(ir)}</td><td>${money(ir)}</td></tr><tr><td>Penalty</td><td>${money(S.penalties.reduce((a,x)=>a+x.amount,0))}</td><td>${money(pe)}</td><td>${money(pe)}</td></tr>`;
  document.getElementById('reportTable').innerHTML=ps.map(p=>`<tr><td>${fmt(p.date)}</td><td>${esc(getCustomer(getLoan(p.loanId)?.customerId)?.name)}</td><td>${p.loanId}</td><td>${money(p.amount)}</td><td>${money(p.principal)}</td><td>${money(p.interest)}</td><td>${money(p.penalty)}</td><td>${p.mode}</td><td>${esc(p.remarks)}</td></tr>`).join('')||'<tr><td colspan="9">No transactions for selected period.</td></tr>';
 }
-function saveSettings(){S.company=document.getElementById('companyName').value.trim()||'MicroFinance Pro';save();refresh();alert('Settings saved.')}
-function clearAll(){if(!confirm('This will delete all customers, loans, products, payments and penalties from this browser. Continue?'))return;S={company:S.company||'MicroFinance Pro',products:[],customers:[],loans:[],payments:[],penalties:[],seq:{c:1,l:1,p:1,t:1}};save();refresh();go('dashboard')}
+
+function saveSettings(){S.company=document.getElementById('companyName').value.trim()||'My Company';save();refresh();alert('Settings saved.')}
+function clearAll(){if(!confirm('This will delete all customers, loans, products, payments and penalties from this browser. Continue?'))return;S={company:S.company||'My Company',products:[],customers:[],loans:[],payments:[],penalties:[],seq:{c:1,l:1,p:1,t:1}};save();refresh();go('dashboard')}
 function openModal(title,body){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=body;document.getElementById('modal').classList.add('show')}
 function closeModal(){document.getElementById('modal').classList.remove('show')}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
