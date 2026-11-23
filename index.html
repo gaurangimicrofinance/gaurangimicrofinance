@@ -1,141 +1,656 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Advanced Microfinance</title>
-<style>
-:root{--bg:#eef3f9;--panel:#fff;--ink:#122033;--muted:#667085;--line:#d9e2ee;--nav:#0c1728;--blue:#155eef;--blue2:#0b4bb5;--green:#079455;--red:#d92d20;--amber:#dc6803;--purple:#7f56d9;--cyan:#0e9384;--shadow:0 12px 30px rgba(16,24,40,.08);--r:16px}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh;display:flex}.side{position:fixed;inset:0 auto 0 0;width:238px;background:linear-gradient(180deg,#0a1424,#101b2e);padding:16px 12px;color:#fff;z-index:30}.brand{padding:12px 12px 18px;border-bottom:1px solid #ffffff15;margin-bottom:10px}.brand strong{display:block;font-size:16px}.brand span{display:block;color:#9fb0c7;font-size:11px;margin-top:4px}.nav button{width:100%;border:0;background:transparent;color:#c9d4e3;padding:11px 12px;border-radius:10px;display:flex;align-items:center;gap:10px;text-align:left;margin:3px 0}.nav button:hover,.nav button.active{background:linear-gradient(90deg,#164b9d,#155eef);color:#fff}.nav i{font-style:normal;width:20px;text-align:center}.main{margin-left:238px;width:calc(100% - 238px);min-width:0}.top{height:66px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:20}.top h1{font-size:19px;margin:0}.topright{display:flex;gap:8px;align-items:center}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 11px;font-size:11px}.content{padding:18px;max-width:1520px;margin:auto}.page{display:none}.page.active{display:block}.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.grow{flex:1}.section-title{font-size:20px;margin:0}.sub{font-size:11px;color:var(--muted);margin-top:4px}.grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g5{grid-template-columns:repeat(5,minmax(0,1fr))}.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:15px;box-shadow:var(--shadow)}.card h3{margin:0 0 11px;font-size:14px}.hero{background:linear-gradient(135deg,#102a56,#1769e0 58%,#0e9384);color:#fff;border-radius:20px;padding:20px;box-shadow:0 18px 40px rgba(16,42,86,.22);margin-bottom:14px;display:flex;justify-content:space-between;gap:20px}.hero h2{margin:3px 0 6px;font-size:25px}.hero p{margin:0;font-size:12px;opacity:.85}.hero .eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.72}.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.metric{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;box-shadow:var(--shadow);position:relative;overflow:hidden}.metric.click{cursor:pointer;transition:.18s}.metric.click:hover{transform:translateY(-2px)}.metric:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--blue)}.metric.green:before{background:var(--green)}.metric.amber:before{background:var(--amber)}.metric.red:before{background:var(--red)}.metric.purple:before{background:var(--purple)}.metric .l{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}.metric .v{font-size:22px;font-weight:900;margin-top:5px}.metric .s{font-size:10px;color:var(--muted);margin-top:3px}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 13px;border-radius:9px;font-weight:750}.btn.sm{padding:6px 9px;font-size:11px}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.green{background:var(--green);border-color:var(--green);color:#fff}.btn.red{background:#fff0ef;border-color:#f4b7b1;color:#b42318}.btn.amber{background:#fff7e8;border-color:#f1cd8a;color:#b54708}.btn:disabled{opacity:.45;cursor:not-allowed}.field{margin-bottom:10px}label{display:block;font-size:11px;font-weight:800;color:#344054;margin-bottom:5px}input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:9px 10px;background:#fff;color:var(--ink);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,94,239,.1)}textarea{min-height:72px;resize:vertical}.row{display:grid;grid-template-columns:repeat(12,1fr);gap:9px}.c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}.c3{grid-column:span 3}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}.table{width:100%;border-collapse:collapse;min-width:760px}.table th,.table td{padding:9px 10px;border-bottom:1px solid #e8edf3;text-align:left;font-size:11px;white-space:nowrap}.table th{background:#f8fafc;color:#475467;text-transform:uppercase;font-size:10px;letter-spacing:.03em}.table tr:last-child td{border-bottom:0}.badge{display:inline-flex;align-items:center;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900}.badge.green{background:#ecfdf3;color:#067647}.badge.red{background:#fef3f2;color:#b42318}.badge.amber{background:#fffaeb;color:#b54708}.badge.blue{background:#eff8ff;color:#175cd3}.badge.gray{background:#f2f4f7;color:#475467}.search{position:relative}.search input{padding-left:35px}.search:before{content:"⌕";position:absolute;left:12px;top:8px;color:#98a2b3}.empty{padding:38px 16px;text-align:center;color:var(--muted);border:1px dashed #cbd5e1;border-radius:12px;background:#fbfdff}.panel{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff}.panel .ph{padding:10px 12px;font-size:12px;font-weight:850;border-bottom:1px solid var(--line);background:#f8fafc}.panel .pb{padding:12px}.panel.blue{border-color:#bfd4ff}.panel.blue .ph{background:#eef4ff;color:#164b9d}.panel.green{border-color:#a7e3c2}.panel.green .ph{background:#ecfdf3;color:#067647}.panel.amber{border-color:#f1d39f}.panel.amber .ph{background:#fff8eb;color:#b54708}.panel.red{border-color:#efb5af}.panel.red .ph{background:#fff1f0;color:#b42318}.calc-line{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed #dbe2ea;font-size:11px}.calc-line:last-child{border-bottom:0}.calc-line strong{font-size:13px}.big{font-size:24px!important;color:var(--blue)}.tabs{display:flex;gap:2px;overflow:auto;border-bottom:1px solid var(--line);margin-top:12px}.tabs button{border:0;background:transparent;padding:10px 12px;color:#667085;white-space:nowrap}.tabs button.on{font-weight:850;color:var(--blue);border-bottom:2px solid var(--blue)}.actions{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0}.actions button{padding:10px;border-radius:10px;border:1px solid var(--line);font-size:11px;font-weight:850;background:#fff}.actions .primary{background:var(--blue);color:#fff;border-color:var(--blue)}.actions .green{background:var(--green);color:#fff;border-color:var(--green)}.actions .amber{background:#fff7e8;color:#b54708;border-color:#f1d39f}.actions .red{background:#fff1f0;color:#b42318;border-color:#efb5af}.workspace-head{display:grid;grid-template-columns:1.1fr 1.9fr;gap:12px}.identity{background:linear-gradient(135deg,#0d2c60,#155eef);color:#fff;border-radius:15px;padding:16px}.identity h3{font-size:18px;margin:5px 0}.identity .small{font-size:11px;opacity:.78}.alert{padding:9px 11px;border-radius:9px;font-size:11px;margin:8px 0}.alert.green{background:#ecfdf3;color:#067647}.alert.red{background:#fef3f2;color:#b42318}.alert.amber{background:#fffaeb;color:#b54708}.modal{position:fixed;inset:0;background:rgba(16,24,40,.64);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}.modal.show{display:flex}.modalbox{width:min(1120px,100%);max-height:95vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 24px 80px #0005}.mh{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;z-index:2}.mb{padding:15px}.x{width:32px;height:32px;border:0;border-radius:50%;background:#f2f4f7}.split2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.paymode{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.paymode button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-size:10px;font-weight:800}.paymode button.on{background:#eef4ff;color:#155eef;border-color:#90b4ff}.hidden{display:none!important}
-@media(max-width:1100px){.metrics{grid-template-columns:repeat(3,1fr)}.g4,.g5{grid-template-columns:repeat(2,1fr)}.workspace-head{grid-template-columns:1fr}.actions{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:760px){.side{inset:auto 0 0 0;width:100%;height:66px;padding:5px}.brand{display:none}.nav{display:flex;justify-content:space-around}.nav button{width:auto;display:block;padding:7px 5px;text-align:center}.nav button i{display:block;width:auto;font-size:16px}.nav button span{display:block;font-size:8px}.main{margin:0 0 66px;width:100%}.top{padding:0 11px}.top h1{font-size:16px}.content{padding:11px}.metrics,.g2,.g3,.g4,.g5,.split2{grid-template-columns:1fr}.row{grid-template-columns:1fr}.c12,.c8,.c6,.c4,.c3{grid-column:span 1}.actions{grid-template-columns:repeat(2,1fr)}.hero{padding:16px}.hero h2{font-size:20px}.paymode{grid-template-columns:repeat(2,1fr)}.modal{padding:6px}.table{min-width:720px}}
-</style>
-</head>
-<body>
-<div class="app">
-<aside class="side"><div class="brand"><strong id="brandCompany">My Company</strong><span>Microfinance Management System</span></div><nav class="nav">
-<button class="active" data-page="dashboard"><i>⌂</i><span>Dashboard</span></button>
-<button data-page="customers"><i>♙</i><span>Customers</span></button>
-<button data-page="newloan"><i>＋</i><span>New Loan</span></button>
-<button data-page="products"><i>▣</i><span>Products</span></button>
-<button data-page="collection"><i>₹</i><span>Collection</span></button>
-<button data-page="loans"><i>▤</i><span>Loans</span></button>
-<button data-page="reports"><i>▥</i><span>Reports</span></button>
-<button data-page="penalty"><i>!</i><span>Penalty</span></button>
-<button data-page="settings"><i>⚙</i><span>Settings</span></button>
-</nav></aside>
-<main class="main"><header class="top"><h1 id="pageTitle">Dashboard</h1><div class="topright"><span class="chip" id="companyPill">My Company</span><span class="chip" id="todayChip"></span></div></header><div class="content">
+<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142e30"><title>रोज़खाता · माइक्रोफाइनेंस</title><style>
 
-<section id="page-dashboard" class="page active">
-<div class="hero"><div><div class="eyebrow">Portfolio Command Center</div><h2 id="dashCompany">My Company</h2><p>Collections, overdue position, revenue recognition and loan actions from one ledger.</p></div><div><button class="btn" onclick="go('newloan')">＋ New Loan</button></div></div>
-<div class="metrics">
-<div class="metric click" onclick="drillActive()"><div class="l">Active Loans</div><div class="v" id="dActive">0</div><div class="s">Click to open portfolio</div></div>
-<div class="metric click green" onclick="drillPrincipal()"><div class="l">Principal Outstanding</div><div class="v" id="dPrincipal">₹0</div><div class="s">Actual principal still unrecovered</div></div>
-<div class="metric click amber" onclick="drillDue()"><div class="l">Due Outstanding Till Today</div><div class="v" id="dDueOS">₹0</div><div class="s">Scheduled due less collections</div></div>
-<div class="metric click purple" onclick="go('reports')"><div class="l">Interest Revenue</div><div class="v" id="dInterest">₹0</div><div class="s">Actually realized only</div></div>
-<div class="metric click red" onclick="go('penalty')"><div class="l">Penalty Due</div><div class="v" id="dPenalty">₹0</div><div class="s">Pending penalty ledger</div></div>
-</div>
-<div class="grid g2" style="margin-top:12px"><div class="card"><h3>Due / Overdue Queue</h3><div id="dashDue"></div></div><div class="card"><h3>Recent Collections</h3><div id="dashRecent"></div></div></div>
-</section>
+[hidden]{display:none!important}
+:root{--ink:#172e30;--muted:#52696a;--line:#d5dfda;--paper:#f4f6f1;--green:#126455;--aqua:#b2e4cb;--gold:#f1b66b;--white:#fff;--shadow:0 6px 24px #15362d08}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:var(--paper);font:15px/1.55 "Nirmala UI","Noto Sans Devanagari","Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+button:focus-visible,a:focus-visible{outline:3px solid #e2a953;outline-offset:3px}
+aside{position:fixed;inset:0 auto 0 0;width:210px;background:#142e30;color:#f7faf1;padding:30px 16px;display:flex;flex-direction:column;z-index:2}
+.brand{display:flex;align-items:center;gap:11px;padding:0 8px 32px;font-size:23px;font-weight:750}
+.mark{display:inline-grid;place-items:center;background:var(--aqua);color:var(--ink);width:40px;height:40px;border-radius:13px;font-size:24px;font-family:Georgia}
+.brand small, .eyebrow{display:block;letter-spacing:.15em;text-transform:uppercase;font:600 10px/1.5 system-ui;color:#73918b}
+.brand small{color:#b2c7c3}
+.nav{display:flex;gap:6px;flex-direction:column}
+.nav button{border:0;text-align:left;background:transparent;color:#c8dbd4;border-radius:9px;padding:11px 13px}
+.nav button b{display:inline-grid;place-items:center;width:21px;margin-right:10px;font:18px/1 system-ui}
+.nav button.on{background:#30524e;color:white}
+.sidefoot{margin-top:auto;font-size:12px;color:#b8cec4;padding:14px 9px}
+.dot{display:inline-block;width:8px;height:8px;background:#70b993;border-radius:50%;margin-right:6px}
+main{margin-left:210px;padding:26px clamp(16px,4vw,64px) 55px;max-width:1600px}
+.top,.row,.spread{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.spread,.top{justify-content:space-between}
+.top{padding-bottom:18px;border-bottom:1px solid var(--line);color:var(--muted);font-size:13px}
+.tag{padding:5px 10px;background:#e4ede6;border-radius:20px;color:#235644;font-size:12px}
+.head{margin:26px 0 18px}
+h1,h2,h3,p{margin:0}
+h1{font-size:clamp(26px,3vw,42px);line-height:1.35;letter-spacing:-.035em}
+h2{font-size:20px}
+h3{font-size:16px}
+.sub,small{color:var(--muted)}
+.sub{margin-top:4px}
+.btn,button.soft,button.ghost{border:1px solid transparent;border-radius:9px;padding:9px 15px;font-weight:650}
+.btn{color:white;background:var(--green)}
+.soft{background:#deeee2;color:#194e42}
+.ghost{background:white;color:var(--ink);border-color:var(--line)!important}
+.card,.hero{border:1px solid var(--line);border-radius:16px;background:white;padding:clamp(16px,2.3vw,28px);box-shadow:var(--shadow);margin-bottom:16px}
+.hero{color:white;background:linear-gradient(108deg,#183b3d,#21534a);border:0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hero small{color:#c5d9cd}
+.amount{font:650 clamp(29px,4.5vw,56px)/1.25 system-ui;letter-spacing:-.05em;margin:7px 0}
+.ring{flex:none;width:82px;height:82px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold) var(--pct),#426a61 0)}
+.ring span{display:grid;place-items:center;border-radius:50%;width:65px;height:65px;background:#214a45;font:700 15px system-ui}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid>.card{margin-bottom:0}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.stat{padding:15px;border:1px solid var(--line);background:white;border-radius:12px}
+.stat strong{display:block;font:650 clamp(19px,2.1vw,32px)/1.5 system-ui;letter-spacing:-.04em}
+.stat small{font-size:12px}
+.bars{display:flex;gap:8px;align-items:flex-end;height:125px;margin-top:14px}
+.bar{flex:1;text-align:center;font-size:10px;color:var(--muted)}
+.bar i{width:70%;background:#8aba9f;display:block;border-radius:4px 4px 0 0;margin:4px auto;min-height:2px}
+.bar:last-child i{background:var(--green)}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:16px 0}
+.wide{grid-column:1/-1}
+label{display:block;font-size:13px;font-weight:650}
+input,select,textarea{display:block;min-width:0;width:100%;border:1px solid #b8c9c0;background:#fcfdfa;color:var(--ink);padding:10px 11px;border-radius:8px;margin-top:5px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#237862;box-shadow:0 0 0 3px #cfe5d6}
+input[type=date]{min-height:43px}
+textarea{min-height:80px}
+.note,.preview,.err{padding:12px 15px;border-radius:9px;margin:12px 0;background:#eaf3eb}
+.err{background:#fbe9e0;color:#843b1d}
+.empty{padding:22px 0;color:var(--muted)}
+.entry{padding:11px 0;border-bottom:1px solid var(--line)}
+.entry:last-child{border:0}
+.result{width:100%;text-align:left;background:white;border:0;border-bottom:1px solid var(--line);padding:11px;color:var(--ink)}
+.result:hover{background:#edf5ed}
+.scroll{overflow:auto}
+.scroll table{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
+th,td{padding:9px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:#eef3ed}
+.muted{color:var(--muted)}
+.switch{display:flex;flex-wrap:wrap;gap:6px;margin:15px 0}
+.switch button{border:1px solid var(--line);border-radius:20px;padding:7px 12px;background:white;color:var(--ink)}
+.switch .active{background:var(--ink);color:white}
+.msg{position:fixed;bottom:20px;right:16px;max-width:min(90vw,440px);background:#193a33;color:white;border-radius:10px;padding:13px 18px;z-index:5}
+.msg:empty{display:none}
+details{margin:12px 0}
+summary{cursor:pointer;font-weight:650}
+pre{overflow:auto;background:#f1f4ef;padding:10px;font-size:12px}
+#print{display:none}
+button.link{border:0;background:none;color:var(--green);padding:4px;text-decoration:underline}
+.sep{margin:16px 0;border:0;border-top:1px solid var(--line)}
+@media(max-width:850px){aside{position:static;width:auto;padding:10px 12px;display:block}
+.brand{padding:0 4px 8px;font-size:18px}
+.brand small,.sidefoot{display:none}
+.mark{width:30px;height:30px;font-size:18px}
+.nav{flex-direction:row;overflow-x:auto}
+.nav button{font-size:13px;white-space:nowrap;padding:7px}
+.nav button b{display:none}
+main{margin:0;padding:14px}
+.head{margin-top:18px}
+}
+@media(max-width:620px){.grid,.fields{grid-template-columns:1fr}
+.stats{gap:6px}
+.stat{padding:9px 6px}
+.stat strong{font-size:17px}
+.stat small{font-size:11px}
+.top{padding-bottom:10px}
+.ring{width:65px;height:65px}
+.ring span{width:51px;height:51px}
+.hero{padding:16px}
+.bars{gap:4px}
+.grid{gap:12px}
+.head .row{margin-top:4px}
+.spread{gap:6px}
+}
+@media print{body{background:white;color:black;font:11pt/1.4 sans-serif}
+aside,main,.msg{display:none!important}
+#print{display:block}
+#print table{width:100%;border-collapse:collapse;font-size:9pt}
+#print td,#print th{border:1px solid #999;padding:4px}
+tr{break-inside:avoid}
+thead{display:table-header-group}
+@page{margin:12mm}
+}
 
-<section id="page-products" class="page"><div class="toolbar"><div class="grow"><h2 class="section-title">Product Design</h2><div class="sub">Interest configuration and collection configuration are independent.</div></div><button class="btn primary" onclick="openProduct()">＋ Create Product</button></div><div class="card"><div id="productList"></div></div></section>
 
-<section id="page-newloan" class="page"><div class="toolbar"><div class="grow"><h2 class="section-title">New Client / Loan</h2><div class="sub">Create customer, guarantor and loan in one flow.</div></div></div><div class="grid g2"><div class="card"><h3>Customer & Guarantor</h3><div class="row"><div class="c6 field"><label>Customer Name *</label><input id="cName"></div><div class="c3 field"><label>Primary Mobile *</label><input id="cMob"></div><div class="c3 field"><label>Secondary Mobile</label><input id="cMob2"></div><div class="c12 field"><label>Customer Address</label><textarea id="cAddr"></textarea></div><div class="c6 field"><label>Guarantor Name</label><input id="gName"></div><div class="c3 field"><label>Guarantor Primary</label><input id="gMob"></div><div class="c3 field"><label>Guarantor Secondary</label><input id="gMob2"></div><div class="c12 field"><label>Guarantor Address</label><textarea id="gAddr"></textarea></div></div></div><div class="card"><h3>Loan Configuration</h3><div class="field"><label>Product *</label><select id="loanProduct" onchange="previewLoan()"></select></div><div class="row"><div class="c6 field"><label>Disbursement Date *</label><input id="loanDate" type="date" onchange="previewLoan()"></div><div class="c6 field"><label>Disbursement Mode</label><select id="loanMode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Mixed Payment</option></select></div></div><div id="loanPreview" class="panel blue"><div class="ph">Loan Preview</div><div class="pb sub">Select a product.</div></div><div style="margin-top:12px"><button class="btn primary" onclick="createLoan()">Create Loan & Schedule</button></div></div></div></section>
-
-<section id="page-customers" class="page"><div class="toolbar"><div class="grow"><h2 class="section-title">Customers</h2><div class="sub">Search-first view. No list is loaded until you search.</div></div><button class="btn primary" onclick="go('newloan')">＋ New Customer / Loan</button></div><div class="card"><div class="search"><input id="customerSearch" placeholder="Name / mobile / Customer ID / Loan ID" oninput="renderCustomers()"></div><div id="customerResults" style="margin-top:12px"><div class="empty">Start typing to search customers.</div></div></div></section>
-
-<section id="page-collection" class="page"><div class="toolbar"><div class="grow"><h2 class="section-title">Recovery Workbench</h2><div class="sub">Search customer or loan, then open the complete collection workspace.</div></div></div><div class="card"><div class="search"><input id="recoverySearch" placeholder="Name / surname / mobile / Customer ID / Loan ID / product" oninput="searchRecovery()"></div><div id="recoveryResults" style="margin-top:12px"><div class="empty">Start typing to find a loan.</div></div></div><div id="recoveryWorkspace" style="margin-top:12px"></div></section>
-
-<section id="page-loans" class="page"><div class="toolbar"><div class="grow"><h2 class="section-title">Loan Register</h2></div><select id="loanFilter" style="width:auto" onchange="renderLoans()"><option value="all">All</option><option value="Active">Active</option><option value="Closed">Closed</option></select></div><div class="card"><div id="loanRegister"></div></div></section>
-
-<section id="page-reports" class="page"><div class="toolbar"><div class="grow"><h2 class="section-title">Reports & Accounts</h2><div class="sub">Calculated interest is not revenue. Revenue is recognized only from actual realized interest and received penalty.</div></div><input type="month" id="reportMonth" style="width:auto" onchange="renderReports()"></div><div class="metrics"><div class="metric"><div class="l">Principal Received</div><div class="v" id="rPrincipal">₹0</div></div><div class="metric green"><div class="l">Interest Revenue</div><div class="v" id="rInterest">₹0</div></div><div class="metric amber"><div class="l">Penalty Revenue</div><div class="v" id="rPenalty">₹0</div></div><div class="metric purple"><div class="l">Operating Revenue</div><div class="v" id="rRevenue">₹0</div></div><div class="metric"><div class="l">Total Collections</div><div class="v" id="rCollections">₹0</div></div></div><div class="grid g2" style="margin-top:12px"><div class="card"><h3>Revenue Recognition</h3><div id="revenueSummary"></div></div><div class="card"><h3>P&L Snapshot</h3><div id="plSummary"></div></div></div><div class="card" style="margin-top:12px"><h3>Transaction Ledger</h3><div id="reportLedger"></div></div></section>
-
-<section id="page-penalty" class="page"><div class="toolbar"><div class="grow"><h2 class="section-title">Penalty Management</h2><div class="sub">Missed EMI penalties are tracked separately from interest revenue.</div></div></div><div class="metrics"><div class="metric amber"><div class="l">Total Penalty</div><div class="v" id="pTotal">₹0</div></div><div class="metric green"><div class="l">Received</div><div class="v" id="pRec">₹0</div></div><div class="metric red"><div class="l">Pending</div><div class="v" id="pPend">₹0</div></div></div><div class="card" style="margin-top:12px"><div id="penaltyLedger"></div></div></section>
-
-<section id="page-settings" class="page"><div class="grid g2"><div class="card"><h3>Company Settings</h3><div class="field"><label>Company Name</label><input id="companyName"></div><button class="btn primary" onclick="saveSettings()">Save Company Name</button></div><div class="card"><h3>Data Controls</h3><div class="sub" style="margin-bottom:12px">This test build stores data in your browser localStorage.</div><button class="btn red" onclick="clearData()">Clear All Local Data</button></div></div></section>
-
-</div></main></div>
-<div id="modal" class="modal"><div class="modalbox"><div class="mh"><strong id="modalTitle"></strong><button class="x" onclick="closeModal()">×</button></div><div class="mb" id="modalBody"></div></div></div>
-<script>
-const KEY='mf_advanced_final_v1';
-let S=JSON.parse(localStorage.getItem(KEY)||'null')||{company:'My Company',products:[],customers:[],loans:[],payments:[],penalties:[],closures:[],audit:[],seq:{p:1,c:1,l:1,t:1,n:1}};
-const money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
-const num=v=>Math.max(0,Number(v)||0);
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-function localISO(d=new Date()){const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())}
-function today(){return localISO()}
-function parseDate(s){return new Date(s+'T00:00:00')}
-function fmt(s){if(!s)return'-';return parseDate(s).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}
-function addDays(s,n){const d=parseDate(s);d.setDate(d.getDate()+n);return localISO(d)}
-function daysBetween(a,b){return Math.max(0,Math.floor((parseDate(b)-parseDate(a))/86400000))}
-function usedMonths(a,b){const d=daysBetween(a,b);return d<=0?0:Math.ceil(d/30)}
-function save(){localStorage.setItem(KEY,JSON.stringify(S))}
-function audit(action,meta={}){S.audit.push({ts:new Date().toISOString(),action,meta});if(S.audit.length>500)S.audit=S.audit.slice(-500)}
-function product(id){return S.products.find(x=>x.id===id)}function loan(id){return S.loans.find(x=>x.id===id)}function customer(id){return S.customers.find(x=>x.id===id)}
-function payments(lid){return S.payments.filter(x=>x.loanId===lid)}
-function penalties(lid){return S.penalties.filter(x=>x.loanId===lid)}
-function closure(lid){return S.closures.find(x=>x.loanId===lid)}
-function allocations(lid){return payments(lid).reduce((a,p)=>({principal:a.principal+p.principal,interest:a.interest+p.interest,penalty:a.penalty+p.penalty}),{principal:0,interest:0,penalty:0})}
-function principalBase(l){return l.preclosePrincipalBase}
-function principalOS(l){if(l.status==='Closed')return 0;return Math.max(0,principalBase(l)-allocations(l.id).principal)}
-function interestOS(l){if(l.status==='Closed')return 0;return Math.max(0,l.interestAmount-allocations(l.id).interest)}
-function totalCollected(lid){return payments(lid).reduce((a,p)=>a+p.amount,0)+penalties(lid).filter(x=>x.status==='Received').reduce((a,p)=>a+p.amount,0)}
-function totalLoanCollections(lid){return payments(lid).reduce((a,p)=>a+p.amount,0)}
-function dueTill(l,asOf=today()){return l.schedule.filter(x=>x.date<=asOf).reduce((a,x)=>a+x.amount,0)}
-function receivedTill(l,asOf=today()){return payments(l.id).filter(p=>p.date<=asOf).reduce((a,p)=>a+p.amount,0)}
-function dueOutstanding(l,asOf=today()){return l.status==='Closed'?0:Math.max(0,dueTill(l,asOf)-receivedTill(l,asOf))}
-function nextDue(l){return l.schedule.find(x=>x.status!=='Paid')}
-function buildSchedule(start,target,emi,days){const rows=[];const n=Math.max(1,Math.floor(days||1));let remain=target;for(let no=1;no<=n;no++){const amt=no<n?Math.min(emi,remain):Math.max(0,remain);rows.push({no,date:addDays(start,no),amount:+amt.toFixed(2),received:0,receivedDate:'',status:'Due',remarks:''});remain-=amt}return rows}
-function allocationFor(l,amount,excludeTxn){let prior=payments(l.id).filter(x=>x.id!==excludeTxn).reduce((a,p)=>({principal:a.principal+p.principal,interest:a.interest+p.interest}),{principal:0,interest:0});let remain=num(amount);const pOS=Math.max(0,principalBase(l)-prior.principal);const pr=Math.min(remain,pOS);remain-=pr;const iOS=Math.max(0,l.interestAmount-prior.interest);const ir=Math.min(remain,iOS);remain-=ir;return{principal:pr,interest:ir,excess:remain}}
-function recalcSchedule(lid){const l=loan(lid);if(!l)return;l.schedule.forEach(x=>{x.received=0;x.receivedDate='';x.status='Due';x.remarks=''});payments(lid).slice().sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id)).forEach(p=>{let remain=p.amount;l.schedule.forEach(x=>{if(remain<=.009)return;const need=Math.max(0,x.amount-x.received);const take=Math.min(need,remain);if(take>.009){x.received=+(x.received+take).toFixed(2);x.receivedDate=p.date;x.status=x.received>=x.amount-.009?'Paid':'Part Paid';x.remarks=`Payment ${p.id}: ${money(p.amount)} received ${fmt(p.date)}; ${money(take)} allocated`;remain-=take}})});if(closure(lid))l.status='Closed'}
-function go(page){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===page));const n={dashboard:'Dashboard',customers:'Customers',newloan:'New Client / Loan',products:'Product Design',collection:'Recovery Workbench',loans:'Loan Register',reports:'Reports & Accounts',penalty:'Penalty Management',settings:'Settings'};document.getElementById('pageTitle').textContent=n[page];if(page==='collection'){document.getElementById('recoverySearch').value='';document.getElementById('recoveryResults').innerHTML='<div class="empty">Start typing to find a loan.</div>';document.getElementById('recoveryWorkspace').innerHTML=''}refreshAll()}
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.page));
-function refreshAll(){document.getElementById('brandCompany').textContent=S.company;document.getElementById('companyPill').textContent=S.company;document.getElementById('companyName').value=S.company;document.getElementById('todayChip').textContent=fmt(today());document.getElementById('dashCompany').textContent=S.company;renderDashboard();renderProducts();renderCustomers();populateProducts();previewLoan();renderLoans();renderReports();renderPenalty()}
-function renderDashboard(){const active=S.loans.filter(l=>l.status==='Active');const pOS=active.reduce((a,l)=>a+principalOS(l),0);const dueOS=active.reduce((a,l)=>a+dueOutstanding(l),0);const intRev=S.payments.reduce((a,p)=>a+p.interest,0);const penDue=S.penalties.filter(p=>p.status==='Pending').reduce((a,p)=>a+p.amount,0);dActive.textContent=active.length;dPrincipal.textContent=money(pOS);dDueOS.textContent=money(dueOS);dInterest.textContent=money(intRev);dPenalty.textContent=money(penDue);const queue=[];active.forEach(l=>l.schedule.filter(x=>x.status!=='Paid'&&x.date<=today()).forEach(x=>queue.push({l,x})));queue.sort((a,b)=>a.x.date.localeCompare(b.x.date));dashDue.innerHTML=queue.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Loan</th><th>Due Date</th><th>EMI</th><th>Status</th><th></th></tr></thead><tbody>${queue.slice(0,25).map(o=>`<tr><td>${esc(customer(o.l.customerId)?.name)}</td><td>${o.l.id}</td><td>${fmt(o.x.date)}</td><td>${money(o.x.amount)}</td><td><span class="badge ${o.x.date<today()?'red':'blue'}">${o.x.date<today()?'Overdue':'Due'}</span></td><td><button class="btn sm primary" onclick="openRecovery('${o.l.id}')">Open</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No due or overdue items.</div>';const recent=S.payments.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id)).slice(0,10);dashRecent.innerHTML=recent.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Date</th><th>Customer</th><th>Amount</th><th>Mode</th><th></th></tr></thead><tbody>${recent.map(p=>`<tr><td>${fmt(p.date)}</td><td>${esc(customer(loan(p.loanId)?.customerId)?.name)}</td><td>${money(p.amount)}</td><td>${esc(p.mode)}</td><td><button class="btn sm" onclick="openRecovery('${p.loanId}')">Open</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No collections yet.</div>'}
-function drillActive(){go('loans');loanFilter.value='Active';renderLoans()}function drillPrincipal(){openModal('Principal Outstanding — Loan Drill Down',`<div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Loan</th><th>Principal Base</th><th>Recovered</th><th>Outstanding</th><th></th></tr></thead><tbody>${S.loans.filter(l=>l.status==='Active').map(l=>{const a=allocations(l.id);return`<tr><td>${esc(customer(l.customerId)?.name)}</td><td>${l.id}</td><td>${money(principalBase(l))}</td><td>${money(a.principal)}</td><td>${money(principalOS(l))}</td><td><button class="btn sm primary" onclick="closeModal();openRecovery('${l.id}')">Open Recovery</button></td></tr>`}).join('')||'<tr><td colspan="6">No active loans.</td></tr>'}</tbody></table></div>`)}function drillDue(){openModal('Due Outstanding Till Today',`<div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Loan</th><th>Due Till Today</th><th>Received</th><th>Due Outstanding</th><th></th></tr></thead><tbody>${S.loans.filter(l=>l.status==='Active'&&dueOutstanding(l)>0).map(l=>`<tr><td>${esc(customer(l.customerId)?.name)}</td><td>${l.id}</td><td>${money(dueTill(l))}</td><td>${money(receivedTill(l))}</td><td>${money(dueOutstanding(l))}</td><td><button class="btn sm primary" onclick="closeModal();openRecovery('${l.id}')">Open</button></td></tr>`).join('')||'<tr><td colspan="6">No due outstanding.</td></tr>'}</tbody></table></div>`)}
-function renderProducts(){productList.innerHTML=S.products.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Product</th><th>Face</th><th>Interest</th><th>Method</th><th>Net Disbursement</th><th>Recovery Target</th><th>Daily EMI</th><th>Derived Days</th><th></th></tr></thead><tbody>${S.products.map(p=>`<tr><td><strong>${esc(p.name)}</strong></td><td>${money(p.face)}</td><td>${p.monthlyRate}% × ${p.interestMonths} mo = ${money(p.interestAmount)}</td><td>${p.method}</td><td>${money(p.netDisbursement)}</td><td>${money(p.recoveryTarget)}</td><td>${money(p.emi)}</td><td>${p.collectionDays}</td><td><button class="btn sm" onclick="openProduct('${p.id}')">Edit</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No product yet. Create your first product.</div>'}
-function openProduct(id){const p=id?product(id):null;openModal(id?'Edit Product':'Create Product',`<div class="grid g2"><div class="panel blue"><div class="ph">Product & Interest Configuration <span style="float:right;color:#667085;font-size:10px;font-weight:600">EMI and collection duration are both set by you.</span></div><div class="pb"><div class="row"><div class="c8 field"><label>Product Name *</label><input id="pName" value="${esc(p?.name||'Daily Collection')}"/></div><div class="c4 field"><label>Face Loan Amount *</label><input type="number" id="pFace" value="${p?.face??50000}" oninput="calcProduct()"/></div><div class="c6 field"><label>Interest Method *</label><select id="pMethod" onchange="calcProduct()"><option ${p?.method==='Upfront Deduction'?'selected':''}>Upfront Deduction</option><option ${p?.method==='Interest Later'?'selected':''}>Interest Later</option></select></div><div class="c3 field"><label>Monthly Interest % *</label><input type="number" step="0.01" id="pRate" value="${p?.monthlyRate??5}" oninput="calcProduct()"/></div><div class="c3 field"><label>Interest Months *</label><input type="number" min="1" step="1" id="pMonths" value="${p?.interestMonths??3}" oninput="calcProduct()"/></div><div class="c6 field"><label>Total Interest Amount (₹) — editable</label><input type="number" id="pInterest" value="${p?.interestAmount??7500}" oninput="interestToRate()"/></div><div class="c3 field"><label>Daily Collection EMI — Set by You *</label><input type="number" min="0.01" step="0.01" id="pEmi" value="${p?.emi??''}" placeholder="Enter EMI" oninput="calcProduct()"/></div><div class="c3 field"><label>Collection Days — Set by You *</label><input type="number" min="1" step="1" id="pDays" value="${p?.collectionDays??''}" placeholder="Enter days" oninput="calcProduct()"/></div></div></div></div><div class="panel green"><div class="ph">Live Calculation Preview</div><div class="pb" id="productCalc"></div></div></div><div class="panel amber" style="margin-top:12px"><div class="ph">Schedule Preview — First 10 Installments</div><div class="pb" id="schedulePreview"></div></div><div style="margin-top:12px"><button class="btn primary" onclick="saveProduct('${id||''}')">Save Product</button> <button class="btn" onclick="closeModal()">Cancel</button></div>`);calcProduct()}
-function interestToRate(){const f=num(pFace.value),i=num(pInterest.value),m=Math.max(1,num(pMonths.value));pRate.value=f?((i/f/m)*100).toFixed(4):0;calcProduct(true)}
-function calcProduct(fromInterest=false){const face=num(pFace.value),rate=num(pRate.value),months=Math.max(1,Math.floor(num(pMonths.value)||1)),method=pMethod.value,emi=num(pEmi.value),days=Math.max(0,Math.floor(num(pDays.value)||0));let interest=num(pInterest.value);if(!fromInterest){interest=face*rate/100*months;pInterest.value=interest.toFixed(2)}const net=method==='Upfront Deduction'?Math.max(0,face-interest):face;const target=method==='Upfront Deduction'?face:face+interest;const hasPlan=emi>0&&days>0;const scheduledBase=hasPlan?emi*Math.max(0,days-1):0;const last=hasPlan?Math.max(0,target-scheduledBase):0;const variance=hasPlan?(emi*days-target):0;productCalc.innerHTML=`<div class="calc-line"><span>Monthly Interest</span><strong>${money(face*rate/100)}</strong></div><div class="calc-line"><span>Total Interest (${months} months)</span><strong>${money(interest)}</strong></div><div class="calc-line"><span>Net Disbursement</span><strong>${money(net)}</strong></div><div class="calc-line"><span>Total Recovery Target</span><strong>${money(target)}</strong></div><div class="calc-line"><span>Daily EMI — Your Decision</span><strong>${emi?money(emi):'Not set'}</strong></div><div class="calc-line"><span>Collection Days — Your Decision</span><strong>${days?days+' days':'Not set'}</strong></div>${hasPlan?`<div class="calc-line"><span>Final Installment</span><strong>${money(last)}</strong></div><div class="alert ${Math.abs(variance)<.01?'green':'amber'}"><b>${Math.abs(variance)<.01?'Plan matches recovery target.':'Custom plan:'}</b> ${Math.abs(variance)<.01?'EMI × days exactly matches the target.':variance>0?'Your EMI × days exceeds the target; the final installment is reduced to the exact remaining balance.':'Your EMI × days is below the target; the final installment is increased to recover the exact target.'}</div>`:`<div class="alert amber"><b>Both controls are manual.</b> Set the Daily EMI and Collection Days yourself. The system will not assume 100 days or derive a duration for you.</div>`}`;if(hasPlan){const fake=buildSchedule(today(),target,emi,days);schedulePreview.innerHTML=`<div class="table-wrap"><table class="table"><thead><tr><th>#</th><th>Date</th><th>Scheduled EMI</th></tr></thead><tbody>${fake.slice(0,15).map(x=>`<tr><td>${x.no}</td><td>${fmt(x.date)}</td><td>${money(x.amount)}</td></tr>`).join('')}</tbody></table></div>${fake.length>15?`<div class="sub" style="margin-top:7px">Showing first 15 of ${fake.length} collection days.</div>`:''}`}else schedulePreview.innerHTML='<div class="empty">Set both your Daily EMI and Collection Days. No default duration is assumed.</div>'}
-function saveProduct(id){const face=num(pFace.value),rate=num(pRate.value),months=Math.max(1,Math.floor(num(pMonths.value)||1)),interest=num(pInterest.value),emi=num(pEmi.value),days=Math.max(0,Math.floor(num(pDays.value)||0)),method=pMethod.value,name=pName.value.trim();if(!name||!face||!emi||!days){alert('Product name, face amount, Daily EMI and Collection Days are required. Both EMI and duration are set by you; no default 100-day rule is used.');return}const net=method==='Upfront Deduction'?Math.max(0,face-interest):face,target=method==='Upfront Deduction'?face:face+interest,obj={id:id||'PRD'+String(S.seq.p++).padStart(4,'0'),name,face,monthlyRate:rate,interestMonths:months,interestAmount:interest,method,netDisbursement:net,recoveryTarget:target,emi,collectionDays:days,active:true};if(id)S.products[S.products.findIndex(x=>x.id===id)]=obj;else S.products.push(obj);audit(id?'PRODUCT_EDIT':'PRODUCT_CREATE',{productId:obj.id,collectionDuration:'manual-user-input'});save();closeModal();refreshAll()}
-function populateProducts(){const old=loanProduct.value;loanProduct.innerHTML='<option value="">Select Product</option>'+S.products.filter(p=>p.active).map(p=>`<option value="${p.id}">${esc(p.name)} — ${money(p.face)}</option>`).join('');if(old)loanProduct.value=old}
-function previewLoan(){const p=product(loanProduct.value),d=loanDate.value||today();if(!p){loanPreview.querySelector('.pb').innerHTML='<div class="sub">Select a product.</div>';return}loanPreview.querySelector('.pb').innerHTML=`<div class="grid g2"><div><div class="calc-line"><span>Face Amount</span><strong>${money(p.face)}</strong></div><div class="calc-line"><span>Interest Method</span><strong>${p.method}</strong></div><div class="calc-line"><span>Interest Amount</span><strong>${money(p.interestAmount)}</strong></div><div class="calc-line"><span>Net Disbursement</span><strong>${money(p.netDisbursement)}</strong></div></div><div><div class="calc-line"><span>Recovery Target</span><strong>${money(p.recoveryTarget)}</strong></div><div class="calc-line"><span>Daily EMI</span><strong>${money(p.emi)}</strong></div><div class="calc-line"><span>Derived Collection Days</span><strong>${p.collectionDays}</strong></div><div class="calc-line"><span>First EMI</span><strong>${fmt(addDays(d,1))}</strong></div></div></div>`}
-function createLoan(){const p=product(loanProduct.value),name=cName.value.trim(),mob=cMob.value.trim(),date=loanDate.value||today();if(!p||!name||!mob){alert('Customer name, primary mobile and product are required.');return}const cid='CUS'+String(S.seq.c++).padStart(5,'0'),lid='LN'+String(S.seq.l++).padStart(6,'0');S.customers.push({id:cid,name,mobile:mob,mobile2:cMob2.value.trim(),address:cAddr.value.trim(),guarantor:{name:gName.value.trim(),mobile:gMob.value.trim(),mobile2:gMob2.value.trim(),address:gAddr.value.trim()}});S.loans.push({id:lid,customerId:cid,productId:p.id,faceAmount:p.face,interestAmount:p.interestAmount,monthlyRate:p.monthlyRate,interestMonths:p.interestMonths,method:p.method,netDisbursement:p.netDisbursement,preclosePrincipalBase:p.netDisbursement,recoveryTarget:p.recoveryTarget,emi:p.emi,collectionDays:p.collectionDays,disbursementDate:date,disbursementMode:loanMode.value,schedule:buildSchedule(date,p.recoveryTarget,p.emi,p.collectionDays),status:'Active'});audit('LOAN_CREATE',{loanId:lid,customerId:cid});save();['cName','cMob','cMob2','cAddr','gName','gMob','gMob2','gAddr'].forEach(id=>document.getElementById(id).value='');go('collection');recoverySearch.value=lid;searchRecovery()}
-function renderCustomers(){const q=(customerSearch.value||'').trim().toLowerCase();if(!q){customerResults.innerHTML='<div class="empty">Start typing to search customers.</div>';return}const ls=S.loans.filter(l=>{const c=customer(l.customerId),p=product(l.productId);return[c?.name,c?.mobile,c?.mobile2,c?.id,l.id,p?.name].join(' ').toLowerCase().includes(q)});customerResults.innerHTML=ls.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Customer ID</th><th>Loan</th><th>Status</th><th>Principal OS</th><th>Due OS</th><th></th></tr></thead><tbody>${ls.map(l=>`<tr><td><strong>${esc(customer(l.customerId)?.name)}</strong><div class="sub">${esc(customer(l.customerId)?.mobile)}</div></td><td>${l.customerId}</td><td>${l.id}</td><td><span class="badge ${l.status==='Active'?'green':'gray'}">${l.status}</span></td><td>${money(principalOS(l))}</td><td>${money(dueOutstanding(l))}</td><td><button class="btn sm primary" onclick="openRecovery('${l.id}')">${l.status==='Active'?'Open Recovery':'View Closed Loan'}</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No matching customer or loan.</div>'}
-function searchRecovery(){const q=(recoverySearch.value||'').trim().toLowerCase();if(!q){recoveryResults.innerHTML='<div class="empty">Start typing to find a loan.</div>';return}const ls=S.loans.filter(l=>{const c=customer(l.customerId),p=product(l.productId);return[c?.name,c?.mobile,c?.mobile2,c?.id,l.id,p?.name].join(' ').toLowerCase().includes(q)});recoveryResults.innerHTML=ls.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Loan</th><th>Product</th><th>Status</th><th>Due OS</th><th></th></tr></thead><tbody>${ls.map(l=>`<tr><td><strong>${esc(customer(l.customerId)?.name)}</strong><div class="sub">${esc(customer(l.customerId)?.mobile)}</div></td><td>${l.id}</td><td>${esc(product(l.productId)?.name)}</td><td><span class="badge ${l.status==='Active'?'green':'gray'}">${l.status}</span></td><td>${money(dueOutstanding(l))}</td><td><button class="btn sm primary" onclick="openRecovery('${l.id}')">${l.status==='Active'?'Open Recovery':'View Loan'}</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No matching loan.</div>'}
-function openRecovery(lid){go('collection');const l=loan(lid),c=customer(l.customerId),p=product(l.productId),a=allocations(lid),closed=l.status==='Closed',penDue=penalties(lid).filter(x=>x.status==='Pending').reduce((s,x)=>s+x.amount,0);recoveryWorkspace.innerHTML=`<div class="card"><div class="workspace-head"><div class="identity"><div class="small">CUSTOMER 360 · ${closed?'CLOSED LOAN':'ACTIVE RECOVERY'}</div><h3>${esc(c.name)}</h3><div class="small">${l.id} · ${esc(p.name)} · ${esc(c.mobile)} ${c.mobile2?'· '+esc(c.mobile2):''}</div><div class="small" style="margin-top:9px">${l.method} · Disbursed ${fmt(l.disbursementDate)}</div></div><div class="metrics"><div class="metric"><div class="l">Face Amount</div><div class="v">${money(l.faceAmount)}</div></div><div class="metric green"><div class="l">Net Disbursement</div><div class="v">${money(l.netDisbursement)}</div></div><div class="metric"><div class="l">Principal OS</div><div class="v">${money(principalOS(l))}</div></div><div class="metric amber"><div class="l">Due Till Today</div><div class="v">${money(closed?0:dueTill(l))}</div></div><div class="metric red"><div class="l">Due Outstanding</div><div class="v">${money(dueOutstanding(l))}</div></div></div></div><div class="actions"><button class="green" ${closed?'disabled':''} onclick="collectPayment('${lid}')">＋ Collect Payment</button><button class="amber" ${closed?'disabled':''} onclick="openPenalty('${lid}')">Penalty</button><button class="primary" ${closed?'disabled':''} onclick="openPreclose('${lid}')">Pre-Closure</button><button class="red" ${closed?'disabled':''} onclick="openSettlement('${lid}')">Settlement</button><button onclick="printLoanCard('${lid}')">Print Loan Card</button><button onclick="printStatement('${lid}')">Print Statement</button></div>${closed?`<div class="alert green"><b>Loan Closed.</b> Outstanding is locked at ₹0. Recovery actions are disabled. You can still view/print the statement and loan card.</div>`:''}<div class="grid g3"><div class="panel blue"><div class="ph">Collection Position</div><div class="pb"><div class="calc-line"><span>Recovery Target</span><strong>${money(l.recoveryTarget)}</strong></div><div class="calc-line"><span>Received from Loan Payments</span><strong>${money(totalLoanCollections(lid))}</strong></div><div class="calc-line"><span>Due Till Today</span><strong>${money(closed?0:dueTill(l))}</strong></div><div class="calc-line"><span>Due Outstanding</span><strong>${money(dueOutstanding(l))}</strong></div></div></div><div class="panel green"><div class="ph">Accounting Position</div><div class="pb"><div class="calc-line"><span>Principal Base</span><strong>${money(principalBase(l))}</strong></div><div class="calc-line"><span>Principal Recovered</span><strong>${money(a.principal)}</strong></div><div class="calc-line"><span>Principal Outstanding</span><strong>${money(principalOS(l))}</strong></div><div class="calc-line"><span>Interest Revenue Realized</span><strong>${money(a.interest)}</strong></div></div></div><div class="panel amber"><div class="ph">Penalty Position</div><div class="pb"><div class="calc-line"><span>Penalty Due</span><strong>${money(penDue)}</strong></div><div class="calc-line"><span>Penalty Received</span><strong>${money(penalties(lid).filter(x=>x.status==='Received').reduce((s,x)=>s+x.amount,0))}</strong></div><div class="calc-line"><span>Next Due</span><strong>${nextDue(l)?fmt(nextDue(l).date):'—'}</strong></div></div></div></div><div class="tabs"><button class="on" onclick="showTab(this,'sch-${lid}')">EMI Schedule</button><button onclick="showTab(this,'pay-${lid}')">Payment History</button><button onclick="showTab(this,'pen-${lid}')">Penalty History</button><button onclick="showTab(this,'det-${lid}')">Loan Details</button></div><div class="rtab" id="sch-${lid}" style="padding-top:12px">${scheduleHTML(l)}</div><div class="rtab hidden" id="pay-${lid}" style="padding-top:12px">${paymentHTML(l)}</div><div class="rtab hidden" id="pen-${lid}" style="padding-top:12px">${penaltyHTML(l)}</div><div class="rtab hidden" id="det-${lid}" style="padding-top:12px">${detailsHTML(l)}</div></div>`;recoveryWorkspace.scrollIntoView({behavior:'smooth',block:'start'})}
-function showTab(btn,id){const root=btn.closest('.card');root.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));btn.classList.add('on');root.querySelectorAll('.rtab').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
-function scheduleHTML(l){return`<div class="table-wrap"><table class="table"><thead><tr><th>#</th><th>Scheduled Date</th><th>EMI</th><th>Actual Received Date</th><th>Received</th><th>Status</th><th>Remarks</th></tr></thead><tbody>${l.schedule.map(x=>`<tr><td>${x.no}</td><td>${fmt(x.date)}</td><td>${money(x.amount)}</td><td>${x.receivedDate?fmt(x.receivedDate):'-'}</td><td>${money(x.received)}</td><td><span class="badge ${x.status==='Paid'?'green':x.date<today()?'red':'blue'}">${x.status}</span></td><td>${esc(x.remarks)}</td></tr>`).join('')}</tbody></table></div>`}
-function paymentHTML(l){const ps=payments(l.id).slice().sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));return ps.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Date</th><th>Txn ID</th><th>Amount</th><th>Principal</th><th>Interest Revenue</th><th>Mode</th><th>Remarks</th><th></th></tr></thead><tbody>${ps.map(p=>`<tr><td>${fmt(p.date)}</td><td>${p.id}</td><td>${money(p.amount)}</td><td>${money(p.principal)}</td><td>${money(p.interest)}</td><td>${esc(p.mode)}</td><td>${esc(p.remarks)}</td><td>${closure(l.id)?'—':`<button class="btn sm" onclick="collectPayment('${l.id}','${p.id}')">Edit</button> <button class="btn sm red" onclick="deletePayment('${p.id}')">Delete</button>`}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No payments recorded.</div>'}
-function penaltyHTML(l){const ps=penalties(l.id);return ps.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Due Date</th><th>Days Late</th><th>Penalty</th><th>Status</th><th>Received Date</th><th>Mode</th></tr></thead><tbody>${ps.map(p=>`<tr><td>${fmt(p.dueDate)}</td><td>${p.daysLate}</td><td>${money(p.amount)}</td><td><span class="badge ${p.status==='Received'?'green':'amber'}">${p.status}</span></td><td>${p.receivedDate?fmt(p.receivedDate):'-'}</td><td>${esc(p.mode||'-')}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No penalty history.</div>'}
-function detailsHTML(l){const c=customer(l.customerId),p=product(l.productId),cl=closure(l.id);return`<div class="grid g3"><div class="panel blue"><div class="ph">Customer</div><div class="pb"><b>${esc(c.name)}</b><div class="sub">${esc(c.mobile)} · ${esc(c.mobile2||'-')}</div><div class="sub">${esc(c.address||'-')}</div></div></div><div class="panel green"><div class="ph">Loan</div><div class="pb"><div class="calc-line"><span>Product</span><strong>${esc(p.name)}</strong></div><div class="calc-line"><span>Interest</span><strong>${p.monthlyRate}%/month × ${p.interestMonths}</strong></div><div class="calc-line"><span>Daily EMI</span><strong>${money(l.emi)}</strong></div><div class="calc-line"><span>Status</span><strong>${l.status}</strong></div></div></div><div class="panel amber"><div class="ph">Guarantor / Closure</div><div class="pb"><div><b>${esc(c.guarantor?.name||'-')}</b></div><div class="sub">${esc(c.guarantor?.mobile||'-')} · ${esc(c.guarantor?.mobile2||'-')}</div>${cl?`<div class="alert green">${esc(cl.type)} on ${fmt(cl.date)} · ${money(cl.amount)}</div>`:''}</div></div></div>`}
-function modePicker(prefix,selected='Cash'){return`<div class="field"><label>Payment Category</label><select id="${prefix}Cat" onchange="updateModeDetail('${prefix}')"><option ${selected==='Cash'?'selected':''}>Cash</option><option ${['PhonePe','Google Pay','Other UPI','UPI'].includes(selected)?'selected':''}>UPI</option><option ${selected==='Bank Transfer'?'selected':''}>Bank Transfer</option><option ${selected.includes('Mixed')?'selected':''}>Mixed Payment</option></select></div><div class="field" id="${prefix}DetailWrap"><label>UPI / Mixed Detail</label><select id="${prefix}Detail"><option>PhonePe</option><option>Google Pay</option><option>Other UPI</option><option>Cash + PhonePe</option><option>Cash + Google Pay</option><option>Cash + Other UPI</option></select></div>`}
-function updateModeDetail(prefix){const cat=document.getElementById(prefix+'Cat').value,wrap=document.getElementById(prefix+'DetailWrap'),sel=document.getElementById(prefix+'Detail');wrap.style.display=['UPI','Mixed Payment'].includes(cat)?'block':'none';if(cat==='UPI'&&!['PhonePe','Google Pay','Other UPI'].includes(sel.value))sel.value='PhonePe';if(cat==='Mixed Payment'&&!sel.value.startsWith('Cash +'))sel.value='Cash + PhonePe'}
-function readMode(prefix){const cat=document.getElementById(prefix+'Cat').value;if(cat==='Cash'||cat==='Bank Transfer')return cat;return document.getElementById(prefix+'Detail').value}
-function collectPayment(lid,pid){const l=loan(lid);if(l.status==='Closed'){alert('Loan is closed.');return}const old=pid?S.payments.find(x=>x.id===pid):null;openModal(old?'Edit Collection':'Collect Payment',`<div class="split2"><div><div class="field"><label>Received Date *</label><input type="date" id="payDate" value="${old?.date||today()}"/></div><div class="field"><label>Collection Amount *</label><input type="number" id="payAmount" value="${old?.amount||''}" oninput="previewPayment('${lid}','${pid||''}')"/></div>${modePicker('pay',old?.mode||'Cash')}<div class="field"><label>Remarks</label><textarea id="payRemarks">${esc(old?.remarks||'')}</textarea></div></div><div class="panel green"><div class="ph">Allocation Preview</div><div class="pb" id="payCalc">Enter amount.</div></div></div><div style="margin-top:12px"><button class="btn green" onclick="savePayment('${lid}','${pid||''}')">${old?'Update':'Save'} Collection</button> <button class="btn" onclick="closeModal()">Cancel</button></div>`);updateModeDetail('pay');if(old){const cat=['PhonePe','Google Pay','Other UPI'].includes(old.mode)?'UPI':old.mode.startsWith('Cash +')?'Mixed Payment':old.mode;payCat.value=cat;updateModeDetail('pay');if(['UPI','Mixed Payment'].includes(cat))payDetail.value=old.mode}previewPayment(lid,pid||'')}
-function previewPayment(lid,pid){const l=loan(lid),amt=num(payAmount.value),a=allocationFor(l,amt,pid);payCalc.innerHTML=`<div class="calc-line"><span>Principal Allocation</span><strong>${money(a.principal)}</strong></div><div class="calc-line"><span>Interest Revenue Allocation</span><strong>${money(a.interest)}</strong></div><div class="calc-line"><span>Excess</span><strong>${money(a.excess)}</strong></div>${a.excess>0?'<div class="alert red">Amount exceeds current principal + configured interest recovery.</div>':'<div class="alert green">Allocation follows principal-first revenue recognition.</div>'}`;return a}
-function savePayment(lid,pid){const amt=num(payAmount.value);if(!amt){alert('Enter collection amount.');return}const a=previewPayment(lid,pid);if(a.excess>.009){alert('Amount exceeds outstanding recovery.');return}const obj={id:pid||'TXN'+String(S.seq.t++).padStart(7,'0'),loanId:lid,date:payDate.value||today(),amount:amt,principal:a.principal,interest:a.interest,penalty:0,mode:readMode('pay'),remarks:payRemarks.value.trim()};if(pid)S.payments[S.payments.findIndex(x=>x.id===pid)]=obj;else S.payments.push(obj);audit(pid?'PAYMENT_EDIT':'PAYMENT_CREATE',{loanId:lid,txnId:obj.id});recalcSchedule(lid);save();closeModal();openRecovery(lid);refreshAll()}
-function deletePayment(pid){const p=S.payments.find(x=>x.id===pid);if(!p||!confirm('Delete this payment and recalculate schedule/accounting?'))return;S.payments=S.payments.filter(x=>x.id!==pid);audit('PAYMENT_DELETE',{loanId:p.loanId,txnId:pid});recalcSchedule(p.loanId);save();openRecovery(p.loanId);refreshAll()}
-function openPenalty(lid){const l=loan(lid),miss=l.schedule.find(x=>x.status!=='Paid'&&x.date<today());if(!miss){alert('No missed past-due EMI found.');return}const late=Math.max(1,daysBetween(miss.date,today()));openModal('Penalty Entry — Missed EMI',`<div class="alert red"><b>Missed EMI:</b> ${fmt(miss.date)} · ${money(miss.amount)} · ${late} day(s) late</div><div class="grid g2"><div><div class="field"><label>Penalty Amount *</label><input type="number" id="penAmt" value="0"/></div><div class="field"><label>Recovery Option</label><select id="penStatus"><option value="Pending">Keep Penalty Due</option><option value="Received">Recover Penalty Now</option></select></div>${modePicker('pen','Cash')}<div class="field"><label>Remarks</label><textarea id="penRemarks"></textarea></div></div><div class="panel amber"><div class="ph">Penalty Context</div><div class="pb"><div class="calc-line"><span>Attracted Date</span><strong>${fmt(miss.date)}</strong></div><div class="calc-line"><span>Days Late</span><strong>${late}</strong></div><div class="calc-line"><span>EMI Amount</span><strong>${money(miss.amount)}</strong></div><div class="sub" style="margin-top:9px">Penalty amount is manually controlled as per your business decision.</div></div></div></div><div style="margin-top:12px"><button class="btn amber" onclick="savePenalty('${lid}','${miss.date}',${late})">Save Penalty</button> <button class="btn" onclick="closeModal()">Cancel</button></div>`);updateModeDetail('pen')}
-function savePenalty(lid,dueDate,late){const amount=num(penAmt.value);if(!amount){alert('Enter penalty amount.');return}const status=penStatus.value;S.penalties.push({id:'PEN'+String(S.seq.n++).padStart(6,'0'),loanId:lid,dueDate,daysLate:late,amount,status,receivedDate:status==='Received'?today():'',mode:readMode('pen'),remarks:penRemarks.value.trim()});audit('PENALTY_CREATE',{loanId:lid,amount,status});save();closeModal();openRecovery(lid);refreshAll()}
-function openPreclose(lid){const l=loan(lid);if(l.status==='Closed'){alert('Loan is closed.');return}openModal('Pre-Closure Calculator — Early Settlement',`<div class="grid g2"><div class="panel green"><div class="ph">Customer & Loan</div><div class="pb"><div><b>${esc(customer(l.customerId)?.name)}</b> · ${l.id}</div><div class="sub">${esc(product(l.productId)?.name)} · ${l.method}</div><div class="row" style="margin-top:10px"><div class="c6 field"><label>Disbursement Date</label><input value="${fmt(l.disbursementDate)}" disabled/></div><div class="c6 field"><label>Pre-Closure Date *</label><input type="date" id="pcDate" min="${l.disbursementDate}" value="${today()}" onchange="calcPreclose('${lid}')"/></div></div></div></div><div class="panel blue"><div class="ph">Pre-Closure Calculation</div><div class="pb" id="pcCalc"></div></div></div><div class="grid g2" style="margin-top:12px"><div class="panel amber"><div class="ph">Waiver Controls</div><div class="pb"><div class="field"><label>Additional Manual Interest Waiver (₹)</label><input type="number" id="pcManualWaiver" value="0" oninput="calcPreclose('${lid}')"/></div><div class="sub">Automatic unused-interest waiver is calculated separately. This field is only for an additional owner-approved waiver.</div></div></div><div class="panel"><div class="ph">Payment Mode for Closure</div><div class="pb">${modePicker('pc','Cash')}</div></div></div><div style="margin-top:12px"><button class="btn green" onclick="confirmPreclose('${lid}')">Confirm Pre-Closure</button> <button class="btn" onclick="printPreclose('${lid}')">Print Calculation</button> <button class="btn" onclick="closeModal()">Cancel</button></div>`);updateModeDetail('pc');calcPreclose(lid)}
-function precloseData(lid){const l=loan(lid),date=pcDate.value||today(),days=daysBetween(l.disbursementDate,date),months=Math.min(l.interestMonths,usedMonths(l.disbursementDate,date)),monthly=l.interestAmount/Math.max(1,l.interestMonths),app=Math.min(l.interestAmount,monthly*months),auto=Math.max(0,l.interestAmount-app),manual=Math.min(app,num(pcManualWaiver.value)),a=allocations(lid),pBase=principalBase(l),pOS=Math.max(0,pBase-a.principal),interestPay=Math.max(0,app-manual),final=pOS+interestPay;return{date,days,months,monthly,app,auto,manual,pBase,pRecovered:a.principal,pOS,interestPay,final}}
-function calcPreclose(lid){const d=precloseData(lid);pcCalc.innerHTML=`<div class="grid g2"><div><div class="calc-line"><span>Total Days Used</span><strong>${d.days}</strong></div><div class="calc-line"><span>Counted Interest Months</span><strong>${d.months}</strong></div><div class="calc-line"><span>Monthly Interest</span><strong>${money(d.monthly)}</strong></div><div class="calc-line"><span>Applicable Interest</span><strong>${money(d.app)}</strong></div></div><div><div class="calc-line"><span>Principal Base</span><strong>${money(d.pBase)}</strong></div><div class="calc-line"><span>Principal Recovered</span><strong>${money(d.pRecovered)}</strong></div><div class="calc-line"><span>Principal Outstanding</span><strong>${money(d.pOS)}</strong></div><div class="calc-line"><span>Automatic Interest Waiver</span><strong>${money(d.auto)}</strong></div></div></div><div class="calc-line"><span>Additional Manual Waiver</span><strong>${money(d.manual)}</strong></div><div class="calc-line"><span>Interest Payable Now</span><strong>${money(d.interestPay)}</strong></div><div class="calc-line"><span>Final Pre-Closure Amount</span><strong class="big">${money(d.final)}</strong></div>`;return d}
-function confirmPreclose(lid){const l=loan(lid),d=calcPreclose(lid);if(!confirm(`Confirm pre-closure and receive ${money(d.final)}?`))return;const txn={id:'TXN'+String(S.seq.t++).padStart(7,'0'),loanId:lid,date:d.date,amount:d.final,principal:d.pOS,interest:d.interestPay,penalty:0,mode:readMode('pc'),remarks:`Pre-Closure; automatic interest waiver ${money(d.auto)}; additional waiver ${money(d.manual)}`};S.payments.push(txn);S.closures.push({loanId:lid,type:'Pre-Closure',date:d.date,amount:d.final,principal:d.pOS,interest:d.interestPay,automaticWaiver:d.auto,manualWaiver:d.manual});l.status='Closed';audit('PRECLOSE',{loanId:lid,amount:d.final});recalcSchedule(lid);save();closeModal();openRecovery(lid);refreshAll()}
-function openSettlement(lid){const l=loan(lid);if(l.status==='Closed'){alert('Loan is closed.');return}const mat=addDays(l.disbursementDate,l.collectionDays);openModal('Post-Maturity / Settlement Calculator',`<div class="grid g2"><div class="panel red"><div class="ph">Settlement Context</div><div class="pb"><div><b>${esc(customer(l.customerId)?.name)}</b> · ${l.id}</div><div class="calc-line"><span>Face / Main Loan Amount</span><strong>${money(l.faceAmount)}</strong></div><div class="calc-line"><span>Maturity Date</span><strong>${fmt(mat)}</strong></div><div class="field" style="margin-top:10px"><label>Settlement Date</label><input type="date" id="stDate" min="${l.disbursementDate}" value="${today()}" onchange="calcSettlement('${lid}')"/></div><div class="field"><label>Additional Manual Waiver (₹)</label><input type="number" id="stWaiver" value="0" oninput="calcSettlement('${lid}')"/></div></div></div><div class="panel blue"><div class="ph">Settlement Calculation</div><div class="pb" id="stCalc"></div></div></div><div class="panel" style="margin-top:12px"><div class="ph">Settlement Payment Mode</div><div class="pb">${modePicker('st','Cash')}</div></div><div style="margin-top:12px"><button class="btn red" onclick="confirmSettlement('${lid}')">Confirm Settlement & Close</button> <button class="btn" onclick="closeModal()">Cancel</button></div>`);updateModeDetail('st');calcSettlement(lid)}
-function settlementData(lid){const l=loan(lid),date=stDate.value||today(),mat=addDays(l.disbursementDate,l.collectionDays),over=Math.max(0,daysBetween(mat,date)),extraMonths=over?Math.ceil(over/30):0,monthly=l.interestAmount/Math.max(1,l.interestMonths),postInterest=monthly*extraMonths,paidPrincipal=allocations(lid).principal,baseOS=Math.max(0,l.faceAmount-paidPrincipal),baseInterestOS=l.method==='Interest Later'?Math.max(0,l.interestAmount-allocations(lid).interest):0,waiver=Math.min(baseInterestOS+postInterest,num(stWaiver.value)),final=baseOS+baseInterestOS+postInterest-waiver;return{date,mat,over,extraMonths,monthly,postInterest,paidPrincipal,baseOS,baseInterestOS,waiver,final}}
-function calcSettlement(lid){const d=settlementData(lid);stCalc.innerHTML=`<div class="calc-line"><span>Face/Main Amount Basis</span><strong>${money(loan(lid).faceAmount)}</strong></div><div class="calc-line"><span>Principal Already Recovered</span><strong>${money(d.paidPrincipal)}</strong></div><div class="calc-line"><span>Base Amount Outstanding</span><strong>${money(d.baseOS)}</strong></div><div class="calc-line"><span>Base Interest Outstanding</span><strong>${money(d.baseInterestOS)}</strong></div><div class="calc-line"><span>Overdue Days</span><strong>${d.over}</strong></div><div class="calc-line"><span>Post-Maturity Months</span><strong>${d.extraMonths}</strong></div><div class="calc-line"><span>Post-Maturity Interest</span><strong>${money(d.postInterest)}</strong></div><div class="calc-line"><span>Manual Waiver</span><strong>${money(d.waiver)}</strong></div><div class="calc-line"><span>Final Settlement Amount</span><strong class="big">${money(d.final)}</strong></div>`;return d}
-function confirmSettlement(lid){const l=loan(lid),d=calcSettlement(lid);if(!confirm(`Confirm settlement and receive ${money(d.final)}?`))return;const principalPart=d.baseOS,interestPart=Math.max(0,d.baseInterestOS+d.postInterest-d.waiver);S.payments.push({id:'TXN'+String(S.seq.t++).padStart(7,'0'),loanId:lid,date:d.date,amount:d.final,principal:principalPart,interest:interestPart,penalty:0,mode:readMode('st'),remarks:`Settlement; post-maturity interest ${money(d.postInterest)}; waiver ${money(d.waiver)}`});S.closures.push({loanId:lid,type:'Settlement',date:d.date,amount:d.final,principal:principalPart,interest:interestPart,waiver:d.waiver});l.status='Closed';audit('SETTLEMENT',{loanId:lid,amount:d.final});recalcSchedule(lid);save();closeModal();openRecovery(lid);refreshAll()}
-function renderLoans(){let ls=S.loans;if(loanFilter.value!=='all')ls=ls.filter(l=>l.status===loanFilter.value);loanRegister.innerHTML=ls.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Loan</th><th>Customer</th><th>Product</th><th>Net Disbursed</th><th>Recovery Target</th><th>Principal OS</th><th>Due OS</th><th>Status</th><th></th></tr></thead><tbody>${ls.map(l=>`<tr><td>${l.id}</td><td>${esc(customer(l.customerId)?.name)}</td><td>${esc(product(l.productId)?.name)}</td><td>${money(l.netDisbursement)}</td><td>${money(l.recoveryTarget)}</td><td>${money(principalOS(l))}</td><td>${money(dueOutstanding(l))}</td><td><span class="badge ${l.status==='Active'?'green':'gray'}">${l.status}</span></td><td><button class="btn sm primary" onclick="openRecovery('${l.id}')">Open</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No loans.</div>'}
-function renderPenalty(){const all=S.penalties;pTotal.textContent=money(all.reduce((a,p)=>a+p.amount,0));pRec.textContent=money(all.filter(p=>p.status==='Received').reduce((a,p)=>a+p.amount,0));pPend.textContent=money(all.filter(p=>p.status==='Pending').reduce((a,p)=>a+p.amount,0));penaltyLedger.innerHTML=all.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Due Date</th><th>Customer</th><th>Loan</th><th>Days Late</th><th>Penalty</th><th>Status</th><th>Mode</th><th></th></tr></thead><tbody>${all.map(p=>`<tr><td>${fmt(p.dueDate)}</td><td>${esc(customer(loan(p.loanId)?.customerId)?.name)}</td><td>${p.loanId}</td><td>${p.daysLate}</td><td>${money(p.amount)}</td><td><span class="badge ${p.status==='Received'?'green':'amber'}">${p.status}</span></td><td>${esc(p.mode||'-')}</td><td>${p.status==='Pending'?`<button class="btn sm primary" onclick="receivePenalty('${p.id}')">Collect</button>`:'—'}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No penalty records.</div>'}
-function receivePenalty(id){const p=S.penalties.find(x=>x.id===id);if(!p)return;p.status='Received';p.receivedDate=today();audit('PENALTY_RECEIVED',{penaltyId:id,amount:p.amount});save();refreshAll()}
-function renderReports(){const m=reportMonth.value,ps=S.payments.filter(p=>!m||p.date.startsWith(m)),pens=S.penalties.filter(p=>p.status==='Received'&&(!m||p.receivedDate.startsWith(m)));const pr=ps.reduce((a,p)=>a+p.principal,0),ir=ps.reduce((a,p)=>a+p.interest,0),pe=pens.reduce((a,p)=>a+p.amount,0),coll=ps.reduce((a,p)=>a+p.amount,0)+pe;rPrincipal.textContent=money(pr);rInterest.textContent=money(ir);rPenalty.textContent=money(pe);rRevenue.textContent=money(ir+pe);rCollections.textContent=money(coll);const calcInt=S.loans.reduce((a,l)=>a+l.interestAmount,0);revenueSummary.innerHTML=`<div class="table-wrap"><table class="table"><thead><tr><th>Revenue Head</th><th>Calculated</th><th>Actually Received / Recognized</th></tr></thead><tbody><tr><td>Interest</td><td>${money(calcInt)}</td><td>${money(ir)}</td></tr><tr><td>Penalty</td><td>${money(S.penalties.reduce((a,p)=>a+p.amount,0))}</td><td>${money(pe)}</td></tr></tbody></table></div>`;plSummary.innerHTML=`<div class="grid g2"><div class="panel green"><div class="ph">Operating Revenue</div><div class="pb"><div class="calc-line"><span>Interest Revenue</span><strong>${money(ir)}</strong></div><div class="calc-line"><span>Penalty Revenue</span><strong>${money(pe)}</strong></div><div class="calc-line"><span>Total Operating Revenue</span><strong>${money(ir+pe)}</strong></div></div></div><div class="panel blue"><div class="ph">Non-Revenue Collections</div><div class="pb"><div class="calc-line"><span>Principal Recovery</span><strong>${money(pr)}</strong></div><div class="sub" style="margin-top:8px">Principal recovery is not treated as revenue.</div></div></div></div>`;reportLedger.innerHTML=ps.length?`<div class="table-wrap"><table class="table"><thead><tr><th>Date</th><th>Customer</th><th>Loan</th><th>Amount</th><th>Principal</th><th>Interest Revenue</th><th>Mode</th><th>Remarks</th></tr></thead><tbody>${ps.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(p=>`<tr><td>${fmt(p.date)}</td><td>${esc(customer(loan(p.loanId)?.customerId)?.name)}</td><td>${p.loanId}</td><td>${money(p.amount)}</td><td>${money(p.principal)}</td><td>${money(p.interest)}</td><td>${esc(p.mode)}</td><td>${esc(p.remarks)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No transactions for selected period.</div>'}
-function printLoanCard(lid){const l=loan(lid),c=customer(l.customerId),p=product(l.productId),w=window.open('','_blank');if(!w){alert('Allow popups to print.');return}w.document.write(`<html><head><title>Loan Card ${l.id}</title><style>@page{size:A4;margin:10mm}body{font-family:Arial;margin:0;color:#182230}h2{margin:0}p{font-size:11px}table{width:100%;border-collapse:collapse;font-size:9px}th,td{border:1px solid #ccd5e0;padding:5px}th{background:#eef4ff}tr{page-break-inside:avoid}thead{display:table-header-group}.head{display:flex;justify-content:space-between;border-bottom:3px solid #155eef;padding-bottom:8px;margin-bottom:10px}.meta{font-size:10px;color:#667085}</style></head><body><div class="head"><div><h2>${esc(S.company)}</h2><div class="meta">Loan Card / EMI Schedule</div></div><div class="meta">${l.id}<br>${fmt(today())}</div></div><p><b>Customer:</b> ${esc(c.name)} · Primary ${esc(c.mobile)} · Secondary ${esc(c.mobile2||'-')}<br><b>Guarantor:</b> ${esc(c.guarantor?.name||'-')} · Primary ${esc(c.guarantor?.mobile||'-')} · Secondary ${esc(c.guarantor?.mobile2||'-')}</p><p><b>Product:</b> ${esc(p.name)} · <b>Net Disbursement:</b> ${money(l.netDisbursement)} · <b>Daily EMI:</b> ${money(l.emi)}</p><table><thead><tr><th>#</th><th>Scheduled Date</th><th>EMI</th><th>Actual Received</th><th>Received Amount</th><th>Status</th><th>Remarks</th><th>Signature</th></tr></thead><tbody>${l.schedule.map(x=>`<tr><td>${x.no}</td><td>${fmt(x.date)}</td><td>${money(x.amount)}</td><td>${x.receivedDate?fmt(x.receivedDate):'-'}</td><td>${money(x.received)}</td><td>${x.status}</td><td>${esc(x.remarks)}</td><td></td></tr>`).join('')}</tbody></table><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
-function printStatement(lid){const l=loan(lid),c=customer(l.customerId),p=product(l.productId),tx=payments(lid).slice().sort((a,b)=>a.date.localeCompare(b.date)),groups=[['Cash',x=>x.mode==='Cash'],['UPI (PhonePe / Google Pay / Other UPI)',x=>['PhonePe','Google Pay','Other UPI','UPI'].includes(x.mode)],['Bank Transfer',x=>x.mode==='Bank Transfer'],['Mixed Payment (Cash + UPI)',x=>x.mode.startsWith('Cash +')||x.mode==='Mixed Payment']],w=window.open('','_blank');if(!w){alert('Allow popups to print.');return}const section=(name,fn)=>{const g=tx.filter(fn);return`<h3>${name}</h3><table><thead><tr><th>Date</th><th>Txn ID</th><th>Amount</th><th>Principal</th><th>Interest Revenue</th><th>Mode</th><th>Remarks</th></tr></thead><tbody>${g.length?g.map(x=>`<tr><td>${fmt(x.date)}</td><td>${x.id}</td><td>${money(x.amount)}</td><td>${money(x.principal)}</td><td>${money(x.interest)}</td><td>${esc(x.mode)}</td><td>${esc(x.remarks)}</td></tr>`).join(''):'<tr><td colspan="7">No transactions.</td></tr>'}</tbody></table>`};w.document.write(`<html><head><title>Statement ${esc(c.name)}</title><style>@page{size:A4;margin:10mm}body{font-family:Arial;margin:0;color:#182230}.head{display:flex;justify-content:space-between;border-bottom:3px solid #155eef;padding-bottom:8px}.meta{font-size:10px;color:#667085}.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0}.box{border:1px solid #d9e2ee;border-radius:7px;padding:7px;font-size:9px}.box b{display:block;font-size:14px;margin-top:3px}h3{font-size:11px;background:#eef4ff;border-left:4px solid #155eef;padding:6px;margin:11px 0 5px}table{width:100%;border-collapse:collapse;font-size:8.5px;margin-bottom:8px}th,td{border:1px solid #d9e2ee;padding:4px;text-align:left}th{background:#f8fafc}thead{display:table-header-group}tr{page-break-inside:avoid}</style></head><body><div class="head"><div><h2 style="margin:0">${esc(S.company)}</h2><div class="meta">Customer Statement</div></div><div class="meta">${fmt(today())}</div></div><p style="font-size:10px"><b>${esc(c.name)}</b> · ${l.id} · ${esc(p.name)}<br>Primary ${esc(c.mobile)} · Secondary ${esc(c.mobile2||'-')} · Guarantor ${esc(c.guarantor?.name||'-')} · ${esc(c.guarantor?.mobile||'-')} / ${esc(c.guarantor?.mobile2||'-')}</p><div class="sum"><div class="box">Face Amount<b>${money(l.faceAmount)}</b></div><div class="box">Net Disbursement<b>${money(l.netDisbursement)}</b></div><div class="box">Principal Recovered<b>${money(allocations(lid).principal)}</b></div><div class="box">Interest Revenue<b>${money(allocations(lid).interest)}</b></div></div>${groups.map(([n,f])=>section(n,f)).join('')}<script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
-function printPreclose(lid){const d=calcPreclose(lid),l=loan(lid),c=customer(l.customerId),w=window.open('','_blank');if(!w)return;w.document.write(`<html><head><title>Pre-Closure Calculation</title><style>body{font-family:Arial;padding:25px;color:#182230}.box{border:1px solid #ddd;border-radius:9px;padding:12px;margin:8px 0}.row{display:flex;justify-content:space-between;padding:6px;border-bottom:1px dashed #ddd}.big{font-size:22px;font-weight:bold;color:#155eef}</style></head><body><h2>${esc(S.company)}</h2><h3>Pre-Closure Calculation</h3><div class="box"><b>${esc(c.name)}</b> · ${l.id}<div>Disbursement ${fmt(l.disbursementDate)} · Closure ${fmt(d.date)}</div></div><div class="box"><div class="row"><span>Principal Base</span><b>${money(d.pBase)}</b></div><div class="row"><span>Principal Recovered</span><b>${money(d.pRecovered)}</b></div><div class="row"><span>Principal Outstanding</span><b>${money(d.pOS)}</b></div><div class="row"><span>Applicable Interest</span><b>${money(d.app)}</b></div><div class="row"><span>Automatic Waiver</span><b>${money(d.auto)}</b></div><div class="row"><span>Additional Waiver</span><b>${money(d.manual)}</b></div><div class="row"><span>Final Payable</span><b class="big">${money(d.final)}</b></div></div><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
-function saveSettings(){S.company=companyName.value.trim()||'My Company';audit('SETTINGS_COMPANY',{company:S.company});save();refreshAll();alert('Company name saved.')}function clearData(){if(!confirm('Delete all local products, customers, loans and transactions?'))return;S={company:S.company||'My Company',products:[],customers:[],loans:[],payments:[],penalties:[],closures:[],audit:[],seq:{p:1,c:1,l:1,t:1,n:1}};save();refreshAll();go('dashboard')}
-function openModal(title,body){modalTitle.textContent=title;modalBody.innerHTML=body;modal.classList.add('show')}function closeModal(){modal.classList.remove('show')}modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
-loanDate.value=today();refreshAll();
-</script>
-</body>
-</html>
+</style></head><body><aside><div class="brand"><span class="mark">र</span><div>रोज़खाता<small>MICROFINANCE</small></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>डेली डायरी</div></aside><main><div class="top"><span>रोज़खाता &nbsp;/&nbsp; डेली डायरी</span><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>
+'use strict';
+// All stored currency amounts are integer paise. ISO date strings represent local business dates.
+const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-'), today=()=>iso(new Date()), day=(s,n)=>new Date(Date.parse(s+'T12:00:00Z')+n*86400000).toISOString().slice(0,10), elapsed=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/86400000);
+const dt=s=>s?s.split('-').reverse().join('/'):'—', money=n=>'₹'+(n/100).toLocaleString('en-IN',{maximumFractionDigits:2}), cents=v=>Math.round(Number(v)*100), norm=s=>s.trim().toLowerCase().replace(/\s+/g,' '), uid=p=>p+'-'+crypto.randomUUID().replaceAll('-','').slice(0,16).toUpperCase();
+function valid(b,s){
+  if(!b)throw Error(s)
+}
+function note(s){
+  $('#msg').textContent=s;
+  clearTimeout(note.t);
+  note.t=setTimeout(()=>$('#msg').textContent='',5200)
+}
+function makeProduct(v){
+  if(v.plan==='solve'&&v.method!=='emi'){
+    const target=cents(v.emi),P=cents(v.principal);
+    valid(target>=100&&target%100===0,'रोज़ की किस्त पूरे रुपये में दर्ज करें।');
+    for(let k=1;k<=730;k++){
+      const months=v.monthMode==='auto'?Math.ceil(k/30):Number(v.months),I=v.method==='rate'?Math.round(P*Number(v.rate)*months/100):cents(v.interest),total=P+(v.type==='after'?I:0);
+      if(k*target===total)return makeProduct({...v,plan:'days',days:k})
+    }
+    const I=v.method==='amount'?cents(v.interest):Math.round(P*Number(v.rate)*Number(v.months||1)/100);
+    throw Error('इस किस्त से पूरा हिसाब नहीं बैठता। '+(v.monthMode==='auto'&&v.method==='rate'?'किस्त या मासिक अवधि बदलें।':choices(P+(v.type==='after'?I:0),Math.round(P/target))))
+  }
+  const principal=cents(v.principal), n=Number(v.days), months=v.monthMode==='auto'?Math.ceil(n/30):Number(v.months);
+  valid(Number.isInteger(n)&&n>=1&&n<=730,'किस्तों की संख्या 1 से 730 रखें।');
+  valid(principal>0&&principal<=1e10&&months>0&&months<=60,'लोन राशि और ब्याज अवधि जाँचें।');
+  let interest=v.method==='rate'?Math.round(principal*Number(v.rate)*months/100):cents(v.interest), installment;
+  if(v.method==='emi'){
+    installment=cents(v.emi);
+    if(v.type==='after')interest=installment*n-principal;else valid(installment*n===principal,'पहले कटौती में कुल वसूली लोन राशि के बराबर रखें। '+choices(principal,n))
+  }
+  const total=principal+(v.type==='after'?interest:0), net=principal-(v.type==='before'?interest:0);
+  valid(Number.isSafeInteger(interest)&&interest>=0&&net>0&&total>0,'ब्याज और हाथ में मिलने वाली राशि जाँचें।');
+  valid(total%(100*n)===0,'बराबर पूरे रुपये की किस्त चुनें। '+choices(total,n));
+  installment=total/n;
+  return {name:String(v.name||'').trim(),principal,n,months,type:v.type,interest,total,net,emi:installment,priority:v.priority,rate:interest*100/(principal*months)};
+}
+function choices(total,n){
+  let opts=[];
+  for(let k=1;k<=730;k++)if(total%(100*k)===0)opts.push(k);
+  return opts.sort((a,b)=>Math.abs(a-n)-Math.abs(b-n)).slice(0,5).map(k=>money(total/k)+' × '+k+' दिन').join(' · ')||'राशि की जाँच करें।'
+}
+function allocate(l,rows,date,amount){
+  let due=[],future=[],current=[];
+  for(let i=0;i<rows.length;i++){
+    if(rows[i].left<=0)continue;
+    (rows[i].date<date?due:rows[i].date===date?current:future).push(i)
+  }
+  const parts=[];
+  for(const i of (l.p.priority==='today'?[...current,...due,...future]:[...due,...current,...future])){
+    if(amount<=0)break;
+    const a=Math.min(amount,rows[i].left);
+    parts.push({i,a});
+    amount-=a
+  }
+  return parts
+}
+function ledger(l){
+  const rows=Array.from({length:l.p.n},(_,i)=>({date:day(l.start,i+1),left:l.p.emi,events:[]})), rev={},cash={};
+  let collected=0;
+  for(const r of l.receipts){
+    cash[r.date]=(cash[r.date]||0)+r.pay;
+    for(const {i,a} of allocate(l,rows,r.date,r.pay)){
+      let row=rows[i];
+      const income=Math.max(0,collected+a-l.p.net)-Math.max(0,collected-l.p.net);
+      collected+=a;
+      const when=row.date>r.date?row.date:r.date;
+      rev[when]=(rev[when]||0)+income;
+      row.left-=a;
+      row.events.push({id:r.id,date:r.date,a})
+    }
+  }
+  if(l.close&&!l.close.scheduled){
+    const c=l.close;
+    cash[c.date]=(cash[c.date]||0)+c.cash-c.refund-c.credit;
+    let recognized=0;
+    for(const d in rev){
+      if(d<=c.date)recognized+=rev[d];else delete rev[d]
+    }
+    rev[c.date]=(rev[c.date]||0)+c.fee-recognized
+  }
+  return {rows,collected,rev,cash,balance:l.close?0:l.p.total-collected};
+}
+function settle(l,date,kind,g){
+  const blocks=Math.min(l.p.months,Math.max(1,Math.ceil(elapsed(l.start,date)/30))),fee=kind==='full'?l.p.interest:Math.min(l.p.interest,Math.round(l.p.interest*blocks/l.p.months));
+  return {fee,waiver:l.p.interest-fee,net:l.p.net+fee-g.collected}
+}
+let db,cloud=null,space='live',screen='home',selected=null,loanTab='pay',reportDate=today(),searchTimer,epoch=0,currentSearch='';
+function idb(){
+  return new Promise((ok,no)=>{
+    const r=indexedDB.open('rozkhata-diary-v1',1);
+    r.onupgradeneeded=()=>{
+      const s=r.result.createObjectStore('records',{keyPath:'key'});
+      s.createIndex('search','search')
+    };
+    r.onsuccess=()=>ok(r.result);
+    r.onerror=()=>no(r.error)
+  })
+}
+const req=r=>new Promise((ok,no)=>{
+  r.onsuccess=()=>ok(r.result);
+  r.onerror=()=>no(r.error)
+}), scoped=k=>space+'/'+k, cref=k=>cloud.fs.doc(cloud.db,'rozkhata',cloud.uid,'records',k);
+async function read(k){
+  if(cloud){
+    const s=await cloud.fs.getDocFromServer(cref(k));
+    return s.exists()?s.data().value:null
+  }
+  return (await req(db.transaction('records').objectStore('records').get(scoped(k))))?.value||null
+}
+async function list(prefix,term='',limit=25){
+  const base=prefix+term;
+  if(cloud){
+    const f=cloud.fs,ref=f.collection(cloud.db,'rozkhata',cloud.uid,'records');
+    return (await f.getDocsFromServer(f.query(ref,f.orderBy('search'),f.startAt(base),f.endAt(base+'\uffff'),f.limit(limit)))).docs.map(x=>x.data().value)
+  }
+  const s=db.transaction('records').objectStore('records').index('search'),q=scoped(base);
+  return (await req(s.getAll(IDBKeyRange.bound(q,q+'\uffff'),limit))).map(x=>x.value)
+}
+// Read and update the loan, reporting totals and receipt history in one transaction.
+async function atomic(keys,change){
+  const unique=[...new Set(keys)];
+  if(cloud){
+    return cloud.fs.runTransaction(cloud.db,async tx=>{
+      const m={};
+      for(const k of unique){
+        const s=await tx.get(cref(k));
+        m[k]=s.exists()?s.data().value:null
+      }
+      for(const [key,value,search] of change(m))tx.set(cref(key),{value,search:search||key})
+    })
+  }
+  return new Promise((ok,no)=>{
+    const tx=db.transaction('records','readwrite'),s=tx.objectStore('records'),m={};
+    let pending=unique.length,err;
+    tx.oncomplete=ok;
+    tx.onabort=()=>no(err||tx.error||Error('सेव रुक गया'));
+    for(const k of unique){
+      const r=s.get(scoped(k));
+      r.onsuccess=()=>{
+        m[k]=r.result?.value||null;
+        if(--pending===0)try{
+          for(const [key,value,search] of change(m))s.put({key:scoped(key),value,search:scoped(search||key)})
+        }catch(e){
+          err=e;
+          tx.abort()
+        }
+      }
+    }
+  })
+}
+const total0=()=>({net:0,recovered:0,loans:0,closed:0,credit:0,recent:[]});
+async function saveLoan(old,l,event){
+  const a=old?ledger(old):{rev:{},cash:{}},b=ledger(l),dates=new Set([...Object.keys(a.rev),...Object.keys(b.rev),...Object.keys(a.cash),...Object.keys(b.cash)]);
+  const deltas=[];
+  for(const d of dates){
+    const rev=(b.rev[d]||0)-(a.rev[d]||0),cash=(b.cash[d]||0)-(a.cash[d]||0);
+    if(rev||cash)deltas.push({d,rev,cash})
+  }
+  const bucket=d=>'M-'+d.slice(0,7),key=l.id;
+  await atomic([key,'SUMMARY',...deltas.map(x=>bucket(x.d))],m=>{
+    valid((m[key]?.version||0)===(old?.version||0),'यह खाता बदल चुका है। खाता दोबारा खोलें।');
+    l.version=(old?.version||0)+1;
+    const s=m.SUMMARY||total0();
+    if(!old){
+      s.net+=l.p.net;
+      s.loans++
+    }
+    s.recovered+=(l.close?l.p.net:Math.min(b.collected,l.p.net))-(old?Math.min(a.collected,old.p.net):0);
+    if(l.close&&!old?.close)s.closed++;
+    s.credit+=(l.credit||0)-(old?.credit||0);
+    s.recent=[{id:l.id,name:l.name,...event},...s.recent].slice(0,8);
+    const months={};
+    for(const x of deltas){
+      const k=bucket(x.d),mm=months[k]||m[k]||{},v=mm[x.d]||{rev:0,cash:0};
+      mm[x.d]={rev:v.rev+x.rev,cash:v.cash+x.cash};
+      months[k]=mm
+    }
+    return [[key,l,'L/'+norm(l.name)],['SUMMARY',s],...Object.entries(months)]
+  })
+}
+async function saveProduct(p){
+  p.id=uid('P');
+  await atomic([p.id],m=>{
+    valid(!m[p.id],'फिर प्रयास करें');
+    return [[p.id,p,'P/'+norm(p.name)]]
+  })
+}
+function field(name,title,type='text',value='',attrs=''){
+  return '<label>'+title+'<input name="'+name+'" type="'+type+'" value="'+esc(value)+'" '+attrs+'></label>'
+}
+function sel(name,title,opts){
+  return '<label>'+title+'<select name="'+name+'">'+opts.map(([v,t])=>'<option value="'+esc(v)+'">'+esc(t)+'</option>').join('')+'</select></label>'
+}
+const button=(s,action,c='btn')=>'<button type="button" class="'+c+'" data-act="'+action+'">'+s+'</button>',header=(t,sub='',action='')=>'<div class="spread head"><div><h1>'+t+'</h1><p class="sub">'+sub+'</p></div>'+action+'</div>',stat=(t,v)=>'<div class="stat"><small>'+t+'</small><strong>'+v+'</strong></div>',fd=f=>Object.fromEntries(new FormData(f)),pages={home:['◩','डैशबोर्ड'],products:['▦','प्रोडक्ट'],issue:['＋','नया लोन'],recover:['⌕','रिकवरी'],reports:['▥','रिपोर्ट'],settings:['⚙','सेटिंग्स']};
+function paintNav(){
+  $('#nav').innerHTML=Object.entries(pages).map(([k,[i,t]])=>'<button class="'+(screen===k?'on':'')+'" data-act="go:'+k+'"><b>'+i+'</b>'+t+'</button>').join('');
+  $('#mode').textContent=cloud?'● Firebase · '+cloud.email:space==='demo'?'● अभ्यास खाता':'● इस डिवाइस पर'
+}
+async function go(k){
+  screen=k;
+  const token=++epoch;
+  paintNav();
+  $('#page').innerHTML='<p class="empty">खोल रहे हैं…</p>';
+  try{
+    const h=await ({home,products,issue,recover,reports,settings}[k])();
+    if(token===epoch){
+      $('#page').innerHTML=h;
+      if(k==='products')productPreview();
+      if(k==='issue')issuePreview();
+      if(k==='recover'&&selected)paymentPreview()
+    }
+  }catch(e){
+    if(token===epoch)$('#page').innerHTML='<p class="err">'+esc(e.message)+'</p>'
+  }
+}
+async function daysData(ds){
+  const keys=[...new Set(ds.map(d=>d.slice(0,7)))],values=await Promise.all(keys.map(k=>read('M-'+k)));
+  return Object.fromEntries(ds.map(d=>[d,values[keys.indexOf(d.slice(0,7))]?.[d]||{cash:0,rev:0}]))
+}
+async function home(){
+  const date=today(),ds=Array.from({length:7},(_,i)=>day(date,i-6)),[s,m]=await Promise.all([read('SUMMARY').then(v=>v||total0()),daysData(ds)]),max=Math.max(1,...ds.map(d=>Math.abs(m[d].cash))),pct=Math.round(100*s.recovered/(s.net||1));
+  return header('डेली डायरी','पोर्टफोलियो और आज का कलेक्शन',button('＋ नया लोन','go:issue'))+'<section class="hero"><div><small>बाज़ार में शेष मूलधन</small><div class="amount">'+money(s.net-s.recovered)+'</div><small>वितरित '+money(s.net)+' &nbsp;·&nbsp; मूल वापस '+money(s.recovered)+'</small></div><div class="ring" style="--pct:'+pct+'%"><span>'+pct+'%</span></div></section><div class="stats">'+stat('आज की शुद्ध वसूली',money(m[date].cash))+stat('आज की ब्याज आय',money(m[date].rev))+stat('खुली डायरी',s.loans-s.closed)+'</div><div class="grid"><section class="card"><div class="spread"><h2>वसूली का रुझान</h2><span class="tag">पिछले 7 दिन</span></div><div class="bars">'+ds.map(d=>'<div class="bar" title="'+dt(d)+' · '+money(m[d].cash)+'"><small>'+money(m[d].cash)+'</small><i style="height:'+Math.round(65*Math.abs(m[d].cash)/max)+'px"></i>'+d.slice(8)+'</div>').join('')+'</div></section><section class="card"><h2>कलेक्शन डेस्क</h2><p class="sub">नाम या लोन आईडी से डायरी खोलें।</p><p class="entry">'+button('वसूली दर्ज करें →','go:recover')+'</p>'+button('प्रोडक्ट बनाएँ','go:products','ghost')+'</section></div><section class="card" style="margin-top:16px"><div class="spread"><h2>हाल की गतिविधि</h2>'+(!s.loans&&!cloud&&space==='live'?button('उदाहरण आज़माएँ','demo','soft'):'')+'</div>'+(s.recent.length?s.recent.map(x=>'<div class="entry spread"><div><button class="link" data-act="open:'+x.id+'">'+esc(x.name)+'</button> · '+esc(x.label)+'<br><small>'+dt(x.date)+' · '+x.id+'</small></div><b>'+money(x.amount)+'</b></div>').join(''):'<p class="empty">पहले एक प्रोडक्ट बनाएँ, फिर ग्राहक की डायरी शुरू करें।</p>')+'</section>'
+}
+async function products(){
+  const ps=await list('P/','',150);
+  return header('प्रोडक्ट','किस्त और ब्याज का हिसाब पहले देखें।')+'<div class="grid"><form id="product" class="card"><h2>नया डेली प्रोडक्ट</h2><div class="fields">'+field('name','प्रोडक्ट नाम','text','','required maxlength="80" placeholder="जैसे डेली 100"')+sel('type','ब्याज का तरीका',[['before','पहले कटौती'],['after','पूरे पैसे दें, ब्याज वसूली में']])+field('principal','लोन राशि ₹','number',10000,'min="1" required')+sel('plan','किस्त तय करें',[['days','दिन भरें, रोज़ की किस्त निकालें'],['solve','रोज़ की किस्त भरें, दिन निकालें']])+field('days','बराबर किस्तों की संख्या','number',100,'min="1" max="730" required')+sel('monthMode','ब्याज के महीने',[['manual','खुद तय करें'],['auto','हर शुरू हुए 30 दिन = 1 महीना']])+field('months','ब्याज अवधि (महीने)','number',3,'min="1" max="60"')+sel('method','किस आधार पर बनाएँ',[['amount','कुल ब्याज राशि'],['rate','मासिक ब्याज प्रतिशत'],['emi','रोज़ की किस्त × दिन']])+field('interest','कुल ब्याज ₹','number',1500,'step=".01" min="0"')+field('rate','प्रति माह ब्याज %','number',5,'step="any" min="0"')+field('emi','रोज़ की किस्त ₹','number',100,'min="1"')+sel('priority','वसूली का क्रम',[['old','पुराना बकाया पहले'],['today','आज की किस्त पहले']])+'</div><div id="calc"></div><button class="btn">प्रोडक्ट सेव करें</button></form><section class="card"><h2>प्रोडक्ट सूची</h2>'+(ps.map(p=>'<div class="entry"><b>'+esc(p.name)+'</b><br>'+money(p.emi)+' × '+p.n+' दिन · हाथ में '+money(p.net)+'<br><small>'+money(p.interest)+' ब्याज · '+p.months+' महीने</small></div>').join('')||'<p class="empty">आपका पहला प्रोडक्ट यहाँ दिखेगा।</p>')+'</section></div>'
+}
+function productPreview(){
+  const f=$('#product');
+  for(const el of f.elements)el.disabled=false;
+  const v=fd(f);
+  for(const [k,visible] of Object.entries({plan:v.method!=='emi',days:v.plan!=='solve'||v.method==='emi',months:v.monthMode==='manual',interest:v.method==='amount'||v.method==='emi'&&v.type==='before',rate:v.method==='rate',emi:v.method==='emi'||v.plan==='solve'})){
+    f.elements[k].parentElement.hidden=!visible;
+    f.elements[k].disabled=!visible
+  }
+  try{
+    const p=makeProduct(v);
+    $('#calc').innerHTML='<div class="preview">हाथ में <b>'+money(p.net)+'</b> · कुल वसूली <b>'+money(p.total)+'</b><br>'+money(p.emi)+' × '+p.n+' दिन · ब्याज '+money(p.interest)+'<br>'+Number(p.rate.toFixed(5))+'% प्रति माह · '+p.months+' महीने</div>'
+  }catch(e){
+    $('#calc').innerHTML='<div class="err">'+esc(e.message)+'</div>'
+  }
+}
+let productOptions=[];
+async function issue(){
+  productOptions=await list('P/','',1000);
+  return header('नई डेली डायरी','ग्राहक का लोन अलग आईडी पर खुलेगा।')+(productOptions.length?'<form class="card" id="issue"><div class="fields">'+field('name','ग्राहक का पूरा नाम','text','','required maxlength="100" autocomplete="off"')+field('mobile','मोबाइल (वैकल्पिक)','tel','','maxlength="20"')+sel('product','प्रोडक्ट',productOptions.map(p=>[p.id,p.name+' · '+money(p.emi)+' × '+p.n]))+field('start','लोन देने की तारीख','date',today(),'required max="'+today()+'"')+'</div><div id="issuecalc"></div><button class="btn">डायरी शुरू करें</button></form>':'<div class="card"><p class="empty">नई डायरी के लिए एक डेली प्रोडक्ट चाहिए।</p>'+button('प्रोडक्ट बनाएँ','go:products')+'</div>')
+}
+function issuePreview(){
+  const f=$('#issue');
+  if(!f)return;
+  const p=productOptions.find(x=>x.id===f.product.value);
+  $('#issuecalc').innerHTML='<div class="preview">हाथ में '+money(p.net)+' · कुल वसूली '+money(p.total)+' · रोज़ '+money(p.emi)+(f.start.value?'<br>पहली किस्त '+dt(day(f.start.value,1))+' · आखिरी '+dt(day(f.start.value,p.n)):'')+'</div>'
+}
+function schedule(l,g){
+  return '<table><thead><tr><th>क्र.</th><th>किस्त</th><th>तय तारीख</th><th>वास्तविक प्राप्ति / रसीद</th><th>समायोजित राशि</th><th>स्थिति</th><th>हस्ताक्षर</th></tr></thead><tbody>'+g.rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+money(l.p.emi)+'</td><td>'+dt(r.date)+'</td><td>'+r.events.map(e=>dt(e.date)+' · '+esc(e.id)).join('<br>')+'</td><td>'+r.events.map(e=>money(e.a)+(e.date<r.date?' · अग्रिम':e.date>r.date?' · बकाया':' · उसी दिन')).join('<br>')+'</td><td>'+(r.left===0?'पूर्ण':l.close?'समापन में निपटा':r.left<l.p.emi?'शेष '+money(r.left):r.date<today()?'बकाया':r.date===today()?'आज देय':'आगामी')+'</td><td></td></tr>').join('')+'</tbody></table>'
+}
+function receipts(l){
+  return l.receipts.slice().reverse().map(r=>'<div class="entry"><b>'+dt(r.date)+' · '+money(r.tender)+'</b><br><small>'+esc(r.id)+' · लोन में '+money(r.pay)+(r.credit?' · ग्राहक जमा '+money(r.credit):'')+(r.change?' · लौटाए '+money(r.change):'')+'</small></div>').join('')||'<p class="empty">अभी कोई वसूली दर्ज नहीं है।</p>'
+}
+function closingInfo(c){
+  if(c.scheduled)return '<div class="preview">पूरी वसूली · डायरी बंद '+dt(c.date)+' · '+esc(c.id)+'<br>अग्रिम ब्याज किस्त की तय तारीख पर आय में आएगा।</div>';
+  return '<div class="preview">डायरी बंद · '+dt(c.date)+' · '+esc(c.id)+'<br>अंतिम भुगतान '+money(c.cash)+' · कुल ब्याज '+money(c.fee)+' · छूट '+money(c.waiver)+(c.refund?' · वापसी '+money(c.refund):'')+(c.credit?' · ग्राहक जमा '+money(c.credit):'')+'</div>'
+}
+async function recover(){
+  let out=header('रिकवरी डेस्क','ग्राहक की सही डायरी चुनें।')+'<section class="card"><label>ग्राहक खोजें<input id="search" placeholder="नाम, सरनेम या लोन आईडी…" autocomplete="off"></label><div id="matches"></div></section>';
+  if(!selected)return out;
+  const l=await read(selected);
+  if(!l){
+    selected=null;
+    return out
+  }
+  currentLoan=l;
+  const g=ledger(l);
+  out+='<div class="card"><div class="spread"><div><h2>'+esc(l.name)+'</h2><small>'+l.id+' · '+esc(l.p.name)+' · '+dt(l.start)+'</small></div><span class="tag">'+(l.close?'बंद डायरी':'डेली · '+money(l.p.emi))+'</span></div><div class="stats">'+stat('हाथ में दिए',money(l.p.net))+stat('कुल वसूली लक्ष्य',money(l.p.total))+stat('शेष वसूली',money(g.balance))+'</div>'+(l.credit?'<p>ग्राहक की अलग जमा राशि <b>'+money(l.credit)+'</b></p>':'')+(l.close?closingInfo(l.close):'')+'<div class="switch">'+[['pay','कलेक्शन'],['card','लोन कार्ड'],['receipts','रसीदें'],['close','डायरी बंद करें']].filter(x=>!l.close||!['pay','close'].includes(x[0])).map(([k,t])=>'<button class="'+(loanTab===k?'active':'')+'" data-act="tab:'+k+'">'+t+'</button>').join('')+'</div>';
+  if(loanTab==='card')out+=button('पूरा कार्ड प्रिंट / PDF','print','ghost')+'<div class="scroll">'+schedule(l,g)+'</div>';
+ else if(loanTab==='receipts'||l.close)out+=receipts(l);
+ else if(loanTab==='close')out+='<form id="close"><h3>अंतिम हिसाब</h3><small>समापन पर मंज़ूर कुल ब्याज का बचा हुआ हिस्सा इसी तारीख की आय में आएगा।</small><div class="fields">'+field('date','बंद करने की तारीख','date',today(),dateBounds(l))+sel('kind','ब्याज का नियम',[['slab','बीते दिनों के अनुसार छूट'],['full','पूरा तय ब्याज']])+sel('extra','पहले मिली अतिरिक्त राशि',[['return','ग्राहक को लौटाएँ'],['credit','सहमति से अलग जमा रखें']])+'</div><div id="closecalc"></div><button class="btn">अंतिम हिसाब दर्ज करें</button></form>';
+ else out+='<form id="pay"><div class="fields">'+field('date','पैसा मिलने की तारीख','date',today(),dateBounds(l))+field('amount','ग्राहक से मिले ₹','number','','required min=".01" max="10000000" step=".01" placeholder="0.00"')+sel('extra','कुल बकाये से अधिक रकम',[['return','वापस करें'],['credit','सहमति से अलग जमा रखें']])+'</div><div id="paycalc"></div><button class="btn">रसीद दर्ज करें</button></form>';
+  return out+'</div>'
+}
+let currentLoan=null;
+function dateBounds(l){
+  return 'required min="'+(l.receipts.at(-1)?.date||l.start)+'" max="'+today()+'"'
+}
+function checkDate(l,d){
+  valid(d&&d>=(l.receipts.at(-1)?.date||l.start)&&d<=today(),'तारीख पिछली रसीद से पहले या भविष्य की नहीं हो सकती।')
+}
+function paymentPreview(){
+  const l=currentLoan;
+  if(!l)return;
+  const g=ledger(l),f=$('#pay')||$('#close');
+  if(!f)return;
+  const v=fd(f);
+  try{
+    checkDate(l,v.date);
+    if(f.id==='close'){
+      const c=settle(l,v.date,v.kind,g);
+      $('#closecalc').innerHTML='<div class="preview">बीते दिन '+elapsed(l.start,v.date)+' · कुल ब्याज '+money(c.fee)+' · छूट '+money(c.waiver)+'<br><b>'+(c.net<0?'लौटाने / जमा रखने हैं ':'अब लेने हैं ')+money(Math.abs(c.net))+'</b></div>';
+      return
+    }
+    const amount=cents(v.amount||0),parts=allocate(l,g.rows,v.date,Math.min(amount,g.balance)),sum=mode=>parts.filter(x=>Math.sign(g.rows[x.i].date.localeCompare(v.date))===mode).reduce((n,x)=>n+x.a,0);
+    $('#paycalc').innerHTML='<div class="preview">पुराना बकाया <b>'+money(sum(-1))+'</b> · उसी दिन <b>'+money(sum(0))+'</b> · अग्रिम <b>'+money(sum(1))+'</b>'+(amount>g.balance?'<br>'+ (v.extra==='credit'?'अलग जमा ':'वापसी ')+money(amount-g.balance):'')+(parts.length?'<br><small>किस्त '+(1+Math.min(...parts.map(x=>x.i)))+' से '+(1+Math.max(...parts.map(x=>x.i)))+' तक · वास्तविक प्राप्ति '+dt(v.date)+'</small>':'')+'</div>'
+  }catch(e){
+    const box=$('#paycalc')||$('#closecalc');
+    box.innerHTML='<p class="err">'+esc(e.message)+'</p>'
+  }
+}
+async function findLoans(term){
+  if(/^D-/i.test(term)){
+    const key=term.toUpperCase();
+    if(cloud){
+      const f=cloud.fs,c=f.collection(cloud.db,'rozkhata',cloud.uid,'records');
+      return (await f.getDocsFromServer(f.query(c,f.orderBy(f.documentId()),f.startAt(key),f.endAt(key+'\uffff'),f.limit(21)))).docs.map(s=>s.data().value)
+    }
+    const q=scoped(key);
+    return (await req(db.transaction('records').objectStore('records').getAll(IDBKeyRange.bound(q,q+'\uffff'),21))).map(x=>x.value)
+  }
+  return list('L/',norm(term),21)
+}
+function searchLoans(v){
+  clearTimeout(searchTimer);
+  const term=norm(v),token=++searchLoans.seq,box=$('#matches');
+  box.textContent='';
+  if(!term)return;
+  searchTimer=setTimeout(async()=>{
+    try{
+      const matches=await findLoans(term);
+      if(token!==searchLoans.seq||!box.isConnected)return;
+      box.innerHTML=matches.slice(0,20).map(l=>'<button class="result" data-act="open:'+l.id+'"><b>'+esc(l.name)+'</b> · '+l.id+'<br><small>'+esc(l.p.name)+' · '+esc(l.mobile||'')+' · '+(l.close?'बंद':'चालू')+'</small></button>').join('')+(matches.length>20?'<small>पहले 20 परिणाम · नाम या आईडी आगे लिखें।</small>':'')||'<p>कोई डायरी नहीं मिली।</p>'
+    }catch(e){
+      box.textContent=e.message
+    }
+  },160)
+}
+searchLoans.seq=0;
+async function reports(){
+  const d=reportDate,start=d.slice(0,7),m=await read('M-'+start)||{},s=await read('SUMMARY')||total0(),keys=Object.keys(m).filter(k=>k<=d).sort().reverse(),sum=k=>keys.reduce((a,x)=>a+m[x][k],0);
+  return header('वसूली और आय','रसीद की तारीख पर वसूली और आपके नियम से ब्याज की पहचान।')+'<section class="card">'+field('reportDate','चुनी तारीख तक इस महीने का हिसाब','date',d,'id="reportDate" max="'+today()+'"')+'<div class="stats">'+stat('महीने की शुद्ध वसूली',money(sum('cash')))+stat('मान्य ब्याज आय',money(sum('rev')))+stat('कुल ग्राहक जमा · अभी',money(s.credit))+'</div><div class="scroll"><table><thead><tr><th>तारीख</th><th>शुद्ध लोन वसूली</th><th>ब्याज आय</th></tr></thead><tbody>'+keys.filter(k=>m[k].cash||m[k].rev).map(k=>'<tr><td>'+dt(k)+'</td><td>'+money(m[k].cash)+'</td><td>'+money(m[k].rev)+'</td></tr>').join('')+'</tbody></table></div>'+(keys.length?'':'<p class="empty">इस अवधि में कोई लेन-देन नहीं है।</p>')+'</section>'
+}
+const rules='match /rozkhata/{owner}/records/{record} {\n  allow read, write: if request.auth != null && request.auth.uid == owner;\n}';
+function settings(){
+  return header('सेटिंग्स','डेटा स्थान और कनेक्शन')+'<section class="card"><h2>कार्य खाता</h2><p class="sub">'+(cloud?'Firebase · '+esc(cloud.email):space==='demo'?'अभ्यास के रिकॉर्ड अलग रखे जाते हैं।':'इस ब्राउज़र के IndexedDB में सेव हो रहा है।')+'</p><div class="row" style="margin-top:14px">'+(cloud?button('साइन आउट','logout','ghost'):button(space==='demo'?'अपने खाते पर लौटें':'अभ्यास खाता खोलें',space==='demo'?'live':'demo','soft'))+(!cloud?button('स्थानीय बैकअप डाउनलोड','backup','ghost'):'')+'</div></section>'+(cloud?'':'<form id="connect" class="card"><h2>Firebase से जोड़ें</h2><p class="sub">दोनों डिवाइस पर एक ही Firestore प्रोजेक्ट और Email/Password खाते से साइन इन करें। स्थानीय और क्लाउड रिकॉर्ड अलग हैं।</p><label>Firebase Web config (JSON)<textarea required name="config" placeholder=\'{"apiKey":"…","authDomain":"…","projectId":"…","appId":"…"}\'>'+esc(localStorage.getItem("rk-config")||"")+'</textarea></label><div class="fields">'+field('email','ईमेल','email','','required autocomplete="username"')+field('password','पासवर्ड','password','','required autocomplete="current-password"')+'</div><button class="btn">क्लाउड खाता खोलें</button><details><summary>कनेक्शन पथ और एक्सेस</summary><p>Cloud Firestore और Email/Password Auth चाहिए। मौजूदा Firestore rules के documents ब्लॉक में इस पथ का नियम रखें और व्यापक सार्वजनिक अनुमति की जाँच करें। इस ऐप की डायरी अपने अलग पथ में बनती है।</p><pre>'+esc(rules)+'</pre></details></form>')
+}
+async function connect(v){
+  let cfg;
+  try{
+    cfg=JSON.parse(v.config)
+  }catch{
+    throw Error('Web config को मान्य JSON में दर्ज करें।')
+  }
+  valid(cfg.apiKey&&cfg.projectId&&cfg.authDomain,'apiKey, projectId और authDomain चाहिए।');
+  const base='https://www.gstatic.com/firebasejs/11.10.0/',[app,auth,fs]=await Promise.all(['firebase-app.js','firebase-auth.js','firebase-firestore.js'].map(x=>import(base+x)));
+  const name='rk-'+cfg.projectId,fb=app.getApps().find(a=>a.name===name)||app.initializeApp(cfg,name),a=auth.getAuth(fb);
+  await auth.setPersistence(a,auth.browserSessionPersistence);
+  await a.authStateReady();
+  const u=v.resume?a.currentUser:(await auth.signInWithEmailAndPassword(a,v.email,v.password)).user;
+  valid(u,'क्लाउड सत्र समाप्त हुआ। फिर साइन इन करें।');
+  const store=fs.getFirestore(fb);
+  try{
+    await fs.getDocFromServer(fs.doc(store,'rozkhata',u.uid,'records','SUMMARY'))
+  }catch(e){
+    await auth.signOut(a);
+    throw e
+  }
+  cloud={db:store,uid:u.uid,email:u.email,fs,a,auth};
+  localStorage.setItem('rk-config',JSON.stringify(cfg));
+  sessionStorage.setItem('rk-cloud','1');
+  selected=null
+}
+async function demo(){
+  space='demo';
+  selected=null;
+  if(await read('SUMMARY'))return;
+  const p=makeProduct({name:'डेली 100 · अग्रिम ब्याज',principal:10000,days:100,months:3,monthMode:'manual',type:'before',method:'amount',interest:1500,priority:'old'});
+  await saveProduct(p);
+  const l={id:uid('D'),p,name:'Rahul Sharma',mobile:'',start:day(today(),-11),receipts:[],credit:0};
+  await saveLoan(null,l,{date:l.start,label:'लोन जारी',amount:p.net});
+  const old=structuredClone(l);
+  for(let i=1;i<=11;i++){
+    const pay=i===11?50000:10000;
+    l.receipts.push({id:'R-DEMO-'+i,date:day(l.start,i),pay,tender:pay,credit:0,change:0})
+  }
+  await saveLoan(old,l,{date:today(),label:'वसूली',amount:50000})
+}
+function printCard(l){
+  const g=ledger(l);
+  $('#print').innerHTML='<h1>दैनिक लोन कार्ड</h1><h2>'+esc(l.name)+'</h2><p>'+l.id+' · '+esc(l.p.name)+' · जारी '+dt(l.start)+' · रोज़ '+money(l.p.emi)+'</p><p>हाथ में '+money(l.p.net)+' · कुल वसूली '+money(l.p.total)+' · शेष '+money(g.balance)+'</p>'+(l.close?closingInfo(l.close):'')+schedule(l,g)+'<h3>भुगतान रजिस्टर</h3>'+receipts(l);
+  window.print()
+}
+async function backup(){
+  const q=space+'/',records=await req(db.transaction('records').objectStore('records').getAll(IDBKeyRange.bound(q,q+'\uffff'))),url=URL.createObjectURL(new Blob([JSON.stringify({format:'rozkhata-v1',records})],{type:'application/json'}));
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='rozkhata-'+space+'-'+today()+'.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000)
+}
+let busy=false;
+document.addEventListener('click',async e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el||busy)return;
+  const [op,arg]=el.dataset.act.split(':');
+  busy=true;
+  try{
+    if(op==='go'){
+      await go(arg)
+    }
+    if(op==='open'){
+      selected=arg;
+      loanTab='pay';
+      await go('recover')
+    }
+    if(op==='tab'){
+      loanTab=arg;
+      await go('recover')
+    }
+    if(op==='print')printCard(currentLoan);
+    if(op==='demo'){
+      await demo();
+      await go('home')
+    }
+    if(op==='live'){
+      space='live';
+      selected=null;
+      await go('home')
+    }
+    if(op==='logout'){
+      await cloud.auth.signOut(cloud.a);
+      cloud=null;
+      sessionStorage.removeItem('rk-cloud');
+      space='live';
+      selected=null;
+      await go('settings')
+    }
+    if(op==='backup')await backup()
+  }catch(e){
+    note(e.message)
+  }finally{
+    busy=false
+  }
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='search')searchLoans(e.target.value);
+  if(e.target.closest('#product'))productPreview();
+  if(e.target.closest('#issue'))issuePreview();
+  if(e.target.closest('#pay,#close'))paymentPreview()
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='reportDate'&&e.target.value&&e.target.value<=today()){
+    reportDate=e.target.value;
+    go('reports')
+  }
+});
+document.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(busy)return;
+  busy=true;
+  const f=e.target,v=fd(f),btn=f.querySelector('button[type=submit],button.btn');
+  btn.disabled=true;
+  try{
+    if(f.id==='product'){
+      const p=makeProduct(v);
+      valid(p.name,'प्रोडक्ट का नाम भरें।');
+      await saveProduct(p);
+      await go('products');
+      note('प्रोडक्ट सेव हो गया।')
+    }
+    if(f.id==='issue'){
+      const p=await read(v.product);
+      valid(p&&v.name.trim()&&v.start&&v.start<=today(),'ग्राहक और तारीख जाँचें।');
+      const l={id:uid('D'),name:v.name.trim(),mobile:v.mobile.trim(),start:v.start,p,credit:0,receipts:[]};
+      await saveLoan(null,l,{label:'लोन जारी',date:l.start,amount:p.net});
+      selected=l.id;
+      loanTab='pay';
+      await go('recover');
+      note('डायरी शुरू हो गई।')
+    }
+    if(f.id==='pay'||f.id==='close'){
+      const old=currentLoan,l=structuredClone(old),g=ledger(l);
+      valid(!l.close,'डायरी पहले ही बंद है।');
+      checkDate(l,v.date);
+      if(f.id==='pay'){
+        const tender=cents(v.amount),pay=Math.min(g.balance,tender),over=tender-pay;
+        valid(tender>0&&g.balance>0,'लोन में शेष वसूली जाँचें।');
+        const r={id:uid('R'),date:v.date,tender,pay,credit:v.extra==='credit'?over:0,change:v.extra==='return'?over:0};
+        l.receipts.push(r);
+        l.credit+=r.credit;
+        if(pay===g.balance){
+          l.close={id:r.id,date:r.date,fee:l.p.interest,waiver:0,cash:0,refund:0,credit:0,scheduled:true};
+          loanTab="card"
+        }
+        await saveLoan(old,l,{date:v.date,label:'रसीद · '+r.id,amount:pay});
+        note('रसीद सेव हुई · '+money(pay)+' लोन में जमा।')
+      }
+ else{
+        const c=settle(l,v.date,v.kind,g);
+        if(!confirm('डायरी बंद करें? अंतिम वसूली '+money(Math.max(0,c.net))+' · ब्याज छूट '+money(c.waiver)))return;
+        const over=Math.max(0,-c.net);
+        l.close={id:uid('C'),date:v.date,fee:c.fee,waiver:c.waiver,cash:Math.max(0,c.net),refund:v.extra==='return'?over:0,credit:v.extra==='credit'?over:0};
+        l.credit+=l.close.credit;
+        await saveLoan(old,l,{date:v.date,label:'डायरी बंद',amount:l.close.cash});
+        loanTab='card';
+        note('अंतिम हिसाब सेव हुआ।')
+      }
+      await go('recover')
+    }
+    if(f.id==='connect'){
+      await connect(v);
+      await go('home');
+      note('Firebase खाता खुल गया।')
+    }
+  }catch(err){
+    note(err.message||String(err))
+  }finally{
+    busy=false;
+    btn.disabled=false
+  }
+});
+(async()=>{
+  try{
+    db=await idb();
+    if(sessionStorage.getItem('rk-cloud')){
+      try{
+        await connect({config:localStorage.getItem('rk-config'),resume:true});
+        await go('home')
+      }catch(err){
+        await go('settings');
+        note('क्लाउड खाता खोलने के लिए फिर साइन इन करें। '+err.message)
+      }
+    }else await go('home')
+  }catch(e){
+    $('#page').textContent='डेटाबेस खोलने में समस्या · '+e.message
+  }
+})();
+</script></body></html>
