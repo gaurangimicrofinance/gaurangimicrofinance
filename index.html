@@ -1,4 +1,4 @@
-<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142e30"><title>RozKhata · Microfinance</title><style>
+<!doctype html><html lang="en-IN" translate="no" class="notranslate"><head><meta charset="utf-8"><meta name="google" content="notranslate"><meta name="application-name" content="RozKhata English 2.0"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142e30"><title>RozKhata · Microfinance</title><style>
 
 [hidden]{display:none!important}
 :root{--ink:#172e30;--muted:#52696a;--line:#d5dfda;--paper:#f4f6f1;--green:#126455;--aqua:#b2e4cb;--gold:#f1b66b;--white:#fff;--shadow:0 6px 24px #15362d08}
@@ -116,7 +116,8 @@ thead{display:table-header-group}
 }
 
 
-</style></head><body><aside><div class="brand"><span class="mark">R</span><div>RozKhata<small>MICROFINANCE</small></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>Daily ledger</div></aside><main><div class="top"><span>RozKhata &nbsp;/&nbsp; Daily ledger</span><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>
+.brand-copy,.breadcrumb{min-width:0}.brand-copy{flex:1}.mark{flex-shrink:0}#companyBrand,#companyCrumb{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#companyCrumb{display:inline-block;max-width:min(34vw,320px);vertical-align:bottom}.edition{font:600 12px system-ui;color:#31584d;white-space:nowrap}.top .edition{margin-left:auto}.company-form{max-width:760px}.company-form input{max-width:32rem}.company-form button{margin-top:14px}@media(max-width:620px){.top{gap:6px}.top .tag{font-size:11px}.brand-copy{max-width:80vw}}
+</style></head><body><aside><div class="brand"><span class="mark" id="monogram">R</span><div class="brand-copy"><span id="companyBrand">RozKhata</span><small>MICROFINANCE</small></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>Daily ledger</div></aside><main><div class="top"><span class="breadcrumb"><span id="companyCrumb">RozKhata</span> &nbsp;/&nbsp; Daily ledger</span><small class="edition">English · v2.0</small><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>
 'use strict';
 // All stored currency amounts are integer paise. ISO date strings represent local business dates.
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -319,12 +320,31 @@ function paintNav(){
   $('#nav').innerHTML=Object.entries(pages).map(([k,[i,t]])=>'<button class="'+(screen===k?'on':'')+'" data-act="go:'+k+'"><b>'+i+'</b>'+t+'</button>').join('');
   $('#mode').textContent=cloud?'● Firebase · '+cloud.email:space==='demo'?'● Practice account':'● On this device'
 }
+let companyName = 'RozKhata';
+function applyCompany(name) {
+  companyName = name || 'RozKhata';
+  for (const selector of ['#companyBrand', '#companyCrumb']) {
+    $(selector).textContent = companyName;
+    $(selector).title = companyName;
+  }
+  $('#monogram').textContent = Array.from(companyName)[0].toLocaleUpperCase();
+  document.title = companyName + ' · Daily ledger';
+}
+async function saveCompany(raw) {
+  const name = String(raw || '').trim();
+  valid(name.length > 0 && name.length <= 80, 'Enter a company name of 1–80 characters.');
+  await atomic(['COMPANY'], () => [['COMPANY', {name}]]);
+  applyCompany(name);
+}
 async function go(k){
   screen=k;
   const token=++epoch;
   paintNav();
   $('#page').innerHTML='<p class="empty">Loading…</p>';
   try{
+    const profile = await read("COMPANY");
+    if (token !== epoch) return;
+    applyCompany(profile?.name);
     const h=await ({home,products,issue,recover,reports,settings}[k])();
     if(token===epoch){
       $('#page').innerHTML=h;
@@ -462,7 +482,7 @@ async function reports(){
 }
 const rules='match /rozkhata/{owner}/records/{record} {\n  allow read, write: if request.auth != null && request.auth.uid == owner;\n}';
 function settings(){
-  return header('Settings','Data storage and connection')+'<section class="card"><h2>Workspace</h2><p class="sub">'+(cloud?'Firebase · '+esc(cloud.email):space==='demo'?'Practice records are stored separately.':'Saved in this browser’s IndexedDB database.')+'</p><div class="row" style="margin-top:14px">'+(cloud?button('Sign out','logout','ghost'):button(space==='demo'?'Return to my account':'Open practice account',space==='demo'?'live':'demo','soft'))+(!cloud?button('Download local backup','backup','ghost'):'')+'</div></section>'+(cloud?'':'<form id="connect" class="card"><h2>Firebase connection</h2><p class="sub">Use the same Firestore project and Email/Password account on both devices. Local and cloud records are separate.</p><label>Firebase Web config (JSON)<textarea required name="config" placeholder=\'{"apiKey":"…","authDomain":"…","projectId":"…","appId":"…"}\'>'+esc(localStorage.getItem("rk-config")||"")+'</textarea></label><div class="fields">'+field('email','Email','email','','required autocomplete="username"')+field('password','Password','password','','required autocomplete="current-password"')+'</div><button class="btn">Open cloud account</button><details><summary>Connection and access rules</summary><p>Cloud Firestore and Email/Password Auth are required. In your existing Firestore rules, inside the documents block, add the rule below and review any broader public permissions. This app stores loans in its own collection.</p><pre>'+esc(rules)+'</pre></details></form>')
+  return header('Settings','Company profile, storage and connections')+'<form id="company" class="card company-form"><h2>Company profile</h2><p class="sub">This name appears across this workspace and on printed loan cards.</p>'+field('companyName','Company name','text',companyName,'required maxlength="80" autocomplete="organization"')+'<button class="btn" type="submit">Save company name</button></form>'+'<section class="card"><h2>Workspace</h2><p class="sub">'+(cloud?'Firebase · '+esc(cloud.email):space==='demo'?'Practice records are stored separately.':'Saved in this browser’s IndexedDB database.')+'</p><div class="row" style="margin-top:14px">'+(cloud?button('Sign out','logout','ghost'):button(space==='demo'?'Return to my account':'Open practice account',space==='demo'?'live':'demo','soft'))+(!cloud?button('Download local backup','backup','ghost'):'')+'</div></section>'+(cloud?'':'<form id="connect" class="card"><h2>Firebase connection</h2><p class="sub">Use the same Firestore project and Email/Password account on both devices. Local and cloud records are separate.</p><label>Firebase Web config (JSON)<textarea required name="config" placeholder=\'{"apiKey":"…","authDomain":"…","projectId":"…","appId":"…"}\'>'+esc(localStorage.getItem("rk-config")||"")+'</textarea></label><div class="fields">'+field('email','Email','email','','required autocomplete="username"')+field('password','Password','password','','required autocomplete="current-password"')+'</div><button class="btn">Open cloud account</button><details><summary>Connection and access rules</summary><p>Cloud Firestore and Email/Password Auth are required. In your existing Firestore rules, inside the documents block, add the rule below and review any broader public permissions. This app stores loans in its own collection.</p><pre>'+esc(rules)+'</pre></details></form>')
 }
 async function connect(v){
   let cfg;
@@ -507,7 +527,7 @@ async function demo(){
 }
 function printCard(l){
   const g=ledger(l);
-  $('#print').innerHTML='<h1>Daily loan card</h1><h2>'+esc(l.name)+'</h2><p>'+l.id+' · '+esc(productTitle(l.p))+' · Issued '+dt(l.start)+' · Daily '+money(l.p.emi)+'</p><p>Net disbursement '+money(l.p.net)+' · Total repayable '+money(l.p.total)+' · Balance '+money(g.balance)+'</p>'+(l.close?closingInfo(l.close):'')+schedule(l,g)+'<h3>Payment register</h3>'+receipts(l);
+  $('#print').innerHTML='<p><strong>'+esc(companyName)+'</strong></p><h1>Daily loan card</h1><h2>'+esc(l.name)+'</h2><p>'+l.id+' · '+esc(productTitle(l.p))+' · Issued '+dt(l.start)+' · Daily '+money(l.p.emi)+'</p><p>Net disbursement '+money(l.p.net)+' · Total repayable '+money(l.p.total)+' · Balance '+money(g.balance)+'</p>'+(l.close?closingInfo(l.close):'')+schedule(l,g)+'<h3>Payment register</h3>'+receipts(l);
   window.print()
 }
 async function backup(){
@@ -581,6 +601,11 @@ document.addEventListener('submit',async e=>{
   const f=e.target,v=fd(f),btn=f.querySelector('button[type=submit],button.btn');
   btn.disabled=true;
   try{
+    if (f.id === 'company') {
+      await saveCompany(v.companyName);
+      f.elements.companyName.value = companyName;
+      note('Company name saved.');
+    }
     if(f.id==='product'){
       const p=makeProduct(v);
       valid(p.name,'Enter a product name.');
