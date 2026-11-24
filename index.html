@@ -1,683 +1,110 @@
-<!doctype html><html lang="en-IN" translate="no" class="notranslate"><head><meta charset="utf-8"><meta name="google" content="notranslate"><meta name="application-name" content="RozKhata English 2.0"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142e30"><title>RozKhata · Microfinance</title><style>
-
-[hidden]{display:none!important}
-:root{--ink:#172e30;--muted:#52696a;--line:#d5dfda;--paper:#f4f6f1;--green:#126455;--aqua:#b2e4cb;--gold:#f1b66b;--white:#fff;--shadow:0 6px 24px #15362d08}
-*{box-sizing:border-box}
-body{margin:0;color:var(--ink);background:var(--paper);font:15px/1.55 "Segoe UI",Roboto,Arial,sans-serif}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-button:disabled{opacity:.55;cursor:wait}
-button:focus-visible,a:focus-visible{outline:3px solid #e2a953;outline-offset:3px}
-aside{position:fixed;inset:0 auto 0 0;width:210px;background:#142e30;color:#f7faf1;padding:30px 16px;display:flex;flex-direction:column;z-index:2}
-.brand{display:flex;align-items:center;gap:11px;padding:0 8px 32px;font-size:23px;font-weight:750}
-.mark{display:inline-grid;place-items:center;background:var(--aqua);color:var(--ink);width:40px;height:40px;border-radius:13px;font-size:24px;font-family:Georgia}
-.brand small, .eyebrow{display:block;letter-spacing:.15em;text-transform:uppercase;font:600 10px/1.5 system-ui;color:#73918b}
-.brand small{color:#b2c7c3}
-.nav{display:flex;gap:6px;flex-direction:column}
-.nav button{border:0;text-align:left;background:transparent;color:#c8dbd4;border-radius:9px;padding:11px 13px}
-.nav button b{display:inline-grid;place-items:center;width:21px;margin-right:10px;font:18px/1 system-ui}
-.nav button.on{background:#30524e;color:white}
-.sidefoot{margin-top:auto;font-size:12px;color:#b8cec4;padding:14px 9px}
-.dot{display:inline-block;width:8px;height:8px;background:#70b993;border-radius:50%;margin-right:6px}
-main{margin-left:210px;padding:26px clamp(16px,4vw,64px) 55px;max-width:1600px}
-.top,.row,.spread{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.spread,.top{justify-content:space-between}
-.top{padding-bottom:18px;border-bottom:1px solid var(--line);color:var(--muted);font-size:13px}
-.tag{padding:5px 10px;background:#e4ede6;border-radius:20px;color:#235644;font-size:12px}
-.head{margin:26px 0 18px}
-h1,h2,h3,p{margin:0}
-h1{font-size:clamp(26px,3vw,42px);line-height:1.35;letter-spacing:-.035em}
-h2{font-size:20px}
-h3{font-size:16px}
-.sub,small{color:var(--muted)}
-.sub{margin-top:4px}
-.btn,button.soft,button.ghost{border:1px solid transparent;border-radius:9px;padding:9px 15px;font-weight:650}
-.btn{color:white;background:var(--green)}
-.soft{background:#deeee2;color:#194e42}
-.ghost{background:white;color:var(--ink);border-color:var(--line)!important}
-.card,.hero{border:1px solid var(--line);border-radius:16px;background:white;padding:clamp(16px,2.3vw,28px);box-shadow:var(--shadow);margin-bottom:16px}
-.hero{color:white;background:linear-gradient(108deg,#183b3d,#21534a);border:0;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.hero small{color:#c5d9cd}
-.amount{font:650 clamp(29px,4.5vw,56px)/1.25 system-ui;letter-spacing:-.05em;margin:7px 0}
-.ring{flex:none;width:82px;height:82px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold) var(--pct),#426a61 0)}
-.ring span{display:grid;place-items:center;border-radius:50%;width:65px;height:65px;background:#214a45;font:700 15px system-ui}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.grid>.card{margin-bottom:0}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
-.stat{padding:15px;border:1px solid var(--line);background:white;border-radius:12px}
-.stat strong{display:block;font:650 clamp(19px,2.1vw,32px)/1.5 system-ui;letter-spacing:-.04em}
-.stat small{font-size:12px}
-.bars{display:flex;gap:8px;align-items:flex-end;height:125px;margin-top:14px}
-.bar{flex:1;text-align:center;font-size:10px;color:var(--muted)}
-.bar i{width:70%;background:#8aba9f;display:block;border-radius:4px 4px 0 0;margin:4px auto;min-height:2px}
-.bar:last-child i{background:var(--green)}
-.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:16px 0}
-.wide{grid-column:1/-1}
-label{display:block;font-size:13px;font-weight:650}
-input,select,textarea{display:block;min-width:0;width:100%;border:1px solid #b8c9c0;background:#fcfdfa;color:var(--ink);padding:10px 11px;border-radius:8px;margin-top:5px;outline:none}
-input:focus,select:focus,textarea:focus{border-color:#237862;box-shadow:0 0 0 3px #cfe5d6}
-input[type=date]{min-height:43px}
-textarea{min-height:80px}
-.note,.preview,.err{padding:12px 15px;border-radius:9px;margin:12px 0;background:#eaf3eb}
-.err{background:#fbe9e0;color:#843b1d}
-.empty{padding:22px 0;color:var(--muted)}
-.entry{padding:11px 0;border-bottom:1px solid var(--line)}
-.entry:last-child{border:0}
-.result{width:100%;text-align:left;background:white;border:0;border-bottom:1px solid var(--line);padding:11px;color:var(--ink)}
-.result:hover{background:#edf5ed}
-.scroll{overflow:auto}
-.scroll table{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
-th,td{padding:9px;text-align:left;border-bottom:1px solid var(--line)}
-th{background:#eef3ed}
-.muted{color:var(--muted)}
-.switch{display:flex;flex-wrap:wrap;gap:6px;margin:15px 0}
-.switch button{border:1px solid var(--line);border-radius:20px;padding:7px 12px;background:white;color:var(--ink)}
-.switch .active{background:var(--ink);color:white}
-.msg{position:fixed;bottom:20px;right:16px;max-width:min(90vw,440px);background:#193a33;color:white;border-radius:10px;padding:13px 18px;z-index:5}
-.msg:empty{display:none}
-details{margin:12px 0}
-summary{cursor:pointer;font-weight:650}
-pre{overflow:auto;background:#f1f4ef;padding:10px;font-size:12px}
-#print{display:none}
-button.link{border:0;background:none;color:var(--green);padding:4px;text-decoration:underline}
-.sep{margin:16px 0;border:0;border-top:1px solid var(--line)}
-@media(max-width:850px){aside{position:static;width:auto;padding:10px 12px;display:block}
-.brand{padding:0 4px 8px;font-size:18px}
-.brand small,.sidefoot{display:none}
-.mark{width:30px;height:30px;font-size:18px}
-.nav{flex-direction:row;overflow-x:auto}
-.nav button{font-size:13px;white-space:nowrap;padding:7px}
-.nav button b{display:none}
-main{margin:0;padding:14px}
-.head{margin-top:18px}
-}
-@media(max-width:620px){.grid,.fields{grid-template-columns:1fr}
-.stats{gap:6px}
-.stat{padding:9px 6px}
-.stat strong{font-size:17px}
-.stat small{font-size:11px}
-.top{padding-bottom:10px}
-.ring{width:65px;height:65px}
-.ring span{width:51px;height:51px}
-.hero{padding:16px}
-.bars{gap:4px}
-.grid{gap:12px}
-.head .row{margin-top:4px}
-.spread{gap:6px}
-}
-@media print{body{background:white;color:black;font:11pt/1.4 sans-serif}
-aside,main,.msg{display:none!important}
-#print{display:block}
-#print table{width:100%;border-collapse:collapse;font-size:9pt}
-#print td,#print th{border:1px solid #999;padding:4px}
-tr{break-inside:avoid}
-thead{display:table-header-group}
-@page{margin:12mm}
-}
-
-
-.brand-copy,.breadcrumb{min-width:0}.brand-copy{flex:1}.mark{flex-shrink:0}#companyBrand,#companyCrumb{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#companyCrumb{display:inline-block;max-width:min(34vw,320px);vertical-align:bottom}.edition{font:600 12px system-ui;color:#31584d;white-space:nowrap}.top .edition{margin-left:auto}.company-form{max-width:760px}.company-form input{max-width:32rem}.company-form button{margin-top:14px}@media(max-width:620px){.top{gap:6px}.top .tag{font-size:11px}.brand-copy{max-width:80vw}}
-</style></head><body><aside><div class="brand"><span class="mark" id="monogram">R</span><div class="brand-copy"><span id="companyBrand">RozKhata</span><small>MICROFINANCE</small></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>Daily ledger</div></aside><main><div class="top"><span class="breadcrumb"><span id="companyCrumb">RozKhata</span> &nbsp;/&nbsp; Daily ledger</span><small class="edition">English · v2.0</small><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>
+<!doctype html><html lang="hi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173f36"><title>ब्याज बही · खाता और हिसाब</title>
+<style>
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;font:16px/1.55 "Noto Sans Devanagari",system-ui,sans-serif;color:#243b32;background:#f6f5ef}header,main{max-width:1080px;margin:auto;padding:22px}header{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;border-bottom:1px solid #cfd7cc}header strong{font-size:24px;color:#164f40}.brand{display:flex;align-items:center;gap:12px}.icon{background:#164f40;color:white;border-radius:10px;padding:3px 10px}button,select,input,textarea{font:inherit}button{border:1px solid #bccbc0;border-radius:8px;padding:9px 15px;background:#fff;color:#174c3c;cursor:pointer}button:hover,button.active{background:#dce9dc}button.primary{background:#18523e;color:white;border-color:#18523e}button:disabled{opacity:.55}nav,.row,.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.row{justify-content:space-between}.hero{background:#173f36;color:white;border-radius:16px;padding:24px 30px;margin:18px 0}.kpis,.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.kpis>div{border-left:2px solid #acc599;padding-left:14px}.kpis small{color:#d5e4d8}.kpis b{display:block;font-size:clamp(19px,3vw,31px);overflow-wrap:anywhere}h1{font-size:clamp(24px,4vw,38px);margin:6px 0 14px}h2{font-size:21px}h2,h3,p{margin:8px 0}.card,dialog{background:#fff;border:1px solid #d5dbd1;border-radius:14px;padding:20px;margin:15px 0}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}label{display:grid;gap:5px;font-size:14px;font-weight:600}.full{grid-column:1/-1}input,select,textarea{width:100%;min-width:0;padding:10px;border:1px solid #b9c9bc;border-radius:7px;background:white;color:#1d342b}.tools input,.tools select{width:auto;max-width:100%}dialog{position:fixed;margin:auto;width:min(600px,94vw);max-height:90vh;color:inherit}dialog::backdrop{background:#142d2399}dialog h2{margin:0 0 16px}.entry{width:100%;display:flex;align-items:center;text-align:left;justify-content:space-between;gap:14px;border:0;border-bottom:1px solid #dee5dc;border-radius:0;background:white;padding:15px 4px}.entry strong{display:block;font-size:17px}.entry span:last-child{text-align:right}small,.muted{color:#54685b}.money{font-variant-numeric:tabular-nums;color:#195741}.tag{display:inline-block;background:#eaf1e5;color:#325b40;padding:2px 9px;border-radius:6px;font-size:13px}.empty{padding:30px 4px;color:#586c60}.error{color:#982f25}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:10px;text-align:left;border-bottom:1px solid #d9e0d5;white-space:nowrap}#status{color:#843624}details{margin:15px 0}summary{cursor:pointer}button:focus-visible,:focus-visible{outline:3px solid #a46b20;outline-offset:2px}@media(max-width:650px){header,main{padding:14px}header{gap:9px}nav button{padding:7px 10px}.hero{padding:18px}.kpis{grid-template-columns:1fr 1fr;gap:14px}.kpis>div:last-child{grid-column:1/-1}.card{padding:14px}.grid{gap:9px}.tools input{width:100%}}@media print{header nav,.tools,button,dialog,#status,.noprint{display:none!important}body{background:white}.hero{background:white;color:black}.kpis small{color:black}.scroll{overflow:visible}main,header{padding:4px}.card{break-inside:avoid}td,th{white-space:normal}}
+</style>
+<header><div class="brand"><strong class="icon">ब</strong><strong>ब्याज बही</strong></div><nav id="nav"></nav></header><main><div id="status" role="status"></div><section id="view"></section></main><dialog id="dialog"><form id="form"><div class="row"><h2 id="title"></h2><button type="button" id="close" aria-label="बंद करें">×</button></div><div id="fields" class="grid"></div><p id="err" class="error" role="alert"></p><button class="primary">सहेजें</button></form></dialog><input type="file" hidden id="restoreFile" accept=".json,application/json">
+<script>
 'use strict';
-// All stored currency amounts are integer paise. ISO date strings represent local business dates.
-const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-'), today=()=>iso(new Date()), day=(s,n)=>new Date(Date.parse(s+'T12:00:00Z')+n*86400000).toISOString().slice(0,10), elapsed=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/86400000);
-const dt=s=>s?s.split('-').reverse().join('/'):'—', money=n=>'₹'+(n/100).toLocaleString('en-IN',{maximumFractionDigits:2}), cents=v=>Math.round(Number(v)*100), norm=s=>s.trim().toLowerCase().replace(/\s+/g,' '), uid=p=>p+'-'+crypto.randomUUID().replaceAll('-','').slice(0,16).toUpperCase();
-function valid(b,s){
-  if(!b)throw Error(s)
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>{let d=new Date();return new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
+const fmt=d=>d?d.split('-').reverse().join('/'):'—',cash=n=>'₹'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const periods={1:'वार्षिक',2:'छमाही',4:'तिमाही',6:'हर दो महीने',12:'मासिक',24:'महीने में दो बार',26:'हर दो सप्ताह',52:'साप्ताहिक',104:'सप्ताह में दो बार',360:'दैनिक'};
+const directions={lend:'दिया हुआ',borrow:'लिया हुआ'},alloc={both:'पहले ब्याज, फिर मूलधन',principal:'केवल मूलधन',interest:'केवल ब्याज'},modes={cash:'नकद',upi:'UPI',bank:'बैंक',other:'अन्य'};
+const dateOf=d=>new Date(d+'T00:00:00Z'),validDate=d=>typeof d==='string'&&/^\d{4}-\d\d-\d\d$/.test(d)&&Number.isFinite(+dateOf(d))&&dateOf(d).toISOString().slice(0,10)===d;
+function yearPart(start,end){
+ const a=dateOf(start),b=dateOf(end);if(b<a)throw Error('अंतिम तारीख आरंभ से पहले है।');
+ let months=(b.getUTCFullYear()-a.getUTCFullYear())*12+b.getUTCMonth()-a.getUTCMonth();
+ if(b.getUTCDate()<a.getUTCDate())months--;
+ let anchor=new Date(Date.UTC(a.getUTCFullYear(),a.getUTCMonth()+months,1));
+ let last=new Date(Date.UTC(anchor.getUTCFullYear(),anchor.getUTCMonth()+1,0)).getUTCDate();
+ anchor.setUTCDate(Math.min(last,a.getUTCDate()));return months/12+(b-anchor)/86400000/360;
 }
-function note(s){
-  $('#msg').textContent=s;
-  clearTimeout(note.t);
-  note.t=setTimeout(()=>$('#msg').textContent='',5200)
+function growth(l,start,end){
+ const y=yearPart(start,end),r=l.rate*l.unit/100,n=l.freq;
+ if(l.type==='simple')return 1+y*r;
+ let whole=Math.floor(y*n);return Math.pow(1+r/n,whole)*(1+Math.max(0,y-whole/n)*r);
 }
-function makeProduct(v){
-  if(v.plan==='solve'&&v.method!=='emi'){
-    const target=cents(v.emi),P=cents(v.principal);
-    valid(target>=100&&target%100===0,'Enter the daily instalment in whole rupees.');
-    for(let k=1;k<=730;k++){
-      const months=v.monthMode==='auto'?Math.ceil(k/30):Number(v.months),I=v.method==='rate'?Math.round(P*Number(v.rate)*months/100):cents(v.interest),total=P+(v.type==='after'?I:0);
-      if(k*target===total)return makeProduct({...v,plan:'days',days:k})
-    }
-    const I=v.method==='amount'?cents(v.interest):Math.round(P*Number(v.rate)*Number(v.months||1)/100);
-    throw Error('This instalment does not divide the repayment total evenly. '+(v.monthMode==='auto'&&v.method==='rate'?'Adjust the instalment or the interest term.':choices(P+(v.type==='after'?I:0),Math.round(P/target))))
-  }
-  const principal=cents(v.principal), n=Number(v.days), months=v.monthMode==='auto'?Math.ceil(n/30):Number(v.months);
-  valid(Number.isInteger(n)&&n>=1&&n<=730,'Enter an instalment count between 1 and 730.');
-  valid(principal>0&&principal<=1e10&&months>0&&months<=60,'Check the loan amount and interest term.');
-  let interest=v.method==='rate'?Math.round(principal*Number(v.rate)*months/100):cents(v.interest), installment;
-  if(v.method==='emi'){
-    installment=cents(v.emi);
-    if(v.type==='after')interest=installment*n-principal;else valid(installment*n===principal,'For upfront interest, total repayments must equal the face value of the loan. '+choices(principal,n))
-  }
-  const total=principal+(v.type==='after'?interest:0), net=principal-(v.type==='before'?interest:0);
-  valid(Number.isSafeInteger(interest)&&interest>=0&&net>0&&total>0,'Check the interest and net disbursement.');
-  valid(total%(100*n)===0,'Choose equal instalments in whole rupees. '+choices(total,n));
-  installment=total/n;
-  return {name:String(v.name||'').trim(),principal,n,months,type:v.type,interest,total,net,emi:installment,priority:v.priority,rate:interest*100/(principal*months)};
+function balance(l,end=today()){
+ if(l.closed&&end>l.closed)end=l.closed;
+ if(end<l.start)return {p:0,i:0,paid:0,rows:[]};
+ let p=l.amount,anchor=l.start,carried=0,interestPaid=0,paid=0,rows=[];
+ const interest=d=>carried+p*(growth(l,anchor,d)-1)-interestPaid;
+ for(const t of l.payments){
+ if(t.date>end)break;
+ let due=Math.max(0,interest(t.date)),ip=t.kind==='principal'?0:Math.min(due,t.amount),pp=t.amount-ip;
+ if((t.kind==='interest'&&pp>0.005001)||pp>p+0.005001)throw Error('भुगतान चुने गए बकाये से अधिक है। तारीख और राशि जाँचें।');
+ if(t.kind==='interest'){ip=t.amount;pp=0}
+ if(pp>0){carried=Math.max(0,due-ip);p=Math.max(0,p-pp);anchor=t.date;interestPaid=0}else interestPaid+=ip;
+ paid+=t.amount;rows.push({...t,ip,pp,p,i:Math.max(0,due-ip)});
+ }
+ let i=Math.max(0,interest(end));if(!Number.isFinite(i)||!Number.isFinite(p+i))throw Error('हिसाब समर्थित अंकों की सीमा से बाहर है।');
+ return {p,i,paid,rows};
 }
-function choices(total,n){
-  let opts=[];
-  for(let k=1;k<=730;k++)if(total%(100*k)===0)opts.push(k);
-  return opts.sort((a,b)=>Math.abs(a-n)-Math.abs(b-n)).slice(0,5).map(k=>money(total/k)+' × '+k+' days').join(' · ')||'Check the amount.'
+const fresh=()=>({version:1,rev:0,people:[],loans:[],history:[]});
+let db,data=fresh(),page='book',selected='',query='',filter='all',closedFilter='open',asof=today(),submitter,calcResult=null;
+function check(ok,msg){if(!ok)throw Error(msg||'बैकअप में अमान्य जानकारी है।')}
+function numeric(n){return typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=1e12}
+function terms(l){check(numeric(l.amount)&&l.amount>0&&numeric(l.rate)&&Object.hasOwn(periods,l.unit)&&Object.hasOwn(periods,l.freq)&&['simple','compound'].includes(l.type)&&validDate(l.start))}
+function validate(s){
+ check(s&&s.version===1&&Array.isArray(s.people)&&Array.isArray(s.loans)&&Array.isArray(s.history));let ids=new Set;
+ function id(x){check(typeof x==='string'&&x.length>0&&!ids.has(x));ids.add(x)}
+ for(const p of s.people){id(p.id);check(typeof p.name==='string'&&p.name.trim().length&&typeof p.phone==='string')}
+ let people=new Set(s.people.map(p=>p.id));
+ for(const l of s.loans){id(l.id);terms(l);check(people.has(l.person)&&Object.hasOwn(directions,l.dir)&&Array.isArray(l.payments)&&l.start<=today()&&(!l.due||validDate(l.due)&&l.due>=l.start));let prev=l.start;
+ for(const t of l.payments){id(t.id);check(validDate(t.date)&&t.date>=prev&&t.date<=today()&&numeric(t.amount)&&t.amount>0&&Object.hasOwn(alloc,t.kind)&&Object.hasOwn(modes,t.mode));prev=t.date}
+ check(!l.closed||(validDate(l.closed)&&l.closed>=prev&&l.closed<=today()));balance(l)}
+ for(const h of s.history){terms(h);check(validDate(h.end)&&h.end>=h.start&&Number.isFinite(growth(h,h.start,h.end)*h.amount))}
 }
-function allocate(l,rows,date,amount){
-  let due=[],future=[],current=[];
-  for(let i=0;i<rows.length;i++){
-    if(rows[i].left<=0)continue;
-    (rows[i].date<date?due:rows[i].date===date?current:future).push(i)
-  }
-  const parts=[];
-  for(const i of (l.p.priority==='today'?[...current,...due,...future]:[...due,...current,...future])){
-    if(amount<=0)break;
-    const a=Math.min(amount,rows[i].left);
-    parts.push({i,a});
-    amount-=a
-  }
-  return parts
+function request(req){return new Promise((res,rej)=>{req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error)})}
+async function load(){data=await request(db.transaction('ledger').objectStore('ledger').get('main'))||fresh()}
+async function save(next){
+ validate(next);
+ await new Promise((res,rej)=>{const tx=db.transaction('ledger','readwrite'),s=tx.objectStore('ledger'),r=s.get('main');let conflict=false;r.onsuccess=()=>{if((r.result?.rev||0)!==data.rev){conflict=true;tx.abort();return}next.rev=data.rev+1;s.put(next,'main')};tx.oncomplete=res;tx.onabort=()=>rej(Error(conflict?'दूसरे टैब में बदलाव हुआ है। पेज रीलोड करके फिर प्रयास करें।':'डेटा सहेजा नहीं जा सका।'))});
+ data=next;render();
 }
-function ledger(l){
-  const rows=Array.from({length:l.p.n},(_,i)=>({date:day(l.start,i+1),left:l.p.emi,events:[]})), rev={},cash={};
-  let collected=0;
-  for(const r of l.receipts){
-    cash[r.date]=(cash[r.date]||0)+r.pay;
-    for(const {i,a} of allocate(l,rows,r.date,r.pay)){
-      let row=rows[i];
-      const income=Math.max(0,collected+a-l.p.net)-Math.max(0,collected-l.p.net);
-      collected+=a;
-      const when=row.date>r.date?row.date:r.date;
-      rev[when]=(rev[when]||0)+income;
-      row.left-=a;
-      row.events.push({id:r.id,date:r.date,a})
-    }
-  }
-  if(l.close&&!l.close.scheduled){
-    const c=l.close;
-    cash[c.date]=(cash[c.date]||0)+c.cash-c.refund-c.credit;
-    let recognized=0;
-    for(const d in rev){
-      if(d<=c.date)recognized+=rev[d];else delete rev[d]
-    }
-    rev[c.date]=(rev[c.date]||0)+c.fee-recognized
-  }
-  return {rows,collected,rev,cash,balance:l.close?0:l.p.total-collected};
+const uid=()=>crypto.randomUUID(),action=(label,a,cls='')=>'<button type="button" class="'+cls+'" data-act="'+a+'">'+label+'</button>';
+const options=(o,v)=>Object.entries(o).map(([k,t])=>'<option value="'+esc(k)+'" '+(String(v)===k?'selected':'')+'>'+esc(t)+'</option>').join('');
+const select=(n,l,o,v)=>'<label>'+l+'<select name="'+n+'">'+options(o,v)+'</select></label>';
+const inp=(n,l,t='text',v='',attrs='required')=>'<label>'+l+'<input name="'+n+'" type="'+t+'" value="'+esc(v)+'" '+attrs+'></label>';
+const moneyAttrs='required min="0.01" max="1000000000000" step=".01"';
+function termFields(l={}){return inp('amount','मूलधन (₹)','number',l.amount||'',moneyAttrs)+inp('rate','ब्याज दर (%)','number',l.rate??'2','required min="0" max="10000" step="any"')+select('unit','दर किस अवधि की है?',periods,l.unit||12)+select('type','ब्याज का प्रकार',{simple:'साधारण',compound:'चक्रवृद्धि'},l.type||'simple')+select('freq','चक्रवृद्धि की अवधि',periods,l.freq||12)+inp('start','शुरू होने की तारीख','date',l.start||today())}
+function termValues(f){return {amount:+f.amount,rate:+f.rate,unit:+f.unit,freq:+f.freq,type:f.type,start:f.start}}
+function modal(title,html,cb,label='सहेजें'){submitter=cb;$('title').textContent=title;$('fields').innerHTML=html;$('err').textContent='';$('form').querySelector('.primary').textContent=label;syncFreq();$('dialog').showModal()}
+function syncFreq(){let f=$('form').elements;if(f.freq)f.freq.closest('label').hidden=f.type.value!=='compound'}
+$('form').onchange=syncFreq;$('close').onclick=()=>$('dialog').close();
+$('form').onsubmit=async e=>{e.preventDefault();let b=e.submitter||$('form').querySelector('.primary');b.disabled=true;try{await submitter(Object.fromEntries(new FormData(e.target)));$('dialog').close()}catch(x){$('err').textContent=x.message}finally{b.disabled=false}};
+const kpis=items=>'<div class="hero"><div class="kpis">'+items.map(([k,v])=>'<div><small>'+k+'</small><b>'+cash(v)+'</b></div>').join('')+'</div></div>';
+function person(l){return data.people.find(p=>p.id===l.person)}
+function rules(){return '<details><summary>गणना का तरीका</summary><p>पूरे कैलेंडर महीने ÷ 12 और बचे दिन ÷ 360। साधारण ब्याज = मूलधन × वार्षिक दर × समय। चक्रवृद्धि में पूरी अवधियों पर ब्याज जुड़ता है और बची अवधि पर साधारण ब्याज लगता है। आरंभ की तारीख पर ब्याज शून्य है।</p><p>इस संस्करण में मूलधन घटाने पर शेष मूलधन की नई अवधि भुगतान की तारीख से शुरू होती है। पुराना बचा ब्याज अलग रहता है। केवल ब्याज भुगतान पर अवधि जारी रहती है। अंतिम प्रदर्शन दो दशमलव में है।</p></details>'}
+function book(){
+ let active=data.loans.filter(l=>!l.closed),lend=0,borrow=0,interest=0;for(let l of active){let b=balance(l);if(l.dir==='lend'){lend+=b.p+b.i;interest+=b.i}else borrow+=b.p+b.i}
+ return '<div class="row"><h1>खाता बही</h1><div class="tools">'+action('ग्राहक जोड़ें','person')+action('＋ नया खाता','new','primary')+'</div></div>'+kpis([['कुल लेना है',lend],['कुल देना है',borrow],['लेने योग्य ब्याज',interest]])+'<div class="card"><div class="tools"><input id="search" aria-label="ग्राहक खोजें" placeholder="नाम या मोबाइल खोजें" value="'+esc(query)+'"><select id="filter" aria-label="खाते का प्रकार">'+options({all:'सभी प्रकार',...directions},filter)+'</select><select id="closedFilter" aria-label="खाता स्थिति">'+options({open:'चालू खाते',closed:'बंद खाते',all:'सभी खाते'},closedFilter)+'</select></div><div id="list">'+list()+'</div></div>';
 }
-function settle(l,date,kind,g){
-  const blocks=Math.min(l.p.months,Math.max(1,Math.ceil(elapsed(l.start,date)/30))),fee=kind==='full'?l.p.interest:Math.min(l.p.interest,Math.round(l.p.interest*blocks/l.p.months));
-  return {fee,waiver:l.p.interest-fee,net:l.p.net+fee-g.collected}
+function list(){let ls=data.loans.filter(l=>(closedFilter==='all'||(closedFilter==='closed')===!!l.closed)&&(filter==='all'||l.dir===filter)&&(person(l).name+' '+person(l).phone).toLowerCase().includes(query.toLowerCase()));return ls.reverse().map(l=>{let b=balance(l);return '<button class="entry" data-act="detail" data-id="'+esc(l.id)+'"><span><strong>'+esc(person(l).name)+'</strong><small>'+directions[l.dir]+' · '+fmt(l.start)+' · '+esc(l.rate)+'% '+periods[l.unit]+'</small></span><span><strong class="money">'+cash(b.p+b.i)+'</strong><small>'+(l.closed?'बंद':l.due&&l.due<today()?'देय तारीख बीती':'बकाया')+'</small></span></button>'}).join('')||'<p class="empty">'+(data.loans.length?'इस फ़िल्टर में कोई खाता नहीं मिला।':'पहला खाता खोलने के लिए “नया खाता” चुनें।')+'</p>'}
+function detail(l){
+ const b=balance(l,asof),p=person(l);
+ return action('← खाता बही','book')+'<div class="row"><div><h1>'+esc(p.name)+'</h1><span class="tag">'+directions[l.dir]+' · '+(l.closed?'बंद':'चालू')+'</span> '+esc(p.phone)+'</div><div class="tools">'+(l.closed?action('खाता फिर खोलें','reopen'):action('＋ भुगतान दर्ज करें','pay','primary')+action('निपटान करें','settle'))+action('प्रिंट / PDF','print')+'</div></div><div class="tools"><label>इस तारीख तक का हिसाब<input type="date" id="asof" min="'+l.start+'" max="'+today()+'" value="'+asof+'"></label></div>'+kpis([['शेष मूलधन',b.p],['बकाया ब्याज',b.i],['कुल बकाया',b.p+b.i]])+'<section class="card"><h2>खाते की शर्तें</h2><p>'+cash(l.amount)+' · '+l.rate+'% '+periods[l.unit]+' · '+(l.type==='simple'?'साधारण ब्याज':'चक्रवृद्धि '+periods[l.freq])+'</p><p>आरंभ '+fmt(l.start)+' · देय तारीख '+fmt(l.due)+(l.closed?' · निपटान '+fmt(l.closed):'')+'</p><p>'+esc(l.note)+'</p>'+rules()+'</section><section class="card"><h2>भुगतान इतिहास</h2><p>कुल भुगतान '+cash(b.paid)+'</p><div class="scroll"><table><thead><tr><th>तारीख</th><th>राशि</th><th>ब्याज</th><th>मूलधन</th><th>माध्यम / विवरण</th><th></th></tr></thead><tbody>'+b.rows.slice().reverse().map(t=>'<tr><td>'+fmt(t.date)+'</td><td>'+cash(t.amount)+'</td><td>'+cash(t.ip)+'</td><td>'+cash(t.pp)+'</td><td>'+modes[t.mode]+' · '+alloc[t.kind]+' '+esc(t.note)+'</td><td>'+(!l.closed?'<button data-act="editpay" data-id="'+esc(t.id)+'">सुधारें</button>':'')+'</td></tr>').join('')+'</tbody></table></div>'+(!b.rows.length?'<p class="muted">इस तारीख तक कोई भुगतान दर्ज नहीं है।</p>':'')+'</section>';
 }
-let db,cloud=null,space='live',screen='home',selected=null,loanTab='pay',reportDate=today(),searchTimer,epoch=0,currentSearch='';
-function idb(){
-  return new Promise((ok,no)=>{
-    const r=indexedDB.open('rozkhata-diary-v1',1);
-    r.onupgradeneeded=()=>{
-      const s=r.result.createObjectStore('records',{keyPath:'key'});
-      s.createIndex('search','search')
-    };
-    r.onsuccess=()=>ok(r.result);
-    r.onerror=()=>no(r.error)
-  })
-}
-const req=r=>new Promise((ok,no)=>{
-  r.onsuccess=()=>ok(r.result);
-  r.onerror=()=>no(r.error)
-}), scoped=k=>space+'/'+k, cref=k=>cloud.fs.doc(cloud.db,'rozkhata',cloud.uid,'records',k);
-async function read(k){
-  if(cloud){
-    const s=await cloud.fs.getDocFromServer(cref(k));
-    return s.exists()?s.data().value:null
-  }
-  return (await req(db.transaction('records').objectStore('records').get(scoped(k))))?.value||null
-}
-async function list(prefix,term='',limit=25){
-  const base=prefix+term;
-  if(cloud){
-    const f=cloud.fs,ref=f.collection(cloud.db,'rozkhata',cloud.uid,'records');
-    return (await f.getDocsFromServer(f.query(ref,f.orderBy('search'),f.startAt(base),f.endAt(base+'\uffff'),f.limit(limit)))).docs.map(x=>x.data().value)
-  }
-  const s=db.transaction('records').objectStore('records').index('search'),q=scoped(base);
-  return (await req(s.getAll(IDBKeyRange.bound(q,q+'\uffff'),limit))).map(x=>x.value)
-}
-// Read and update the loan, reporting totals and receipt history in one transaction.
-async function atomic(keys,change){
-  const unique=[...new Set(keys)];
-  if(cloud){
-    return cloud.fs.runTransaction(cloud.db,async tx=>{
-      const m={};
-      for(const k of unique){
-        const s=await tx.get(cref(k));
-        m[k]=s.exists()?s.data().value:null
-      }
-      for(const [key,value,search] of change(m))tx.set(cref(key),{value,search:search||key})
-    })
-  }
-  return new Promise((ok,no)=>{
-    const tx=db.transaction('records','readwrite'),s=tx.objectStore('records'),m={};
-    let pending=unique.length,err;
-    tx.oncomplete=ok;
-    tx.onabort=()=>no(err||tx.error||Error('Save interrupted'));
-    for(const k of unique){
-      const r=s.get(scoped(k));
-      r.onsuccess=()=>{
-        m[k]=r.result?.value||null;
-        if(--pending===0)try{
-          for(const [key,value,search] of change(m))s.put({key:scoped(key),value,search:scoped(search||key)})
-        }catch(e){
-          err=e;
-          tx.abort()
-        }
-      }
-    }
-  })
-}
-const total0=()=>({net:0,recovered:0,loans:0,closed:0,credit:0,recent:[]});
-async function saveLoan(old,l,event){
-  const a=old?ledger(old):{rev:{},cash:{}},b=ledger(l),dates=new Set([...Object.keys(a.rev),...Object.keys(b.rev),...Object.keys(a.cash),...Object.keys(b.cash)]);
-  const deltas=[];
-  for(const d of dates){
-    const rev=(b.rev[d]||0)-(a.rev[d]||0),cash=(b.cash[d]||0)-(a.cash[d]||0);
-    if(rev||cash)deltas.push({d,rev,cash})
-  }
-  const bucket=d=>'M-'+d.slice(0,7),key=l.id;
-  await atomic([key,'SUMMARY',...deltas.map(x=>bucket(x.d))],m=>{
-    valid((m[key]?.version||0)===(old?.version||0),'This loan has changed. Reopen it before saving.');
-    l.version=(old?.version||0)+1;
-    const s=m.SUMMARY||total0();
-    if(!old){
-      s.net+=l.p.net;
-      s.loans++
-    }
-    s.recovered+=(l.close?l.p.net:Math.min(b.collected,l.p.net))-(old?Math.min(a.collected,old.p.net):0);
-    if(l.close&&!old?.close)s.closed++;
-    s.credit+=(l.credit||0)-(old?.credit||0);
-    s.recent=[{id:l.id,name:l.name,...event},...s.recent].slice(0,8);
-    const months={};
-    for(const x of deltas){
-      const k=bucket(x.d),mm=months[k]||m[k]||{},v=mm[x.d]||{rev:0,cash:0};
-      mm[x.d]={rev:v.rev+x.rev,cash:v.cash+x.cash};
-      months[k]=mm
-    }
-    return [[key,l,'L/'+norm(l.name)],['SUMMARY',s],...Object.entries(months)]
-  })
-}
-async function saveProduct(p){
-  p.id=uid('P');
-  await atomic([p.id],m=>{
-    valid(!m[p.id],'Please try again');
-    return [[p.id,p,'P/'+norm(p.name)]]
-  })
-}
-function field(name,title,type='text',value='',attrs=''){
-  return '<label>'+title+'<input name="'+name+'" type="'+type+'" value="'+esc(value)+'" '+attrs+'></label>'
-}
-function sel(name,title,opts){
-  return '<label>'+title+'<select name="'+name+'">'+opts.map(([v,t])=>'<option value="'+esc(v)+'">'+esc(t)+'</option>').join('')+'</select></label>'
-}
-const button=(s,action,c='btn')=>'<button type="button" class="'+c+'" data-act="'+action+'">'+s+'</button>',header=(t,sub='',action='')=>'<div class="spread head"><div><h1>'+t+'</h1><p class="sub">'+sub+'</p></div>'+action+'</div>',stat=(t,v)=>'<div class="stat"><small>'+t+'</small><strong>'+v+'</strong></div>',fd=f=>Object.fromEntries(new FormData(f)),pages={home:['◩','Dashboard'],products:['▦','Products'],issue:['＋','New loan'],recover:['⌕','Collections'],reports:['▥','Reports'],settings:['⚙','Settings']};
-function activityLabel(value=""){const old={"\u0932\u094b\u0928 \u091c\u093e\u0930\u0940": "Loan disbursed", "\u0935\u0938\u0942\u0932\u0940": "Payment", "\u0921\u093e\u092f\u0930\u0940 \u092c\u0902\u0926": "Loan closed"};const prefix="\u0930\u0938\u0940\u0926 \u00b7 ";return old[value]||(value.startsWith(prefix)?'Receipt · '+value.slice(prefix.length):value)}
-function productTitle(p){return space==='demo' && p.name==="\u0921\u0947\u0932\u0940 100 \u00b7 \u0905\u0917\u094d\u0930\u093f\u092e \u092c\u094d\u092f\u093e\u091c"?'Daily 100 · Upfront interest':p.name}
-function paintNav(){
-  $('#nav').innerHTML=Object.entries(pages).map(([k,[i,t]])=>'<button class="'+(screen===k?'on':'')+'" data-act="go:'+k+'"><b>'+i+'</b>'+t+'</button>').join('');
-  $('#mode').textContent=cloud?'● Firebase · '+cloud.email:space==='demo'?'● Practice account':'● On this device'
-}
-let companyName = 'RozKhata';
-function applyCompany(name) {
-  companyName = name || 'RozKhata';
-  for (const selector of ['#companyBrand', '#companyCrumb']) {
-    $(selector).textContent = companyName;
-    $(selector).title = companyName;
-  }
-  $('#monogram').textContent = Array.from(companyName)[0].toLocaleUpperCase();
-  document.title = companyName + ' · Daily ledger';
-}
-async function saveCompany(raw) {
-  const name = String(raw || '').trim();
-  valid(name.length > 0 && name.length <= 80, 'Enter a company name of 1–80 characters.');
-  await atomic(['COMPANY'], () => [['COMPANY', {name}]]);
-  applyCompany(name);
-}
-async function go(k){
-  screen=k;
-  const token=++epoch;
-  paintNav();
-  $('#page').innerHTML='<p class="empty">Loading…</p>';
-  try{
-    const profile = await read("COMPANY");
-    if (token !== epoch) return;
-    applyCompany(profile?.name);
-    const h=await ({home,products,issue,recover,reports,settings}[k])();
-    if(token===epoch){
-      $('#page').innerHTML=h;
-      if(k==='products')productPreview();
-      if(k==='issue')issuePreview();
-      if(k==='recover'&&selected)paymentPreview()
-    }
-  }catch(e){
-    if(token===epoch)$('#page').innerHTML='<p class="err">'+esc(e.message)+'</p>'
-  }
-}
-async function daysData(ds){
-  const keys=[...new Set(ds.map(d=>d.slice(0,7)))],values=await Promise.all(keys.map(k=>read('M-'+k)));
-  return Object.fromEntries(ds.map(d=>[d,values[keys.indexOf(d.slice(0,7))]?.[d]||{cash:0,rev:0}]))
-}
-async function home(){
-  const date=today(),ds=Array.from({length:7},(_,i)=>day(date,i-6)),[s,m]=await Promise.all([read('SUMMARY').then(v=>v||total0()),daysData(ds)]),max=Math.max(1,...ds.map(d=>Math.abs(m[d].cash))),pct=Math.round(100*s.recovered/(s.net||1));
-  return header('Daily ledger','Portfolio and collections today',button('＋ New loan','go:issue'))+'<section class="hero"><div><small>Outstanding principal</small><div class="amount">'+money(s.net-s.recovered)+'</div><small>Disbursed '+money(s.net)+' &nbsp;·&nbsp; Principal recovered '+money(s.recovered)+'</small></div><div class="ring" style="--pct:'+pct+'%"><span>'+pct+'%</span></div></section><div class="stats">'+stat('Net collections today',money(m[date].cash))+stat('Interest income today',money(m[date].rev))+stat('Open loans',s.loans-s.closed)+'</div><div class="grid"><section class="card"><div class="spread"><h2>Collection trend</h2><span class="tag">Last 7 days</span></div><div class="bars">'+ds.map(d=>'<div class="bar" title="'+dt(d)+' · '+money(m[d].cash)+'"><small>'+money(m[d].cash)+'</small><i style="height:'+Math.round(65*Math.abs(m[d].cash)/max)+'px"></i>'+d.slice(8)+'</div>').join('')+'</div></section><section class="card"><h2>Collection desk</h2><p class="sub">Open a loan by customer name or loan ID.</p><p class="entry">'+button('Record payment →','go:recover')+'</p>'+button('Create product','go:products','ghost')+'</section></div><section class="card" style="margin-top:16px"><div class="spread"><h2>Recent activity</h2>'+(!s.loans&&!cloud&&space==='live'?button('Try sample account','demo','soft'):'')+'</div>'+(s.recent.length?s.recent.map(x=>'<div class="entry spread"><div><button class="link" data-act="open:'+x.id+'">'+esc(x.name)+'</button> · '+esc(activityLabel(x.label))+'<br><small>'+dt(x.date)+' · '+x.id+'</small></div><b>'+money(x.amount)+'</b></div>').join(''):'<p class="empty">Create a product, then open a loan for your customer.</p>')+'</section>'
-}
-async function products(){
-  const ps=await list('P/','',150);
-  return header('Products','Preview the instalments and interest before saving.')+'<div class="grid"><form id="product" class="card"><h2>New daily loan product</h2><div class="fields">'+field('name','Product name','text','','required maxlength="80" placeholder="e.g. Daily 100"')+sel('type','Interest collection',[['before','Deduct upfront'],['after','Disburse in full, collect interest later']])+field('principal','Loan amount ₹','number',10000,'min="1" required')+sel('plan','Schedule calculation',[['days','Enter the term, calculate daily instalment'],['solve','Enter the daily instalment, calculate the term']])+field('days','Number of instalments','number',100,'min="1" max="730" required')+sel('monthMode','Interest months',[['manual','Set manually'],['auto','Count each started 30-day period']])+field('months','Interest term (months)','number',3,'min="1" max="60"')+sel('method','Calculation basis',[['amount','Total interest amount'],['rate','Monthly interest rate'],['emi','Daily instalment × days']])+field('interest','Total interest ₹','number',1500,'step=".01" min="0"')+field('rate','Monthly interest %','number',5,'step="any" min="0"')+field('emi','Daily instalment ₹','number',100,'min="1"')+sel('priority','Payment allocation',[['old','Oldest overdue first'],['today','Current instalment first']])+'</div><div id="calc"></div><button class="btn">Save product</button></form><section class="card"><h2>Product catalogue</h2>'+(ps.map(p=>'<div class="entry"><b>'+esc(productTitle(p))+'</b><br>'+money(p.emi)+' × '+p.n+' days · Net disbursement '+money(p.net)+'<br><small>'+money(p.interest)+' Interest · '+p.months+' months</small></div>').join('')||'<p class="empty">Your first product will appear here.</p>')+'</section></div>'
-}
-function productPreview(){
-  const f=$('#product');
-  for(const el of f.elements)el.disabled=false;
-  const v=fd(f);
-  for(const [k,visible] of Object.entries({plan:v.method!=='emi',days:v.plan!=='solve'||v.method==='emi',months:v.monthMode==='manual',interest:v.method==='amount'||v.method==='emi'&&v.type==='before',rate:v.method==='rate',emi:v.method==='emi'||v.plan==='solve'})){
-    f.elements[k].parentElement.hidden=!visible;
-    f.elements[k].disabled=!visible
-  }
-  try{
-    const p=makeProduct(v);
-    $('#calc').innerHTML='<div class="preview">Net disbursement <b>'+money(p.net)+'</b> · Total repayable <b>'+money(p.total)+'</b><br>'+money(p.emi)+' × '+p.n+' days · Interest '+money(p.interest)+'<br>'+Number(p.rate.toFixed(5))+'% per month · '+p.months+' months</div>'
-  }catch(e){
-    $('#calc').innerHTML='<div class="err">'+esc(e.message)+'</div>'
-  }
-}
-let productOptions=[];
-async function issue(){
-  productOptions=await list('P/','',1000);
-  return header('New daily loan','Each loan gets its own loan ID.')+(productOptions.length?'<form class="card" id="issue"><div class="fields">'+field('name','Customer full name','text','','required maxlength="100" autocomplete="off"')+field('mobile','Mobile number (optional)','tel','','maxlength="20"')+sel('product','Products',productOptions.map(p=>[p.id,productTitle(p)+' · '+money(p.emi)+' × '+p.n]))+field('start','Disbursement date','date',today(),'required max="'+today()+'"')+'</div><div id="issuecalc"></div><button class="btn">Open loan</button></form>':'<div class="card"><p class="empty">Create a daily loan product before opening a loan.</p>'+button('Create product','go:products')+'</div>')
-}
-function issuePreview(){
-  const f=$('#issue');
-  if(!f)return;
-  const p=productOptions.find(x=>x.id===f.product.value);
-  $('#issuecalc').innerHTML='<div class="preview">Net disbursement '+money(p.net)+' · Total repayable '+money(p.total)+' · Daily '+money(p.emi)+(f.start.value?'<br>First instalment '+dt(day(f.start.value,1))+' · Last instalment '+dt(day(f.start.value,p.n)):'')+'</div>'
-}
-function schedule(l,g){
-  return '<table><thead><tr><th>No.</th><th>Instalment</th><th>Due date</th><th>Date received / Receipt</th><th>Amount applied</th><th>Status</th><th>Signature</th></tr></thead><tbody>'+g.rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+money(l.p.emi)+'</td><td>'+dt(r.date)+'</td><td>'+r.events.map(e=>dt(e.date)+' · '+esc(e.id)).join('<br>')+'</td><td>'+r.events.map(e=>money(e.a)+(e.date<r.date?' · Advance':e.date>r.date?' · Overdue':' · On due date')).join('<br>')+'</td><td>'+(r.left===0?'Paid':l.close?'Settled at closure':r.left<l.p.emi?'Balance '+money(r.left):r.date<today()?'Overdue':r.date===today()?'Due today':'Upcoming')+'</td><td></td></tr>').join('')+'</tbody></table>'
-}
-function receipts(l){
-  return l.receipts.slice().reverse().map(r=>'<div class="entry"><b>'+dt(r.date)+' · '+money(r.tender)+'</b><br><small>'+esc(r.id)+' · Applied to loan '+money(r.pay)+(r.credit?' · Customer credit '+money(r.credit):'')+(r.change?' · Returned '+money(r.change):'')+'</small></div>').join('')||'<p class="empty">No payments recorded yet.</p>'
-}
-function closingInfo(c){
-  if(c.scheduled)return '<div class="preview">Paid in full · Loan closed '+dt(c.date)+' · '+esc(c.id)+'<br>Advance interest will be recognised on each instalment’s due date.</div>';
-  return '<div class="preview">Loan closed · '+dt(c.date)+' · '+esc(c.id)+'<br>Final payment '+money(c.cash)+' · Total interest '+money(c.fee)+' · Interest waived '+money(c.waiver)+(c.refund?' · Refund '+money(c.refund):'')+(c.credit?' · Customer credit '+money(c.credit):'')+'</div>'
-}
-async function recover(){
-  let out=header('Collection desk','Select the customer’s loan to record a payment.')+'<section class="card"><label>Find a customer<input id="search" placeholder="Name, surname or loan ID…" autocomplete="off"></label><div id="matches"></div></section>';
-  if(!selected)return out;
-  const l=await read(selected);
-  if(!l){
-    selected=null;
-    return out
-  }
-  currentLoan=l;
-  const g=ledger(l);
-  out+='<div class="card"><div class="spread"><div><h2>'+esc(l.name)+'</h2><small>'+l.id+' · '+esc(productTitle(l.p))+' · '+dt(l.start)+'</small></div><span class="tag">'+(l.close?'Closed loan':'Daily · '+money(l.p.emi))+'</span></div><div class="stats">'+stat('Net disbursement',money(l.p.net))+stat('Total repayable',money(l.p.total))+stat('Outstanding balance',money(g.balance))+'</div>'+(l.credit?'<p>Customer credit held separately <b>'+money(l.credit)+'</b></p>':'')+(l.close?closingInfo(l.close):'')+'<div class="switch">'+[['pay','Payment'],['card','Loan card'],['receipts','Receipts'],['close','Close loan']].filter(x=>!l.close||!['pay','close'].includes(x[0])).map(([k,t])=>'<button class="'+(loanTab===k?'active':'')+'" data-act="tab:'+k+'">'+t+'</button>').join('')+'</div>';
-  if(loanTab==='card')out+=button('Print card / PDF','print','ghost')+'<div class="scroll">'+schedule(l,g)+'</div>';
- else if(loanTab==='receipts'||l.close)out+=receipts(l);
- else if(loanTab==='close')out+='<form id="close"><h3>Settlement</h3><small>Any remaining interest recognised at settlement is posted on the closure date.</small><div class="fields">'+field('date','Closure date','date',today(),dateBounds(l))+sel('kind','Interest treatment',[['slab','Discount by elapsed term'],['full','Full agreed interest']])+sel('extra','Previously collected excess',[['return','Refund to customer'],['credit','Hold as credit with consent']])+'</div><div id="closecalc"></div><button class="btn">Confirm settlement</button></form>';
- else out+='<form id="pay"><div class="fields">'+field('date','Date received','date',today(),dateBounds(l))+field('amount','Amount received ₹','number','','required min=".01" max="10000000" step=".01" placeholder="0.00"')+sel('extra','Amount above outstanding balance',[['return','Return change'],['credit','Hold as credit with consent']])+'</div><div id="paycalc"></div><button class="btn">Save receipt</button></form>';
-  return out+'</div>'
-}
-let currentLoan=null;
-function dateBounds(l){
-  return 'required min="'+(l.receipts.at(-1)?.date||l.start)+'" max="'+today()+'"'
-}
-function checkDate(l,d){
-  valid(d&&d>=(l.receipts.at(-1)?.date||l.start)&&d<=today(),'Choose a date from the last receipt or disbursement through today.')
-}
-function paymentPreview(){
-  const l=currentLoan;
-  if(!l)return;
-  const g=ledger(l),f=$('#pay')||$('#close');
-  if(!f)return;
-  const v=fd(f);
-  try{
-    checkDate(l,v.date);
-    if(f.id==='close'){
-      const c=settle(l,v.date,v.kind,g);
-      $('#closecalc').innerHTML='<div class="preview">Elapsed days '+elapsed(l.start,v.date)+' · Total interest '+money(c.fee)+' · Interest waived '+money(c.waiver)+'<br><b>'+(c.net<0?'Refund / hold as credit ':'Amount to collect ')+money(Math.abs(c.net))+'</b></div>';
-      return
-    }
-    const amount=cents(v.amount||0),parts=allocate(l,g.rows,v.date,Math.min(amount,g.balance)),sum=mode=>parts.filter(x=>Math.sign(g.rows[x.i].date.localeCompare(v.date))===mode).reduce((n,x)=>n+x.a,0);
-    $('#paycalc').innerHTML='<div class="preview">Past due <b>'+money(sum(-1))+'</b> · On due date <b>'+money(sum(0))+'</b> · Advance <b>'+money(sum(1))+'</b>'+(amount>g.balance?'<br>'+ (v.extra==='credit'?'Separate credit ':'Refund ')+money(amount-g.balance):'')+(parts.length?'<br><small>Instalment '+(1+Math.min(...parts.map(x=>x.i)))+' to '+(1+Math.max(...parts.map(x=>x.i)))+' · Date received '+dt(v.date)+'</small>':'')+'</div>'
-  }catch(e){
-    const box=$('#paycalc')||$('#closecalc');
-    box.innerHTML='<p class="err">'+esc(e.message)+'</p>'
-  }
-}
-async function findLoans(term){
-  if(/^D-/i.test(term)){
-    const key=term.toUpperCase();
-    if(cloud){
-      const f=cloud.fs,c=f.collection(cloud.db,'rozkhata',cloud.uid,'records');
-      return (await f.getDocsFromServer(f.query(c,f.orderBy(f.documentId()),f.startAt(key),f.endAt(key+'\uffff'),f.limit(21)))).docs.map(s=>s.data().value)
-    }
-    const q=scoped(key);
-    return (await req(db.transaction('records').objectStore('records').getAll(IDBKeyRange.bound(q,q+'\uffff'),21))).map(x=>x.value)
-  }
-  return list('L/',norm(term),21)
-}
-function searchLoans(v){
-  clearTimeout(searchTimer);
-  const term=norm(v),token=++searchLoans.seq,box=$('#matches');
-  box.textContent='';
-  if(!term)return;
-  searchTimer=setTimeout(async()=>{
-    try{
-      const matches=await findLoans(term);
-      if(token!==searchLoans.seq||!box.isConnected)return;
-      box.innerHTML=matches.slice(0,20).map(l=>'<button class="result" data-act="open:'+l.id+'"><b>'+esc(l.name)+'</b> · '+l.id+'<br><small>'+esc(productTitle(l.p))+' · '+esc(l.mobile||'')+' · '+(l.close?'Closed':'Open')+'</small></button>').join('')+(matches.length>20?'<small>First 20 results · Type more of the name or loan ID to narrow the search.</small>':'')||'<p>No matching loans.</p>'
-    }catch(e){
-      box.textContent=e.message
-    }
-  },160)
-}
-searchLoans.seq=0;
-async function reports(){
-  const d=reportDate,start=d.slice(0,7),m=await read('M-'+start)||{},s=await read('SUMMARY')||total0(),keys=Object.keys(m).filter(k=>k<=d).sort().reverse(),sum=k=>keys.reduce((a,x)=>a+m[x][k],0);
-  return header('Collections and income','Collections follow the receipt date. Interest follows your recognition rules.')+'<section class="card">'+field('reportDate','Month to date through','date',d,'id="reportDate" max="'+today()+'"')+'<div class="stats">'+stat('Net collections this month',money(sum('cash')))+stat('Recognised interest',money(sum('rev')))+stat('Total customer credit · current',money(s.credit))+'</div><div class="scroll"><table><thead><tr><th>Date</th><th>Net loan collections</th><th>Interest income</th></tr></thead><tbody>'+keys.filter(k=>m[k].cash||m[k].rev).map(k=>'<tr><td>'+dt(k)+'</td><td>'+money(m[k].cash)+'</td><td>'+money(m[k].rev)+'</td></tr>').join('')+'</tbody></table></div>'+(keys.length?'':'<p class="empty">No transactions in this period.</p>')+'</section>'
-}
-const rules='match /rozkhata/{owner}/records/{record} {\n  allow read, write: if request.auth != null && request.auth.uid == owner;\n}';
-function settings(){
-  return header('Settings','Company profile, storage and connections')+'<form id="company" class="card company-form"><h2>Company profile</h2><p class="sub">This name appears across this workspace and on printed loan cards.</p>'+field('companyName','Company name','text',companyName,'required maxlength="80" autocomplete="organization"')+'<button class="btn" type="submit">Save company name</button></form>'+'<section class="card"><h2>Workspace</h2><p class="sub">'+(cloud?'Firebase · '+esc(cloud.email):space==='demo'?'Practice records are stored separately.':'Saved in this browser’s IndexedDB database.')+'</p><div class="row" style="margin-top:14px">'+(cloud?button('Sign out','logout','ghost'):button(space==='demo'?'Return to my account':'Open practice account',space==='demo'?'live':'demo','soft'))+(!cloud?button('Download local backup','backup','ghost'):'')+'</div></section>'+(cloud?'':'<form id="connect" class="card"><h2>Firebase connection</h2><p class="sub">Use the same Firestore project and Email/Password account on both devices. Local and cloud records are separate.</p><label>Firebase Web config (JSON)<textarea required name="config" placeholder=\'{"apiKey":"…","authDomain":"…","projectId":"…","appId":"…"}\'>'+esc(localStorage.getItem("rk-config")||"")+'</textarea></label><div class="fields">'+field('email','Email','email','','required autocomplete="username"')+field('password','Password','password','','required autocomplete="current-password"')+'</div><button class="btn">Open cloud account</button><details><summary>Connection and access rules</summary><p>Cloud Firestore and Email/Password Auth are required. In your existing Firestore rules, inside the documents block, add the rule below and review any broader public permissions. This app stores loans in its own collection.</p><pre>'+esc(rules)+'</pre></details></form>')
-}
-async function connect(v){
-  let cfg;
-  try{
-    cfg=JSON.parse(v.config)
-  }catch{
-    throw Error('Enter a valid Web config JSON object.')
-  }
-  valid(cfg.apiKey&&cfg.projectId&&cfg.authDomain,'apiKey, projectId and authDomain are required.');
-  const base='https://www.gstatic.com/firebasejs/11.10.0/',[app,auth,fs]=await Promise.all(['firebase-app.js','firebase-auth.js','firebase-firestore.js'].map(x=>import(base+x)));
-  const name='rk-'+cfg.projectId,fb=app.getApps().find(a=>a.name===name)||app.initializeApp(cfg,name),a=auth.getAuth(fb);
-  await auth.setPersistence(a,auth.browserSessionPersistence);
-  await a.authStateReady();
-  const u=v.resume?a.currentUser:(await auth.signInWithEmailAndPassword(a,v.email,v.password)).user;
-  valid(u,'Your cloud session has expired. Sign in again.');
-  const store=fs.getFirestore(fb);
-  try{
-    await fs.getDocFromServer(fs.doc(store,'rozkhata',u.uid,'records','SUMMARY'))
-  }catch(e){
-    await auth.signOut(a);
-    throw e
-  }
-  cloud={db:store,uid:u.uid,email:u.email,fs,a,auth};
-  localStorage.setItem('rk-config',JSON.stringify(cfg));
-  sessionStorage.setItem('rk-cloud','1');
-  selected=null
-}
-async function demo(){
-  space='demo';
-  selected=null;
-  if(await read('SUMMARY'))return;
-  const p=makeProduct({name:'Daily 100 · Upfront interest',principal:10000,days:100,months:3,monthMode:'manual',type:'before',method:'amount',interest:1500,priority:'old'});
-  await saveProduct(p);
-  const l={id:uid('D'),p,name:'Rahul Sharma',mobile:'',start:day(today(),-11),receipts:[],credit:0};
-  await saveLoan(null,l,{date:l.start,label:'Loan disbursed',amount:p.net});
-  const old=structuredClone(l);
-  for(let i=1;i<=11;i++){
-    const pay=i===11?50000:10000;
-    l.receipts.push({id:'R-DEMO-'+i,date:day(l.start,i),pay,tender:pay,credit:0,change:0})
-  }
-  await saveLoan(old,l,{date:today(),label:'Payment',amount:50000})
-}
-function printCard(l){
-  const g=ledger(l);
-  $('#print').innerHTML='<p><strong>'+esc(companyName)+'</strong></p><h1>Daily loan card</h1><h2>'+esc(l.name)+'</h2><p>'+l.id+' · '+esc(productTitle(l.p))+' · Issued '+dt(l.start)+' · Daily '+money(l.p.emi)+'</p><p>Net disbursement '+money(l.p.net)+' · Total repayable '+money(l.p.total)+' · Balance '+money(g.balance)+'</p>'+(l.close?closingInfo(l.close):'')+schedule(l,g)+'<h3>Payment register</h3>'+receipts(l);
-  window.print()
-}
-async function backup(){
-  const q=space+'/',records=await req(db.transaction('records').objectStore('records').getAll(IDBKeyRange.bound(q,q+'\uffff'))),url=URL.createObjectURL(new Blob([JSON.stringify({format:'rozkhata-v1',records})],{type:'application/json'}));
-  const a=document.createElement('a');
-  a.href=url;
-  a.download='rozkhata-'+space+'-'+today()+'.json';
-  a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000)
-}
-let busy=false;
-document.addEventListener('click',async e=>{
-  const el=e.target.closest('[data-act]');
-  if(!el||busy)return;
-  const [op,arg]=el.dataset.act.split(':');
-  busy=true;
-  try{
-    if(op==='go'){
-      await go(arg)
-    }
-    if(op==='open'){
-      selected=arg;
-      loanTab='pay';
-      await go('recover')
-    }
-    if(op==='tab'){
-      loanTab=arg;
-      await go('recover')
-    }
-    if(op==='print')printCard(currentLoan);
-    if(op==='demo'){
-      await demo();
-      await go('home')
-    }
-    if(op==='live'){
-      space='live';
-      selected=null;
-      await go('home')
-    }
-    if(op==='logout'){
-      await cloud.auth.signOut(cloud.a);
-      cloud=null;
-      sessionStorage.removeItem('rk-cloud');
-      space='live';
-      selected=null;
-      await go('settings')
-    }
-    if(op==='backup')await backup()
-  }catch(e){
-    note(e.message)
-  }finally{
-    busy=false
-  }
-});
-document.addEventListener('input',e=>{
-  if(e.target.id==='search')searchLoans(e.target.value);
-  if(e.target.closest('#product'))productPreview();
-  if(e.target.closest('#issue'))issuePreview();
-  if(e.target.closest('#pay,#close'))paymentPreview()
-});
-document.addEventListener('change',e=>{
-  if(e.target.id==='reportDate'&&e.target.value&&e.target.value<=today()){
-    reportDate=e.target.value;
-    go('reports')
-  }
-});
-document.addEventListener('submit',async e=>{
-  e.preventDefault();
-  if(busy)return;
-  busy=true;
-  const f=e.target,v=fd(f),btn=f.querySelector('button[type=submit],button.btn');
-  btn.disabled=true;
-  try{
-    if (f.id === 'company') {
-      await saveCompany(v.companyName);
-      f.elements.companyName.value = companyName;
-      note('Company name saved.');
-    }
-    if(f.id==='product'){
-      const p=makeProduct(v);
-      valid(p.name,'Enter a product name.');
-      await saveProduct(p);
-      await go('products');
-      note('Product saved.')
-    }
-    if(f.id==='issue'){
-      const p=await read(v.product);
-      valid(p&&v.name.trim()&&v.start&&v.start<=today(),'Check the customer and disbursement date.');
-      const l={id:uid('D'),name:v.name.trim(),mobile:v.mobile.trim(),start:v.start,p,credit:0,receipts:[]};
-      await saveLoan(null,l,{label:'Loan disbursed',date:l.start,amount:p.net});
-      selected=l.id;
-      loanTab='pay';
-      await go('recover');
-      note('Loan opened.')
-    }
-    if(f.id==='pay'||f.id==='close'){
-      const old=currentLoan,l=structuredClone(old),g=ledger(l);
-      valid(!l.close,'This loan is already closed.');
-      checkDate(l,v.date);
-      if(f.id==='pay'){
-        const tender=cents(v.amount),pay=Math.min(g.balance,tender),over=tender-pay;
-        valid(tender>0&&g.balance>0,'Check the outstanding balance before posting a payment.');
-        const r={id:uid('R'),date:v.date,tender,pay,credit:v.extra==='credit'?over:0,change:v.extra==='return'?over:0};
-        l.receipts.push(r);
-        l.credit+=r.credit;
-        if(pay===g.balance){
-          l.close={id:r.id,date:r.date,fee:l.p.interest,waiver:0,cash:0,refund:0,credit:0,scheduled:true};
-          loanTab="card"
-        }
-        await saveLoan(old,l,{date:v.date,label:'Receipt · '+r.id,amount:pay});
-        note('Receipt saved · '+money(pay)+' applied to loan.')
-      }
- else{
-        const c=settle(l,v.date,v.kind,g);
-        if(!confirm('Close loan? Final collection '+money(Math.max(0,c.net))+' · Interest waiver '+money(c.waiver)))return;
-        const over=Math.max(0,-c.net);
-        l.close={id:uid('C'),date:v.date,fee:c.fee,waiver:c.waiver,cash:Math.max(0,c.net),refund:v.extra==='return'?over:0,credit:v.extra==='credit'?over:0};
-        l.credit+=l.close.credit;
-        await saveLoan(old,l,{date:v.date,label:'Loan closed',amount:l.close.cash});
-        loanTab='card';
-        note('Settlement saved.')
-      }
-      await go('recover')
-    }
-    if(f.id==='connect'){
-      await connect(v);
-      await go('home');
-      note('Firebase account opened.')
-    }
-  }catch(err){
-    note(err.message||String(err))
-  }finally{
-    busy=false;
-    btn.disabled=false
-  }
-});
-(async()=>{
-  try{
-    db=await idb();
-    if(sessionStorage.getItem('rk-cloud')){
-      try{
-        await connect({config:localStorage.getItem('rk-config'),resume:true});
-        await go('home')
-      }catch(err){
-        await go('settings');
-        note('Sign in again to open your cloud account. '+err.message)
-      }
-    }else await go('home')
-  }catch(e){
-    $('#page').textContent='Could not open the database · '+e.message
-  }
-})();
-</script></body></html>
+function calc(){let h=calcResult||data.history.at(-1);return '<div class="row"><h1>ब्याज कैलकुलेटर</h1>'+action('नई गणना','compute','primary')+'</div>'+(h?kpis([['मूलधन',h.amount],['ब्याज',h.amount*(growth(h,h.start,h.end)-1)],['कुल रकम',h.amount*growth(h,h.start,h.end)]]):'')+'<div class="card"><h2>पिछली गणनाएँ</h2>'+data.history.slice().reverse().map(x=>'<p>'+fmt(x.start)+' – '+fmt(x.end)+' · '+cash(x.amount)+' · '+x.rate+'% '+periods[x.unit]+' · '+(x.type==='simple'?'साधारण':'चक्रवृद्धि '+periods[x.freq])+' · ब्याज <b>'+cash(x.amount*(growth(x,x.start,x.end)-1))+'</b></p>').join('')+(!data.history.length?'<p>राशि और तारीखें चुनने के लिए नई गणना खोलें।</p>':'')+rules()+'</div>'}
+function render(){let pages={book:'खाते',people:'ग्राहक',stats:'सारांश',calc:'कैलकुलेटर',backup:'बैकअप'};$('nav').innerHTML=Object.entries(pages).map(([k,v])=>action(v,k,(page===k||(page==='detail'&&k==='book'))?'active':'')).join('');$('view').innerHTML=page==='book'?book():page==='people'?customers():page==='stats'?stats():page==='detail'?detail(current()):page==='calc'?calc():'<h1>बैकअप और बहाली</h1><section class="card"><h2>अपने खातों की प्रति रखें</h2><p>इस साइट का डेटा इसी ब्राउज़र के IndexedDB में सहेजा जाता है। दूसरे फ़ोन या कंप्यूटर पर ले जाने के लिए बैकअप डाउनलोड करें।</p><div class="tools">'+action('बैकअप डाउनलोड','download','primary')+action('बैकअप बहाल करें','restore')+'</div><p class="muted">'+data.people.length+' ग्राहक · '+data.loans.length+' खाते</p></section>'}
+function current(){return data.loans.find(l=>l.id===selected)}
+function customers(){return '<div class="row"><h1>ग्राहक</h1>'+action('＋ ग्राहक जोड़ें','person','primary')+'</div><div class="card">'+(data.people.map(p=>'<div class="row"><p><b>'+esc(p.name)+'</b><br><small>'+esc(p.phone)+' · '+data.loans.filter(l=>l.person===p.id).length+' खाते</small></p><button data-act="editperson" data-id="'+esc(p.id)+'">सुधारें</button></div>').join('')||'<p>अभी कोई ग्राहक दर्ज नहीं है।</p>')+'</div>'}
+function stats(){let groups=Object.keys(directions).map(dir=>{let ls=data.loans.filter(l=>l.dir===dir),g={count:ls.length,open:0,p:0,i:0,paid:0,ip:0};for(let l of ls){let b=balance(l);if(!l.closed){g.open++;g.p+=b.p;g.i+=b.i}g.paid+=b.paid;g.ip+=b.rows.reduce((v,t)=>v+t.ip,0)}return g});return '<h1>कारोबार का सारांश</h1><div class="card scroll"><table><thead><tr><th>विवरण</th><th>दिया हुआ</th><th>लिया हुआ</th></tr></thead><tbody>'+[['count','कुल खाते'],['open','चालू खाते'],['p','बकाया मूलधन'],['i','बकाया ब्याज'],['paid','दर्ज भुगतान'],['ip','भुगतान में ब्याज']].map(([k,t],i)=>'<tr><th>'+t+'</th>'+groups.map(g=>'<td>'+(i<2?g[k]:cash(g[k]))+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'+action('प्रिंट / PDF','print')}
+function addPerson(p){modal(p?'ग्राहक सुधारें':'ग्राहक जोड़ें',inp('name','ग्राहक का नाम','text',p?.name||'','required maxlength="100"')+inp('phone','मोबाइल (वैकल्पिक)','tel',p?.phone||'','maxlength="20"'),async f=>{check(f.name.trim(),'नाम दर्ज करें।');let s=structuredClone(data),v={id:p?.id||uid(),name:f.name.trim(),phone:f.phone.trim()};if(p)s.people[s.people.findIndex(x=>x.id===p.id)]=v;else s.people.push(v);await save(s)})}
+function newLoan(){let pp=Object.fromEntries(data.people.map(p=>[p.id,p.name+(p.phone?' · '+p.phone:'')]));modal('नया खाता',select('person','ग्राहक',{'new':'नया ग्राहक',...pp},data.people.at(-1)?.id||'new')+'<div class="full grid" id="newperson">'+inp('name','नए ग्राहक का नाम','text','','maxlength="100"')+inp('phone','मोबाइल (वैकल्पिक)','tel','','maxlength="20"')+'</div>'+select('dir','लेन-देन',directions,'lend')+termFields()+inp('due','देय तारीख (वैकल्पिक)','date','','')+inp('note','नोट (वैकल्पिक)','text','','maxlength="500"'),async f=>{let s=structuredClone(data),id=f.person;if(id==='new'){check(f.name.trim(),'ग्राहक का नाम दर्ज करें।');id=uid();s.people.push({id,name:f.name.trim(),phone:f.phone.trim()})}let l={...termValues(f),person:id,id:uid(),dir:f.dir,due:f.due,note:f.note,payments:[],closed:null};check(l.start<=today(),'आरंभ की तारीख भविष्य में है।');check(!l.due||l.due>=l.start,'देय तारीख आरंभ के बाद रखें।');s.loans.push(l);await save(s);selected=l.id;page='detail';asof=today();render()});let f=$('form').elements;f.start.max=today();const change=()=>{$('newperson').style.display=f.person.value==='new'?'grid':'none';f.name.required=f.person.value==='new'};f.person.onchange=change;change()}
+function payment(t,settle=false){let l=current(),day=t?.date||today(),b=balance(l,day),amt=t?.amount??(settle?+(b.p+b.i).toFixed(2):'');modal(settle?'पूरा भुगतान और निपटान':t?'भुगतान सुधारें':'भुगतान दर्ज करें',inp('amount','भुगतान (₹)','number',amt,moneyAttrs+(settle?' readonly':''))+inp('date','भुगतान की तारीख','date',day,'required min="'+l.start+'" max="'+today()+'"'+(settle?' readonly':''))+(settle?'':select('kind','भुगतान कहाँ लगाएँ?',alloc,t?.kind||'both'))+select('mode','भुगतान माध्यम',modes,t?.mode||'cash')+inp('note','नोट (वैकल्पिक)','text',t?.note||'','maxlength="500"'),async f=>{let s=structuredClone(data),a=s.loans.find(x=>x.id===l.id),v={id:t?.id||uid(),date:f.date,amount:+f.amount,kind:f.kind||'both',mode:f.mode,note:f.note};if(t)a.payments[a.payments.findIndex(x=>x.id===t.id)]=v;else a.payments.push(v);a.payments.sort((x,y)=>x.date.localeCompare(y.date));if(settle)a.closed=f.date;await save(s);asof=today();render()})}
+document.addEventListener('click',async e=>{let btn=e.target.closest('[data-act]');if(!btn)return;let a=btn.dataset.act;$('status').textContent='';try{
+ if(['book','people','stats','backup','calc'].includes(a)){page=a;render()}
+ if(a==='detail'){selected=btn.dataset.id;asof=today();page='detail';render()}
+ if(a==='person')addPerson();if(a==='editperson')addPerson(data.people.find(x=>x.id===btn.dataset.id));if(a==='new')newLoan();if(a==='pay')payment();if(a==='editpay')payment(current().payments.find(t=>t.id===btn.dataset.id));
+ if(a==='settle'){let b=balance(current());if(b.p+b.i>=.005)payment(null,true);else modal('शून्य बकाया खाता बंद करें','<p>इस खाते पर आगे ब्याज रुक जाएगा।</p>',async()=>{let s=structuredClone(data);s.loans.find(x=>x.id===selected).closed=today();await save(s)},'बंद करें')}
+ if(a==='reopen')modal('खाता फिर खोलें','<p>भुगतान इतिहास सुरक्षित रहेगा।</p>',async()=>{let s=structuredClone(data);s.loans.find(x=>x.id===selected).closed=null;await save(s)},'फिर खोलें');
+ if(a==='compute')modal('ब्याज की गणना',termFields(calcResult||{})+inp('end','इस तारीख तक','date',calcResult?.end||today()),async f=>{check(f.end>=f.start,'अंतिम तारीख आरंभ से पहले है।');let h={...termValues(f),end:f.end};let s=structuredClone(data);s.history.push(h);await save(s);calcResult=h;render()},'गणना करें');
+ if(a==='print')window.print();if(a==='download'){let u=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'}));let link=document.createElement('a');link.href=u;link.download='byaj-bahi-'+today()+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+ if(a==='restore')$('restoreFile').click();
+ }catch(x){$('status').textContent=x.message}});
+$('restoreFile').onchange=async e=>{let f=e.target.files[0];e.target.value='';if(!f)return;try{let s=JSON.parse(await f.text());validate(s);modal('बैकअप बहाल करें','<p class="full">मौजूदा डेटा की जगह इस फ़ाइल के '+s.people.length+' ग्राहक और '+s.loans.length+' खाते रखे जाएँगे।</p>',async()=>{await save(s);selected='';calcResult=null},'बदलकर बहाल करें')}catch(x){$('status').textContent='बैकअप पढ़ने में समस्या। '+x.message}};
+document.addEventListener('input',e=>{if(e.target.id==='search'){query=e.target.value;$('list').innerHTML=list()}});
+document.addEventListener('change',e=>{if(e.target.id==='filter'||e.target.id==='closedFilter'){if(e.target.id==='filter')filter=e.target.value;else closedFilter=e.target.value;$('list').innerHTML=list()}if(e.target.id==='asof'&&e.target.reportValidity()&&e.target.value){asof=e.target.value;render()}});
+(async()=>{try{let r=indexedDB.open('byaj-bahi-ledger-v1',1);r.onupgradeneeded=()=>r.result.createObjectStore('ledger');db=await request(r);await load();render()}catch(x){$('status').textContent='बही खोलने में समस्या। ब्राउज़र की स्टोरेज अनुमति जाँचें। '+x.message}})();
+</script></html>
