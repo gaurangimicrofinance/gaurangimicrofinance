@@ -1,4 +1,4 @@
-<!doctype html><html lang="en-IN" translate="no" class="notranslate"><head><meta charset="utf-8"><meta name="google" content="notranslate"><meta name="application-name" content="RozKhata English 2.0"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142e30"><title>RozKhata · Microfinance</title><style>
+<!doctype html><html lang="en-IN" translate="no" class="notranslate"><head><meta charset="utf-8"><meta name="google" content="notranslate"><meta name="application-name" content="RozKhata English 3.0"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142e30"><title>RozKhata · Microfinance</title><style>
 
 [hidden]{display:none!important}
 :root{--ink:#172e30;--muted:#52696a;--line:#d5dfda;--paper:#f4f6f1;--green:#126455;--aqua:#b2e4cb;--gold:#f1b66b;--white:#fff;--shadow:0 6px 24px #15362d08}
@@ -117,7 +117,8 @@ thead{display:table-header-group}
 
 
 .brand-copy,.breadcrumb{min-width:0}.brand-copy{flex:1}.mark{flex-shrink:0}#companyBrand,#companyCrumb{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#companyCrumb{display:inline-block;max-width:min(34vw,320px);vertical-align:bottom}.edition{font:600 12px system-ui;color:#31584d;white-space:nowrap}.top .edition{margin-left:auto}.company-form{max-width:760px}.company-form input{max-width:32rem}.company-form button{margin-top:14px}@media(max-width:620px){.top{gap:6px}.top .tag{font-size:11px}.brand-copy{max-width:80vw}}
-</style></head><body><aside><div class="brand"><span class="mark" id="monogram">R</span><div class="brand-copy"><span id="companyBrand">RozKhata</span><small>MICROFINANCE</small></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>Daily ledger</div></aside><main><div class="top"><span class="breadcrumb"><span id="companyCrumb">RozKhata</span> &nbsp;/&nbsp; Daily ledger</span><small class="edition">English · v2.0</small><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>
+.offer{align-self:start;background:linear-gradient(140deg,#eef5ea,#fff);border-top:4px solid #328071}.offer h2{margin-bottom:20px}.offer .amount{color:#175447}.catalogue{margin-top:18px}.account-actions{margin:10px 0 18px}.danger{border-left:4px solid #b15e45}.danger p{margin:8px 0}.builder details{margin:12px 0 18px}.builder .fields{align-items:start}@media(min-width:851px){.builder{grid-template-columns:1.2fr 1fr}.offer{position:sticky;top:15px}}
+</style></head><body><aside><div class="brand"><span class="mark" id="monogram">R</span><div class="brand-copy"><span id="companyBrand">RozKhata</span><small>MICROFINANCE</small></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>Daily ledger</div></aside><main><div class="top"><span class="breadcrumb"><span id="companyCrumb">RozKhata</span> &nbsp;/&nbsp; Daily ledger</span><small class="edition">English · v3.0</small><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>
 'use strict';
 // All stored currency amounts are integer paise. ISO date strings represent local business dates.
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -243,12 +244,13 @@ async function atomic(keys,change){
   const unique=[...new Set(keys)];
   if(cloud){
     return cloud.fs.runTransaction(cloud.db,async tx=>{
+      const lock=await tx.get(cref('!RESET'));valid(!lock.exists(),'Workspace reset in progress. Resume it in Settings.');
       const m={};
       for(const k of unique){
         const s=await tx.get(cref(k));
         m[k]=s.exists()?s.data().value:null
       }
-      for(const [key,value,search] of change(m))tx.set(cref(key),{value,search:search||key})
+      for(const [key,value,search] of change(m)){if(value===null)tx.delete(cref(key));else tx.set(cref(key),{value,search:search||key})}
     })
   }
   return new Promise((ok,no)=>{
@@ -261,7 +263,7 @@ async function atomic(keys,change){
       r.onsuccess=()=>{
         m[k]=r.result?.value||null;
         if(--pending===0)try{
-          for(const [key,value,search] of change(m))s.put({key:scoped(key),value,search:scoped(search||key)})
+          for(const [key,value,search] of change(m)){if(value===null)s.delete(scoped(key));else s.put({key:scoped(key),value,search:scoped(search||key)})}
         }catch(e){
           err=e;
           tx.abort()
@@ -366,22 +368,70 @@ async function home(){
 }
 async function products(){
   const ps=await list('P/','',150);
-  return header('Products','Preview the instalments and interest before saving.')+'<div class="grid"><form id="product" class="card"><h2>New daily loan product</h2><div class="fields">'+field('name','Product name','text','','required maxlength="80" placeholder="e.g. Daily 100"')+sel('type','Interest collection',[['before','Deduct upfront'],['after','Disburse in full, collect interest later']])+field('principal','Loan amount ₹','number',10000,'min="1" required')+sel('plan','Schedule calculation',[['days','Enter the term, calculate daily instalment'],['solve','Enter the daily instalment, calculate the term']])+field('days','Number of instalments','number',100,'min="1" max="730" required')+sel('monthMode','Interest months',[['manual','Set manually'],['auto','Count each started 30-day period']])+field('months','Interest term (months)','number',3,'min="1" max="60"')+sel('method','Calculation basis',[['amount','Total interest amount'],['rate','Monthly interest rate'],['emi','Daily instalment × days']])+field('interest','Total interest ₹','number',1500,'step=".01" min="0"')+field('rate','Monthly interest %','number',5,'step="any" min="0"')+field('emi','Daily instalment ₹','number',100,'min="1"')+sel('priority','Payment allocation',[['old','Oldest overdue first'],['today','Current instalment first']])+'</div><div id="calc"></div><button class="btn">Save product</button></form><section class="card"><h2>Product catalogue</h2>'+(ps.map(p=>'<div class="entry"><b>'+esc(productTitle(p))+'</b><br>'+money(p.emi)+' × '+p.n+' days · Net disbursement '+money(p.net)+'<br><small>'+money(p.interest)+' Interest · '+p.months+' months</small></div>').join('')||'<p class="empty">Your first product will appear here.</p>')+'</section></div>'
+  return header('Products','Set your loan offer and see the repayment in rupees.')+
+    '<div class="grid builder"><form class="card" id="product"><h2>New loan product</h2><div class="fields">'+
+    field('name','Product name','text','','required maxlength="80" placeholder="Daily 100"')+
+    field('principal','Loan amount ₹','number',10000,'required min="1" step=".01"')+
+    sel('type','Interest collection',[['before','Deduct interest upfront'],['after','Give full amount']])+
+    field('interest','Agreed interest ₹','number',1500,'required min="0" step=".01"')+
+    field('days','Collection days','number',100,'required min="1" max="730"')+
+    field('emi','Daily instalment ₹','number',100,'min="1" step="1"')+
+    '</div><p id="entryHint" class="sub"></p><details><summary>Collection preference</summary>'+sel('priority','Apply payments to',[['old','Oldest overdue first'],['today','Current instalment first']])+'</details><button class="btn" id="saveProduct">Save product</button></form>'+
+    '<section class="card offer" aria-live="polite"><h2>Loan preview</h2><div id="calc"></div></section></div>'+
+    '<section class="card catalogue"><h2>Product catalogue</h2>'+ (ps.map(p=>'<div class="entry spread"><b>'+esc(productTitle(p))+'</b><span>'+money(p.emi)+' × '+p.n+' days · Interest '+money(p.interest)+'</span></div>').join('')||'<p class="empty">Your saved products will appear here.</p>')+'</section>';
 }
-function productPreview(){
-  const f=$('#product');
-  for(const el of f.elements)el.disabled=false;
+function offer(v,fromEmi){
+  const principal=cents(v.principal), n=Number(v.days);
+  valid(principal>0 && principal<=1e10,'Enter a valid loan amount.');
+  valid(Number.isInteger(n)&&n>=1&&n<=730,'Choose 1 to 730 collection days.');
+  let interest=cents(v.interest);
+  const emi=cents(v.emi);
+  if(fromEmi){
+    valid(emi>=100 && emi%100===0,'Enter a whole-rupee instalment.');
+    if(v.type==='after') interest=emi*n-principal;
+  }
+  valid(Number.isSafeInteger(interest)&&interest>=0,'Total repayments must cover the amount disbursed.');
+  valid(v.type!=='before'||interest<principal,'Upfront interest must be less than the loan amount.');
+  const net=v.type==='before'?principal-interest:principal;
+  const total=net+interest;
+  const months=n===100?3:n/30;
+  return {name:String(v.name||'').trim(),principal,n,months,type:v.type,interest,total,net,emi:total/n,
+    priority:v.priority||'old',rate:interest*100/(principal*months)};
+}
+function productPreview(trigger){
+  const f=$('#product');if(!f)return;
   const v=fd(f);
-  for(const [k,visible] of Object.entries({plan:v.method!=='emi',days:v.plan!=='solve'||v.method==='emi',months:v.monthMode==='manual',interest:v.method==='amount'||v.method==='emi'&&v.type==='before',rate:v.method==='rate',emi:v.method==='emi'||v.plan==='solve'})){
-    f.elements[k].parentElement.hidden=!visible;
-    f.elements[k].disabled=!visible
-  }
+  $('#entryHint').textContent=v.type==='before'?'Enter the deduction and days, or set a daily amount to find an equal repayment term.':'Edit interest to calculate the instalment. Edit the instalment to calculate interest over the selected days.';
+  if(['interest','type'].includes(trigger)) f.dataset.fromEmi='';
+  if(trigger==='emi')f.dataset.fromEmi='yes';
+  const useEmi=f.dataset.fromEmi==='yes';
+  let msg='';
   try{
-    const p=makeProduct(v);
-    $('#calc').innerHTML='<div class="preview">Net disbursement <b>'+money(p.net)+'</b> · Total repayable <b>'+money(p.total)+'</b><br>'+money(p.emi)+' × '+p.n+' days · Interest '+money(p.interest)+'<br>'+Number(p.rate.toFixed(5))+'% per month · '+p.months+' months</div>'
-  }catch(e){
-    $('#calc').innerHTML='<div class="err">'+esc(e.message)+'</div>'
-  }
+    if(useEmi && v.type==='before' && trigger==='emi'){
+      const count=cents(v.principal)/cents(v.emi);
+      if(Number.isInteger(count)&&count>=1&&count<=730)f.elements.days.value=v.days=count;
+    }
+    if(v.type==='before' && ['days','principal'].includes(trigger))f.dataset.fromEmi='';
+    const p=offer(v,useEmi);
+    if(useEmi && v.type==='after')f.elements.interest.value=p.interest/100;
+    const exact=p.total%(p.n*100)===0;
+    const mismatch=f.dataset.fromEmi==='yes' && v.type==='before' && cents(v.emi)*p.n!==p.total;
+    if(!mismatch && (!useEmi||v.type==='before'))f.elements.emi.value=exact?p.emi/100:'';
+    const pct=x=>Number(x.toFixed(3))+'%';
+    const line=(k,v)=>'<div class="spread entry"><span>'+k+'</span><b>'+v+'</b></div>';
+    let html='<small>Customer receives</small><div class="amount">'+money(p.net)+'</div>'+
+      line('Total to collect',money(p.total))+line('Agreed interest',money(p.interest))+
+      line('Daily collection',money(p.emi)+' × '+p.n)+line('Full-term rate',pct(100*p.interest/p.principal))+
+      line('Monthly flat rate',pct(p.rate))+'<p class="sub">Rate on the loan amount · '+(p.n===100?'100-day diary uses 3 interest months.':'30 days per interest month.')+'</p>';
+    if(!exact||mismatch){
+      const opts=[];for(let k=1;k<=730;k++)if(p.total%(k*100)===0)opts.push(k);
+      const near=opts.sort((a,b)=>Math.abs(a-p.n)-Math.abs(b-p.n)).slice(0,4);
+      html+='<div class="note">Choose an equal whole-rupee schedule for '+money(p.total)+'.</div><div class="row">'+near.map(k=>button(money(p.total/k)+' × '+k+' days','term:'+k,'soft')).join('')+'</div>';
+    }
+    $('#calc').innerHTML=html;$('#saveProduct').disabled=!exact||mismatch;
+    return exact&&!mismatch?p:null;
+  }catch(e){msg=e.message}
+  $('#calc').innerHTML='<p class="err">'+esc(msg)+'</p>';$('#saveProduct').disabled=true;return null;
 }
 let productOptions=[];
 async function issue(){
@@ -415,7 +465,13 @@ async function recover(){
   currentLoan=l;
   const g=ledger(l);
   out+='<div class="card"><div class="spread"><div><h2>'+esc(l.name)+'</h2><small>'+l.id+' · '+esc(productTitle(l.p))+' · '+dt(l.start)+'</small></div><span class="tag">'+(l.close?'Closed loan':'Daily · '+money(l.p.emi))+'</span></div><div class="stats">'+stat('Net disbursement',money(l.p.net))+stat('Total repayable',money(l.p.total))+stat('Outstanding balance',money(g.balance))+'</div>'+(l.credit?'<p>Customer credit held separately <b>'+money(l.credit)+'</b></p>':'')+(l.close?closingInfo(l.close):'')+'<div class="switch">'+[['pay','Payment'],['card','Loan card'],['receipts','Receipts'],['close','Close loan']].filter(x=>!l.close||!['pay','close'].includes(x[0])).map(([k,t])=>'<button class="'+(loanTab===k?'active':'')+'" data-act="tab:'+k+'">'+t+'</button>').join('')+'</div>';
-  if(loanTab==='card')out+=button('Print card / PDF','print','ghost')+'<div class="scroll">'+schedule(l,g)+'</div>';
+  out+='<div class="row account-actions">'+button('Edit account','tab:edit','ghost')+button('Delete account','deleteAccount','ghost')+'</div>';
+  if(loanTab==='edit'){
+    const editable=!l.close&&!l.receipts.length;
+    const options=editable?await list('P/','',1000):[];
+    const productSelect=editable?'<label>Loan product<select name="product">'+[l.p,...options.filter(p=>p.id!==l.p.id)].map(p=>'<option value="'+esc(p.id)+'" '+(p.id===l.p.id?'selected':'')+'>'+esc(productTitle(p))+'</option>').join('')+'</select></label>':'';
+    out+='<form id="editAccount"><h3>Edit account</h3><div class="fields">'+field('name','Customer name','text',l.name,'required maxlength="100"')+field('mobile','Mobile number','tel',l.mobile,'maxlength="20"')+productSelect+(editable?field('start','Disbursement date','date',l.start,'required max="'+today()+'"'):'')+'</div>'+(editable?'':'<p class="sub">Posted receipts and their financial terms are retained.</p>')+'<button class="btn">Save changes</button></form>';
+  }else if(loanTab==='card')out+=button('Print card / PDF','print','ghost')+'<div class="scroll">'+schedule(l,g)+'</div>';
  else if(loanTab==='receipts'||l.close)out+=receipts(l);
  else if(loanTab==='close')out+='<form id="close"><h3>Settlement</h3><small>Any remaining interest recognised at settlement is posted on the closure date.</small><div class="fields">'+field('date','Closure date','date',today(),dateBounds(l))+sel('kind','Interest treatment',[['slab','Discount by elapsed term'],['full','Full agreed interest']])+sel('extra','Previously collected excess',[['return','Refund to customer'],['credit','Hold as credit with consent']])+'</div><div id="closecalc"></div><button class="btn">Confirm settlement</button></form>';
  else out+='<form id="pay"><div class="fields">'+field('date','Date received','date',today(),dateBounds(l))+field('amount','Amount received ₹','number','','required min=".01" max="10000000" step=".01" placeholder="0.00"')+sel('extra','Amount above outstanding balance',[['return','Return change'],['credit','Hold as credit with consent']])+'</div><div id="paycalc"></div><button class="btn">Save receipt</button></form>';
@@ -481,8 +537,55 @@ async function reports(){
   return header('Collections and income','Collections follow the receipt date. Interest follows your recognition rules.')+'<section class="card">'+field('reportDate','Month to date through','date',d,'id="reportDate" max="'+today()+'"')+'<div class="stats">'+stat('Net collections this month',money(sum('cash')))+stat('Recognised interest',money(sum('rev')))+stat('Total customer credit · current',money(s.credit))+'</div><div class="scroll"><table><thead><tr><th>Date</th><th>Net loan collections</th><th>Interest income</th></tr></thead><tbody>'+keys.filter(k=>m[k].cash||m[k].rev).map(k=>'<tr><td>'+dt(k)+'</td><td>'+money(m[k].cash)+'</td><td>'+money(m[k].rev)+'</td></tr>').join('')+'</tbody></table></div>'+(keys.length?'':'<p class="empty">No transactions in this period.</p>')+'</section>'
 }
 const rules='match /rozkhata/{owner}/records/{record} {\n  allow read, write: if request.auth != null && request.auth.uid == owner;\n}';
+async function editAccount(l,v){
+  const name=v.name.trim();valid(name,'Enter the customer name.');
+  const updated={...l,name,mobile:v.mobile.trim(),version:l.version+1};
+  if(!l.close&&!l.receipts.length){
+    valid(v.start&&v.start<=today(),'Choose a valid disbursement date.');
+    updated.start=v.start;
+    if(v.product!==l.p.id){updated.p=await read(v.product);valid(updated.p,'Select an existing product.')}
+  }
+  await atomic([l.id,'SUMMARY'],m=>{
+    valid(m[l.id]?.version===l.version,'The account changed. Reopen it to edit.');
+    const s=m.SUMMARY||total0();s.net+=updated.p.net-l.p.net;
+    s.recent=s.recent.map(x=>x.id===l.id?{...x,name,...(x.label==='Loan disbursed'||activityLabel(x.label)==='Loan disbursed'?{date:updated.start,amount:updated.p.net}:{})}:x);
+    return [[l.id,updated,'L/'+norm(name)],['SUMMARY',s]];
+  });
+}
+async function deleteAccount(l){
+  const g=ledger(l),dates=new Set([...Object.keys(g.rev),...Object.keys(g.cash)]);
+  const months=[...new Set([...dates].map(d=>'M-'+d.slice(0,7)))];
+  await atomic([l.id,'SUMMARY',...months],m=>{
+    valid(m[l.id]?.version===l.version,'The account changed. Reopen it before deleting.');
+    const s=m.SUMMARY||total0();s.net-=l.p.net;s.loans--;s.closed-=Number(!!l.close);
+    s.credit-=l.credit||0;s.recovered-=l.close?l.p.net:Math.min(g.collected,l.p.net);
+    s.recent=s.recent.filter(x=>x.id!==l.id);
+    for(const d of dates){const mm=m['M-'+d.slice(0,7)],v=mm?.[d];if(!v)continue;
+      v.cash-=g.cash[d]||0;v.rev-=g.rev[d]||0;if(!v.cash&&!v.rev)delete mm[d];}
+    return [[l.id,null],['SUMMARY',s],...months.map(k=>[k,Object.keys(m[k]||{}).length?m[k]:null])];
+  });
+}
+async function clearWorkspace(){
+  if(!cloud){
+    await new Promise((resolve,reject)=>{const tx=db.transaction('records','readwrite');
+      const prefix=scoped('');tx.objectStore('records').delete(IDBKeyRange.bound(prefix,prefix+'\uffff'));
+      tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Reset interrupted.'));
+    });
+  }else{
+    const f=cloud.fs, ref=f.collection(cloud.db,'rozkhata',cloud.uid,'records');
+    await f.setDoc(cref('!RESET'),{value:{active:true},search:'!RESET'});
+    for(;;){
+      const docs=await f.getDocsFromServer(f.query(ref,f.orderBy(f.documentId()),f.startAfter('!RESET'),f.limit(200)));
+      if(docs.empty)break;
+      const batch=f.writeBatch(cloud.db);docs.forEach(d=>batch.delete(d.ref));await batch.commit();
+    }
+    await f.deleteDoc(cref('!RESET'));
+  }
+  selected=null;currentLoan=null;loanTab='pay';applyCompany('RozKhata');
+}
+
 function settings(){
-  return header('Settings','Company profile, storage and connections')+'<form id="company" class="card company-form"><h2>Company profile</h2><p class="sub">This name appears across this workspace and on printed loan cards.</p>'+field('companyName','Company name','text',companyName,'required maxlength="80" autocomplete="organization"')+'<button class="btn" type="submit">Save company name</button></form>'+'<section class="card"><h2>Workspace</h2><p class="sub">'+(cloud?'Firebase · '+esc(cloud.email):space==='demo'?'Practice records are stored separately.':'Saved in this browser’s IndexedDB database.')+'</p><div class="row" style="margin-top:14px">'+(cloud?button('Sign out','logout','ghost'):button(space==='demo'?'Return to my account':'Open practice account',space==='demo'?'live':'demo','soft'))+(!cloud?button('Download local backup','backup','ghost'):'')+'</div></section>'+(cloud?'':'<form id="connect" class="card"><h2>Firebase connection</h2><p class="sub">Use the same Firestore project and Email/Password account on both devices. Local and cloud records are separate.</p><label>Firebase Web config (JSON)<textarea required name="config" placeholder=\'{"apiKey":"…","authDomain":"…","projectId":"…","appId":"…"}\'>'+esc(localStorage.getItem("rk-config")||"")+'</textarea></label><div class="fields">'+field('email','Email','email','','required autocomplete="username"')+field('password','Password','password','','required autocomplete="current-password"')+'</div><button class="btn">Open cloud account</button><details><summary>Connection and access rules</summary><p>Cloud Firestore and Email/Password Auth are required. In your existing Firestore rules, inside the documents block, add the rule below and review any broader public permissions. This app stores loans in its own collection.</p><pre>'+esc(rules)+'</pre></details></form>')
+  return header('Settings','Company profile, storage and connections')+'<form id="company" class="card company-form"><h2>Company profile</h2><p class="sub">This name appears across this workspace and on printed loan cards.</p>'+field('companyName','Company name','text',companyName,'required maxlength="80" autocomplete="organization"')+'<button class="btn" type="submit">Save company name</button></form>'+'<section class="card"><h2>Workspace</h2><p class="sub">'+(cloud?'Firebase · '+esc(cloud.email):space==='demo'?'Practice records are stored separately.':'Saved in this browser’s IndexedDB database.')+'</p><div class="row" style="margin-top:14px">'+(cloud?button('Sign out','logout','ghost'):button(space==='demo'?'Return to my account':'Open practice account',space==='demo'?'live':'demo','soft'))+(!cloud?button('Download local backup','backup','ghost'):'')+'</div></section><section class="card danger"><h2>Clear old data</h2><p>Erase all accounts, receipts, products, reports and the company profile in this workspace. This is permanent.</p><p><strong>'+esc(cloud?'Firebase · '+cloud.email:space==='demo'?'Practice account':'Local account on this device')+'</strong></p>'+button('Clear workspace data','wipe','ghost')+'</section>'+(cloud?'':'<form id="connect" class="card"><h2>Firebase connection</h2><p class="sub">Use the same Firestore project and Email/Password account on both devices. Local and cloud records are separate.</p><label>Firebase Web config (JSON)<textarea required name="config" placeholder=\'{"apiKey":"…","authDomain":"…","projectId":"…","appId":"…"}\'>'+esc(localStorage.getItem("rk-config")||"")+'</textarea></label><div class="fields">'+field('email','Email','email','','required autocomplete="username"')+field('password','Password','password','','required autocomplete="current-password"')+'</div><button class="btn">Open cloud account</button><details><summary>Connection and access rules</summary><p>Cloud Firestore and Email/Password Auth are required. In your existing Firestore rules, inside the documents block, add the rule below and review any broader public permissions. This app stores loans in its own collection.</p><pre>'+esc(rules)+'</pre></details></form>')
 }
 async function connect(v){
   let cfg;
@@ -545,6 +648,17 @@ document.addEventListener('click',async e=>{
   const [op,arg]=el.dataset.act.split(':');
   busy=true;
   try{
+    if(op==='term'){const form=$('#product');form.elements.days.value=arg;form.dataset.fromEmi='';productPreview('days')}
+    if(op==='deleteAccount'){
+      const l=currentLoan;
+      if(prompt('Permanently delete '+l.name+' and all receipts for '+l.id+'? Type DELETE to confirm.')!=='DELETE')return;
+      await deleteAccount(l);selected=null;currentLoan=null;await go('recover');note('Account deleted and reports updated.');
+    }
+    if(op==='wipe'){
+      const target=cloud?'Firebase '+cloud.email:space==='demo'?'practice account':'local account on this device';
+      if(prompt('Permanently erase ALL data in '+target+'? Type CLEAR ALL to confirm.')!=='CLEAR ALL')return;
+      await clearWorkspace();await go('home');note('Workspace cleared.');
+    }
     if(op==='go'){
       await go(arg)
     }
@@ -584,7 +698,7 @@ document.addEventListener('click',async e=>{
 });
 document.addEventListener('input',e=>{
   if(e.target.id==='search')searchLoans(e.target.value);
-  if(e.target.closest('#product'))productPreview();
+  if(e.target.closest('#product'))productPreview(e.target.name);
   if(e.target.closest('#issue'))issuePreview();
   if(e.target.closest('#pay,#close'))paymentPreview()
 });
@@ -606,8 +720,9 @@ document.addEventListener('submit',async e=>{
       f.elements.companyName.value = companyName;
       note('Company name saved.');
     }
+    if(f.id==='editAccount'){await editAccount(currentLoan,v);loanTab='card';await go('recover');note('Account updated.')}
     if(f.id==='product'){
-      const p=makeProduct(v);
+      const p=productPreview();valid(p,'Choose a valid whole-rupee repayment schedule.');
       valid(p.name,'Enter a product name.');
       await saveProduct(p);
       await go('products');
