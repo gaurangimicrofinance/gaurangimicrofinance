@@ -1,4 +1,5 @@
-<!doctype html><html lang="en-IN" translate="no" class="notranslate"><head><meta charset="utf-8"><meta name="google" content="notranslate"><meta name="application-name" content="RozKhata English 5.0"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142e30"><title>RozKhata · Microfinance</title><style>
+```
+<!doctype html><html lang="en-IN" translate="no" class="notranslate"><head><meta charset="utf-8"><meta name="google" content="notranslate"><meta name="application-name" content="RozKhata English 6.0"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142e30"><title>RozKhata · Microfinance</title><style>
 
 [hidden]{display:none!important}
 :root{--ink:#172e30;--muted:#52696a;--line:#d5dfda;--paper:#f4f6f1;--green:#126455;--aqua:#b2e4cb;--gold:#f1b66b;--white:#fff;--shadow:0 6px 24px #15362d08}
@@ -119,7 +120,8 @@ thead{display:table-header-group}
 .brand-copy,.breadcrumb{min-width:0}.brand-copy{flex:1}.mark{flex-shrink:0}#companyBrand,#companyCrumb{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#companyCrumb{display:inline-block;max-width:min(34vw,320px);vertical-align:bottom}.edition{font:600 12px system-ui;color:#31584d;white-space:nowrap}.top .edition{margin-left:auto}.company-form{max-width:760px}.company-form input{max-width:32rem}.company-form button{margin-top:14px}@media(max-width:620px){.top{gap:6px}.top .tag{font-size:11px}.brand-copy{max-width:80vw}}
 .offer{align-self:start;background:linear-gradient(140deg,#eef5ea,#fff);border-top:4px solid #328071}.offer h2{margin-bottom:20px}.offer .amount{color:#175447}.catalogue{margin-top:18px}.account-actions{margin:10px 0 18px}.danger{border-left:4px solid #b15e45}.danger p{margin:8px 0}.builder details{margin:12px 0 18px}.builder .fields{align-items:start}@media(min-width:851px){.builder{grid-template-columns:1.2fr 1fr}.offer{position:sticky;top:15px}}
 .contact-group{border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:8px 0;min-width:0}.contact-group legend{font-weight:700;padding:0 6px}.contact-group textarea{min-height:65px}.four{grid-template-columns:repeat(4,minmax(0,1fr))}.four .stat:last-child{background:#fff5de;border-color:#d9bd82}.cardhead{background:#183d39;color:white;display:flex;align-items:center;justify-content:space-between;padding:20px;border-radius:13px;gap:14px;overflow-wrap:anywhere}.cardhead small{display:block;color:#c5e1d5}.cardhead strong{font-size:24px}.cardmeta,.people{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:12px 0}.cardmeta span,.people section{background:#eff4ee;padding:10px;border-radius:7px}.cardmeta b,.people small,.receiptid{display:block}.people{grid-template-columns:1fr 1fr}.people section>div{margin:5px 0;white-space:pre-line;overflow-wrap:anywhere}.loan-table tbody tr:nth-child(even){background:#f7f9f5}.statuschip{display:inline-block;background:#eef1ed;padding:3px 8px;border-radius:10px}.statuschip.paid{color:#205c42;background:#def0df}.statuschip.due{color:#714319;background:#fff0d1}@media(max-width:700px){.four{grid-template-columns:1fr 1fr}.cardmeta{grid-template-columns:1fr 1fr}.people{grid-template-columns:1fr}.payment-method .fields{grid-template-columns:1fr}}@media print{.cardhead{background:white;color:black;border:1px solid #555}.cardhead small{color:#345}.people{grid-template-columns:1fr 1fr}.receiptid{font-size:8pt}.loan-table td:last-child{min-width:18mm}.cardmeta,.people{break-inside:avoid}}
-</style></head><body><aside><div class="brand"><span class="mark" id="monogram">R</span><div class="brand-copy"><span id="companyBrand">RozKhata</span><small>MICROFINANCE</small></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>Daily ledger</div></aside><main><div class="top"><span class="breadcrumb"><span id="companyCrumb">RozKhata</span> &nbsp;/&nbsp; Daily ledger</span><small class="edition">English · v5.0</small><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>
+#companyBrand,#companyCrumb{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;max-width:100%}.brand{align-items:flex-start}.brand-copy{line-height:1.22}.brand-copy small{margin-top:5px}.breadcrumb{flex:1;overflow-wrap:anywhere}aside{overflow-y:auto}.calcrows{display:grid;gap:7px;margin:12px 0}.calcrows div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:5px 0}.calcrows b{text-align:right}.settletotal{font-size:1.2em}
+</style></head><body><aside><div class="brand"><span class="mark" id="monogram">R</span><div class="brand-copy"><span id="companyBrand">RozKhata</span><small>MICROFINANCE</small></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>Daily ledger</div></aside><main><div class="top"><span class="breadcrumb"><span id="companyCrumb">RozKhata</span> &nbsp;/&nbsp; Daily ledger</span><small class="edition">English · v6.0</small><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>
 'use strict';
 // All stored currency amounts are integer paise. ISO date strings represent local business dates.
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -204,12 +206,23 @@ function ledger(l){
   }
   return {rows,collected,rev,cash,balance:l.close?0:l.p.total-collected};
 }
-function settle(l,date,g){
-  const days=elapsed(l.start,date);
-  const months=Math.max(1, Number(l.p.months));
-  const period=Math.max(1,Math.ceil(days/30));
-  const fee=period>=months?l.p.interest:Math.round(l.p.interest*period/months);
-  return {days,period:Math.min(period,Math.ceil(months)),fee,waiver:l.p.interest-fee,net:l.p.net+fee-g.collected};
+function chargeMonths(p){
+  if(p.n===100 && (p.months===3 || p.months==null))return 3;
+  return Math.max(1,Math.ceil(p.months??(p.n/30)));
+}
+function settle(l,date,g,inputs={}){
+  const days=elapsed(l.start,date),months=chargeMonths(l.p),started=Math.max(1,Math.ceil(days/30)),period=Math.min(months,started);
+  const calculated=Math.round(l.p.interest*period/months);
+  const amount=(value,fallback)=>{
+    if(value==null||value==='')return fallback;
+    valid(/^\d+(?:\.\d{1,2})?$/.test(String(value)),'Enter a non-negative amount with up to two decimal places.');
+    const result=cents(value);valid(Number.isSafeInteger(result)&&result<=1e10,'Amount exceeds the supported range.');return result;
+  };
+  const fee=amount(inputs.finalInterest,calculated),extra=amount(inputs.extraCharge,0);
+  return {days,months,started,period,calculated,fee,extra,adjustment:fee-calculated,waiver:Math.max(0,l.p.interest-fee),net:l.p.net+fee+extra-g.collected};
+}
+function calculationRows(items){
+  return '<div class="calcrows">'+items.map(([label,value])=>'<div><span>'+label+'</span><b>'+value+'</b></div>').join('')+'</div>'
 }
 let db,cloud=null,space='live',screen='home',selected=null,loanTab='pay',reportDate=today(),searchTimer,epoch=0,currentSearch='';
 function idb(){
@@ -282,7 +295,8 @@ async function saveLoan(old,l,event){
   const deltas=[];
   for(const d of dates){
     const rev=(b.rev[d]||0)-(a.rev[d]||0),cash=(b.cash[d]||0)-(a.cash[d]||0);
-    if(rev||cash)deltas.push({d,rev,cash})
+    const charges=(l.close?.date===d?l.close.extra||0:0)-(old?.close?.date===d?old.close.extra||0:0);
+    if(rev||cash||charges)deltas.push({d,rev,cash,charges})
   }
   const bucket=d=>'M-'+d.slice(0,7),key=l.id;
   await atomic([key,'SUMMARY',...deltas.map(x=>bucket(x.d))],m=>{
@@ -300,7 +314,7 @@ async function saveLoan(old,l,event){
     const months={};
     for(const x of deltas){
       const k=bucket(x.d),mm=months[k]||m[k]||{},v=mm[x.d]||{rev:0,cash:0};
-      mm[x.d]={rev:v.rev+x.rev,cash:v.cash+x.cash};
+      mm[x.d]={rev:v.rev+x.rev,cash:v.cash+x.cash,charges:(v.charges||0)+x.charges};
       months[k]=mm
     }
     return [[key,l,'L/'+norm(l.name)],['SUMMARY',s],...Object.entries(months)]
@@ -383,9 +397,9 @@ async function products(){
     field('interest','Agreed interest ₹','number',1500,'required min="0" step=".01"')+
     field('days','Collection days','number',100,'required min="1" max="730"')+
     field('emi','Daily instalment ₹','number',100,'min="1" step="1"')+
-    '</div><p id="entryHint" class="sub"></p><details><summary>Collection preference</summary>'+sel('priority','Apply payments to',[['old','Oldest overdue first'],['today','Current instalment first']])+'</details><button class="btn" id="saveProduct">Save product</button></form>'+
+    '</div><p id="entryHint" class="sub"></p><details><summary>Collection preference</summary>'+sel('priority','Apply payments to',[['old','Oldest overdue first'],['today','Current instalment first']])+'</details><button class="btn" id="saveProduct">Save product</button> <button type="button" class="ghost" hidden id="cancelProduct" data-act="cancelProduct">Cancel edit</button></form>'+
     '<section class="card offer" aria-live="polite"><h2>Loan preview</h2><div id="calc"></div></section></div>'+
-    '<section class="card catalogue"><h2>Product catalogue</h2>'+ (ps.map(p=>'<div class="entry spread"><b>'+esc(productTitle(p))+'</b><span>'+money(p.emi)+' × '+p.n+' days · Interest '+money(p.interest)+'</span></div>').join('')||'<p class="empty">Your saved products will appear here.</p>')+'</section>';
+    '<section class="card catalogue"><h2>Product catalogue</h2>'+ (ps.map(p=>'<div class="entry spread"><b>'+esc(productTitle(p))+'</b><span>'+money(p.emi)+' × '+p.n+' days · Interest '+money(p.interest)+'</span>'+button('Edit product','editProduct:'+p.id,'ghost')+'</div>').join('')||'<p class="empty">Your saved products will appear here.</p>')+'</section>';
 }
 function offer(v,fromEmi){
   const principal=cents(v.principal), n=Number(v.days);
@@ -401,7 +415,7 @@ function offer(v,fromEmi){
   valid(v.type!=='before'||interest<principal,'Upfront interest must be less than the loan amount.');
   const net=v.type==='before'?principal-interest:principal;
   const total=net+interest;
-  const months=n===100?3:n/30;
+  const months=n===100?3:Math.ceil(n/30);
   return {name:String(v.name||'').trim(),principal,n,months,type:v.type,interest,total,net,emi:total/n,
     priority:v.priority||'old',rate:interest*100/(principal*months)};
 }
@@ -429,7 +443,11 @@ function productPreview(trigger){
     let html='<small>Customer receives</small><div class="amount">'+money(p.net)+'</div>'+
       line('Total to collect',money(p.total))+line('Agreed interest',money(p.interest))+
       line('Daily collection',money(p.emi)+' × '+p.n)+line('Full-term rate',pct(100*p.interest/p.principal))+
-      line('Monthly flat rate',pct(p.rate))+'<p class="sub">Rate on the loan amount · '+(p.n===100?'100-day diary uses 3 interest months.':'30 days per interest month.')+'</p>';
+      line('Monthly flat rate',pct(p.rate))+'<p class="sub">Rate on the loan amount · '+(p.n===100?'100-day diary uses 3 interest months.':'Each started 30-day period counts as one whole month.')+'</p>'+calculationRows([
+      ['Interest months',p.n===100?'3 months + 10 collection days':p.n+' days ÷ 30, rounded up = '+p.months],
+      ['Interest per month',money(p.interest)+' ÷ '+p.months+' = '+money(Math.round(p.interest/p.months))],
+      ['Monthly flat rate',pct(100*p.interest/p.principal)+' ÷ '+p.months+' = '+pct(p.rate)]
+    ]);
     if(!exact||mismatch){
       const opts=[];for(let k=1;k<=730;k++)if(p.total%(k*100)===0)opts.push(k);
       const near=opts.sort((a,b)=>Math.abs(a-p.n)-Math.abs(b-p.n)).slice(0,4);
@@ -523,7 +541,7 @@ function receipts(l){
 }
 function closingInfo(c){
   if(c.scheduled)return '<div class="preview">Paid in full · Loan closed '+dt(c.date)+' · '+esc(c.id)+'<br>Advance interest will be recognised on each instalment’s due date.</div>';
-  return '<div class="preview">Loan closed · '+dt(c.date)+' · '+esc(c.id)+'<br>Final payment '+money(c.cash)+(c.cash?' · '+methodText(c.methods):'')+' · Charge period '+c.period+' · Total interest '+money(c.fee)+' · Interest waived '+money(c.waiver)+(c.refund?' · Refund '+money(c.refund):'')+(c.credit?' · Customer credit '+money(c.credit):'')+'</div>'
+  return '<div class="preview">Loan closed · '+dt(c.date)+' · '+esc(c.id)+'<br>Final payment '+money(c.cash)+(c.cash?' · '+methodText(c.methods):'')+(c.period?' · Charge period '+c.period:'')+(c.calculated!=null?' · Calculated interest '+money(c.calculated)+' · Adjustment '+money(c.adjustment)+' · Extra charges '+money(c.extra):'')+(c.note?' · '+esc(c.note):'')+' · Final interest '+money(c.fee)+' · Interest waived '+money(c.waiver)+(c.refund?' · Refund '+money(c.refund):'')+(c.credit?' · Customer credit '+money(c.credit):'')+'</div>'
 }
 async function recover(){
   let out=header('Collection desk',selected?'Manage the selected loan.':'Search to open a loan.');
@@ -545,7 +563,7 @@ async function recover(){
     out+='<form id="editAccount"><h3>Edit account</h3><div class="fields">'+contactFields(l)+productSelect+(editable?field('start','Disbursement date','date',l.start,'required max="'+today()+'"'):'')+'</div>'+(editable?'':'<p class="sub">Posted receipts and their financial terms are retained.</p>')+'<button class="btn">Save changes</button></form>';
   }else if(loanTab==='card')out+=cardIdentity(l,g)+'<details><summary>Customer and guarantor details</summary>'+contactDetails(l)+'</details><div class="spread entry"><h3>Instalment schedule</h3>'+button('Print card / PDF','print','ghost')+'</div><div class="scroll">'+schedule(l,g)+'</div>';
  else if(loanTab==='receipts'||l.close)out+=receipts(l);
- else if(loanTab==='close')out+='<form id="close"><h3>Settlement</h3><small>Any remaining interest recognised at settlement is posted on the closure date.</small><div class="fields">'+field('date','Closure date','date',today(),dateBounds(l))+'</div>'+paymentFields()+'<div id="closecalc"></div><button class="btn">Confirm settlement</button></form>';
+ else if(loanTab==='close')out+='<form id="close"><h3>Settlement</h3><small>Any remaining interest recognised at settlement is posted on the closure date.</small><div class="fields">'+field('date','Closure date','date',today(),dateBounds(l))+field('finalInterest','Final interest ₹ (optional override)','number','','min="0" step=".01" placeholder="Use calculated interest"')+field('extraCharge','Additional charges ₹','number','','min="0" step=".01" placeholder="0.00"')+field('adjustNote','Adjustment note (optional)','text','','maxlength="180"')+'</div><div id="closecalc"></div>'+paymentFields()+'<button class="btn">Confirm settlement</button></form>';
  else out+='<form id="pay"><div class="fields">'+field('date','Date received','date',today(),dateBounds(l))+field('amount','Amount received ₹','number','','required min=".01" max="'+(g.balance/100)+'" step=".01" placeholder="0.00"')+'</div>'+paymentFields()+'<div id="paycalc"></div><button class="btn">Save receipt</button></form>';
   return out+'</div>'
 }
@@ -565,9 +583,16 @@ function paymentPreview(){
   try{
     checkDate(l,v.date);
     if(f.id==='close'){
-      const c=settle(l,v.date,g);
+      const c=settle(l,v.date,g,v);
       showPaymentFields(f,Math.max(0,c.net));
-      $('#closecalc').innerHTML='<div class="preview">Elapsed days '+elapsed(l.start,v.date)+' · Total interest '+money(c.fee)+' · Interest waived '+money(c.waiver)+'<br><b>'+(c.net<0?'Refund to customer ':'Amount to collect ')+money(Math.abs(c.net))+'</b></div>';
+      f.elements.finalInterest.placeholder=(c.calculated/100).toFixed(2)+' (automatic)';
+      $('#closecalc').innerHTML='<div class="preview"><h3>Settlement calculation</h3>'+calculationRows([
+        ['Days from disbursement',dt(l.start)+' → '+dt(v.date)+' · '+c.days+' days'],
+        ['Started 30-day periods',c.days+' ÷ 30 → '+c.started+' (charged '+c.period+' of '+c.months+')'],
+        ['Calculated interest',money(l.p.interest)+' × '+c.period+' / '+c.months+' = '+money(c.calculated)],
+        ['Interest adjustment',money(c.adjustment)],['Final interest',money(c.fee)],['Additional charges',money(c.extra)],
+        ['Net disbursement',money(l.p.net)],['Already collected',money(g.collected)]
+      ])+'<b class="settletotal">'+(c.net<0?'Refund to customer ':'Amount to collect ')+money(Math.abs(c.net))+'</b></div>';
       return
     }
     const amount=cents(v.amount||0),parts=allocate(l,g.rows,v.date,Math.min(amount,g.balance)),sum=mode=>parts.filter(x=>Math.sign(g.rows[x.i].date.localeCompare(v.date))===mode).reduce((n,x)=>n+x.a,0);
@@ -608,7 +633,7 @@ function searchLoans(v,shown=10){
 searchLoans.seq=0;
 async function reports(){
   const d=reportDate,start=d.slice(0,7),m=await read('M-'+start)||{},s=await read('SUMMARY')||total0(),keys=Object.keys(m).filter(k=>k<=d).sort().reverse(),sum=k=>keys.reduce((a,x)=>a+m[x][k],0);
-  return header('Collections and income','Collections follow the receipt date. Interest follows your recognition rules.')+'<section class="card">'+field('reportDate','Month to date through','date',d,'id="reportDate" max="'+today()+'"')+'<div class="stats">'+stat('Net collections this month',money(sum('cash')))+stat('Recognised interest',money(sum('rev')))+stat('Total customer credit · current',money(s.credit))+'</div><div class="scroll"><table><thead><tr><th>Date</th><th>Net loan collections</th><th>Interest income</th></tr></thead><tbody>'+keys.filter(k=>m[k].cash||m[k].rev).map(k=>'<tr><td>'+dt(k)+'</td><td>'+money(m[k].cash)+'</td><td>'+money(m[k].rev)+'</td></tr>').join('')+'</tbody></table></div>'+(keys.length?'':'<p class="empty">No transactions in this period.</p>')+'</section>'
+  return header('Collections and income','Collections follow the receipt date. Interest follows your recognition rules.')+'<section class="card">'+field('reportDate','Month to date through','date',d,'id="reportDate" max="'+today()+'"')+'<div class="stats">'+stat('Net collections this month',money(sum('cash')))+stat('Recognised interest',money(sum('rev')))+stat('Total customer credit · current',money(s.credit))+'</div><div class="scroll"><table><thead><tr><th>Date</th><th>Net loan collections</th><th>Interest income</th><th>Additional charges</th></tr></thead><tbody>'+keys.filter(k=>m[k].cash||m[k].rev||m[k].charges).map(k=>'<tr><td>'+dt(k)+'</td><td>'+money(m[k].cash)+'</td><td>'+money(m[k].rev)+'</td><td>'+money(m[k].charges||0)+'</td></tr>').join('')+'</tbody></table></div>'+(keys.length?'':'<p class="empty">No transactions in this period.</p>')+'</section>'
 }
 const rules='match /rozkhata/{owner}/records/{record} {\n  allow read, write: if request.auth != null && request.auth.uid == owner;\n}';
 async function editAccount(l,v){
@@ -635,7 +660,7 @@ async function deleteAccount(l){
     s.credit-=l.credit||0;s.recovered-=l.close?l.p.net:Math.min(g.collected,l.p.net);
     s.recent=s.recent.filter(x=>x.id!==l.id);
     for(const d of dates){const mm=m['M-'+d.slice(0,7)],v=mm?.[d];if(!v)continue;
-      v.cash-=g.cash[d]||0;v.rev-=g.rev[d]||0;if(!v.cash&&!v.rev)delete mm[d];}
+      v.cash-=g.cash[d]||0;v.rev-=g.rev[d]||0;if(l.close?.date===d)v.charges=(v.charges||0)-(l.close.extra||0);if(!v.cash&&!v.rev&&!v.charges)delete mm[d];}
     return [[l.id,null],['SUMMARY',s],...months.map(k=>[k,Object.keys(m[k]||{}).length?m[k]:null])];
   });
 }
@@ -734,6 +759,14 @@ document.addEventListener('click',async e=>{
       await clearWorkspace();await go('home');note('Workspace cleared.');
     }
     if(op==='more'){searchLoans($('#search').value,Number(arg))}
+    if(op==='editProduct'){
+      const p=await read(arg);valid(p,'Product could not be found.');
+      const f=$('#product');f.dataset.id=p.id;f.dataset.revision=p.revision||0;f.dataset.fromEmi='';
+      for(const [k,val] of Object.entries({name:p.name,principal:p.principal/100,type:p.type,interest:p.interest/100,days:p.n,emi:p.emi/100,priority:p.priority||'old'}))f.elements[k].value=val;
+      f.querySelector('h2').textContent='Edit product';$('#saveProduct').textContent='Save changes';
+      $('#cancelProduct').hidden=false;productPreview();f.elements.name.focus();f.scrollIntoView({block:'start'});
+    }
+    if(op==='cancelProduct')await go('products');
     if(op==='go'){
       selected=null; currentLoan=null; loanTab='pay';
       await go(arg);
@@ -801,7 +834,10 @@ document.addEventListener('submit',async e=>{
     if(f.id==='product'){
       const p=productPreview();valid(p,'Choose a valid whole-rupee repayment schedule.');
       valid(p.name,'Enter a product name.');
-      await saveProduct(p);
+      if(f.dataset.id){
+        p.id=f.dataset.id;const revision=Number(f.dataset.revision);
+        await atomic([p.id],m=>{valid(m[p.id]&&(m[p.id].revision||0)===revision,'Product changed. Reopen it before saving.');return [[p.id,{...p,revision:revision+1},'P/'+norm(p.name)]]})
+      }else await saveProduct(p);
       await go('products');
       note('Product saved.')
     }
@@ -835,10 +871,10 @@ document.addEventListener('submit',async e=>{
         note('Receipt saved · '+money(pay)+' applied to loan.')
       }
  else{
-        const c=settle(l,v.date,g);
-        if(!confirm('Close loan? '+(c.net<0?'Confirm refund to customer ':'Amount received ')+money(Math.abs(c.net))+' · Interest waived '+money(c.waiver)))return;
+        const c=settle(l,v.date,g,v);
+        if(!confirm('Close loan? '+(c.net<0?'Confirm refund to customer ':'Amount received ')+money(Math.abs(c.net))+' · Final interest '+money(c.fee)+' · Extra charges '+money(c.extra)))return;
         const over=Math.max(0,-c.net);
-        l.close={id:uid('C'),date:v.date,methods:captureMethod(v,Math.max(0,c.net)),fee:c.fee,waiver:c.waiver,cash:Math.max(0,c.net),refund:over,credit:0};
+        l.close={id:uid('C'),date:v.date,methods:captureMethod(v,Math.max(0,c.net)),period:c.period,months:c.months,days:c.days,calculated:c.calculated,extra:c.extra,adjustment:c.adjustment,note:(v.adjustNote||'').trim(),fee:c.fee,waiver:c.waiver,cash:Math.max(0,c.net),refund:over,credit:0};
         l.credit+=l.close.credit;
         await saveLoan(old,l,{date:v.date,label:'Loan closed',amount:l.close.cash});
         loanTab='card';
