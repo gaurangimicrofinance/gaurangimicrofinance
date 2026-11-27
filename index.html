@@ -1,4 +1,4 @@
-<!doctype html><html lang="en-IN" translate="no" class="notranslate"><head><meta charset="utf-8"><meta name="google" content="notranslate"><meta name="application-name" content="RozKhata English 8.0"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142e30"><title>RozKhata · Microfinance</title><style>
+<!doctype html><html lang="en-IN" translate="no" class="notranslate"><head><meta charset="utf-8"><meta name="google" content="notranslate"><meta name="application-name" content="RozKhata English 10.0"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142d50"><title>RozKhata · Microfinance</title><style>
 [hidden]{display:none!important}
 :root{--ink:#172e30;--muted:#52696a;--line:#d5dfda;--paper:#f4f6f1;--green:#126455;--aqua:#b2e4cb;--gold:#f1b66b;--white:#fff;--shadow:0 6px 24px #15362d08}
 *{box-sizing:border-box}
@@ -125,7 +125,49 @@ thead{display:table-header-group}
 @media(max-width:650px){.deskgrid{grid-template-columns:1fr}.kpis{gap:8px}.kpi{padding:12px}.chart small{font-size:9px}.filterrow label{flex-basis:42%}}
 @media print{@page{size:A4;margin:0}#print{padding:14mm 12mm 12mm}#print .reportstats{grid-template-columns:repeat(4,1fr)}#print th{background:#e3ece5}#print table{font-variant-numeric:tabular-nums}#print .stat{box-shadow:none}#print .stat strong{font-size:15px}.document-title h1{font-size:24px}}
 
-</style></head><body><aside><div class="brand"><span class="mark" id="monogram">R</span><div class="brand-copy"><span id="companyBrand">RozKhata</span></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>Daily ledger</div></aside><main><div class="top"><span class="breadcrumb"><span id="companyCrumb">RozKhata</span> &nbsp;/&nbsp; Daily ledger</span><small class="edition">English · v9.0 <span id="businessDate"></span></small><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>/* pdf-lib license
+:root{--paper:#f3f6fb;--ink:#172d4d;--muted:#4c627c;--line:#d7e1ee;--green:#245aa3;--shadow:0 5px 24px #213c600b}
+@media screen{
+aside{background:linear-gradient(163deg,#122d50,#10213f 85%);color:#f4f7ff}
+aside .mark{background:#d7e9ff;color:#193c71}
+.nav button{color:#d9e6fa;transition:background .15s,color .15s}.nav button:hover{background:#203e63}.nav button.on{background:#294f80;border-left-color:#94c8ff;color:white}
+.kpi.primary,.cardhead{background:linear-gradient(120deg,#183a70,#245aa0);border-color:#315f99}.kpi.primary small,.kpi.primary i,.cardhead small{color:#dbebff}.kname i{color:#547aaa}
+.kpi:hover,.kpi:focus-visible{border-color:#759bd1;box-shadow:0 5px 19px #163f7120}.btn:hover{background:#194784}
+.chart i{background:#628fca}.chart>div:last-child i{background:#275da3}.chart i.refund{background:#aa6b42}
+.offer{background:linear-gradient(148deg,#edf4ff,#fff 65%);border-top-color:#447ec2}.offer .amount{color:#204e87}
+.note,.preview,.soft,.tag,.cardmeta span,.people section,th{background:#eaf1fa;color:#243f66}.loan-table tbody tr:nth-child(even){background:#f7f9fd}
+input,select,textarea{background:white;border-color:#b7c7db}input:focus,select:focus,textarea:focus{border-color:#4079bb;box-shadow:0 0 0 3px #d9e8fc}.edition{color:#375377}
+.result:hover{background:#edf4ff}.nav button:focus-visible,.btn:focus-visible,.ghost:focus-visible{outline:3px solid #73aafa}
+@media(max-width:850px){
+aside{position:static;overflow:visible;padding:10px 14px}
+aside .brand{flex-direction:row;align-items:center;gap:10px;padding:0 0 10px}
+aside .brand-copy{min-width:0;flex:1}aside .mark{border-radius:9px}
+.nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));overflow:visible;gap:4px}
+.nav button{text-align:center;min-height:44px;padding:6px 2px;border:1px solid transparent;font-size:12px}
+.nav button.on{border:1px solid #6091c7}.nav button b{display:block;margin:0 auto 2px;font-size:15px}
+}
+@media(max-width:700px){
+main,.grid>* , .deskgrid>*, .fields>*, .filterrow label,.stat,.card,.entry>*,.spread>*,.row>*,.top>*,.calcrows div>*{min-width:0;max-width:100%}
+main{padding:12px clamp(10px,3.3vw,18px) calc(24px + env(safe-area-inset-bottom))}
+body{overflow-wrap:anywhere}.grid,.deskgrid{grid-template-columns:minmax(0,1fr)}.fields{grid-template-columns:minmax(0,1fr)}
+.stats,.reportstats,.four,.cardmeta{grid-template-columns:repeat(2,minmax(0,1fr))}
+.filterrow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.filterrow label:first-child{grid-column:1/-1}
+input,select,textarea{font-size:16px;max-width:100%}.btn,.soft,.ghost,.switch button{min-height:44px}
+.top .edition{white-space:normal}.cardhead{flex-wrap:wrap}.chart{gap:2px}.chart small{line-height:1.2}
+pre{white-space:pre-wrap;overflow-wrap:anywhere}.scroll{overflow:visible}
+#page table,#page tbody,#page tr{display:block;width:100%;white-space:normal}
+#page thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+#page tbody tr{padding:8px 12px;margin:10px 0;border:1px solid var(--line);border-radius:10px}
+#page td,#page .statement td:first-child{display:grid;grid-template-columns:minmax(74px,.8fr) minmax(0,1.2fr);align-items:baseline;text-align:right;padding:5px 0;gap:9px;overflow-wrap:anywhere;font-size:13px}
+#page td::before{content:attr(data-label);text-align:left;font-weight:600;color:var(--muted)}
+#page td>span{min-width:0}#page td:last-child{border:0}#page .loan-table td:last-child{display:none}
+#page td:has(.receiptid){white-space:normal}
+}
+@media(max-width:520px){.nav{grid-template-columns:repeat(3,minmax(0,1fr))}.nav button b{display:inline;margin:0 5px 0 0}.nav button{min-height:41px}.top .breadcrumb{flex-basis:100%}.stat strong{font-size:clamp(16px,5vw,23px)}}
+@media(prefers-reduced-motion:reduce){.nav button{transition:none}}
+}
+@media print{#print{color:#183452}#print .document-title{border-color:#244f86}#print .summaryline{display:flex;justify-content:space-between;border-bottom:1px solid #dce4ef;padding:4pt 0}#print .summaryline b{text-align:right}#print .loan-table thead{display:table-header-group}}
+</style></head><body><aside><div class="brand"><span class="mark" id="monogram">R</span><div class="brand-copy"><span id="companyBrand">RozKhata</span></div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><span class="dot"></span>Daily ledger</div></aside><main><div class="top"><span class="breadcrumb"><span id="companyCrumb">RozKhata</span> &nbsp;/&nbsp; Daily ledger</span><small class="edition">English · v10.0 <span id="businessDate"></span></small><span class="tag" id="mode"></span></div><div id="page" aria-live="polite"></div></main><div id="print"></div><div class="msg" role="status" id="msg"></div><script>/* pdf-lib license
 MIT License
 
 Copyright (c) 2019 Andrew Dillon
@@ -555,7 +597,7 @@ function makeReport(data,p,key,now=today()){
  return {title:reportTitles[key],range:rangeText(p),asof:dt(now),key,cards,columns,rows}
 }
 function reportTable(report,rows){
- return '<table class="statement"><thead><tr>'+report.columns.map(s=>'<th>'+esc(s)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table>'
+ return '<table class="statement"><thead><tr>'+report.columns.map(s=>'<th>'+esc(s)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map((c,i)=>'<td data-label="'+esc(report.columns[i])+'"><span>'+esc(c)+'</span></td>').join('')+'</tr>').join('')+'</tbody></table>'
 }
 function filterSelect(key,label,choices,selected){
  return '<label>'+label+'<select name="'+key+'" data-calendar="'+key+'">'+choices.map(([v,t])=>'<option value="'+v+'" '+(selected===v?'selected':'')+'>'+esc(t)+'</option>').join('')+'</select></label>'
@@ -792,7 +834,7 @@ function entryTime(record){
  return ' · Entered '+new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',dateStyle:'short',timeStyle:'short'}).format(new Date(record.recordedAt))+' IST';
 }
 function schedule(l,g){
-  return '<table class="loan-table"><thead><tr><th>No.</th><th>Instalment</th><th>Due date</th><th>Date received / Receipt</th><th>Amount applied</th><th>Status</th><th>Signature</th></tr></thead><tbody>'+g.rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+money(l.p.emi)+'</td><td>'+dt(r.date)+'</td><td>'+r.events.map(e=>dt(e.date)+'<small class="receiptid">'+esc(e.id)+'</small>').join('<br>')+'</td><td>'+r.events.map(e=>money(e.a)+' · '+allocationLabel(e.date,r.date)).join('<br>')+'</td><td><span class="statuschip '+(r.left===0?'paid':r.date<=today()&&!l.close?'due':'')+'">'+(r.left===0?'Paid':l.close?'Settled at closure':r.left<l.p.emi?'Balance '+money(r.left):r.date<today()?'Overdue':r.date===today()?'Due today' :'Upcoming')+'</span></td><td></td></tr>').join('')+'</tbody></table>'
+  return '<table class="loan-table"><thead><tr><th>No.</th><th>Instalment</th><th>Due date</th><th>Date received / Receipt</th><th>Amount applied</th><th>Status</th><th>Signature</th></tr></thead><tbody>'+g.rows.map((r,i)=>'<tr><td data-label="No."><span>'+(i+1)+'</span></td><td data-label="Instalment"><span>'+money(l.p.emi)+'</span></td><td data-label="Due date"><span>'+dt(r.date)+'</span></td><td data-label="Date received / Receipt"><span>'+r.events.map(e=>dt(e.date)+'<small class="receiptid">'+esc(e.id)+'</small>').join('<br>')+'</span></td><td data-label="Amount applied"><span>'+r.events.map(e=>money(e.a)+' · '+allocationLabel(e.date,r.date)).join('<br>')+'</span></td><td data-label="Status"><span><span class="statuschip '+(r.left===0?'paid':r.date<=today()&&!l.close?'due':'')+'">'+(r.left===0?'Paid':l.close?'Settled at closure':r.left<l.p.emi?'Balance '+money(r.left):r.date<today()?'Overdue':r.date===today()?'Due today' :'Upcoming')+'</span></span></td><td data-label="Signature"><span></span></td></tr>').join('')+'</tbody></table>'
 }
 function receipts(l){
   return l.receipts.slice().reverse().map(r=>'<div class="entry"><b>'+dt(r.date)+' · '+money(r.tender)+'</b><br><small>'+esc(r.id)+entryTime(r)+' · '+methodText(r.methods)+' · Applied to loan '+money(r.pay)+(r.credit?' · Customer credit '+money(r.credit):'')+(r.change?' · Returned '+money(r.change):'')+'</small></div>').join('')||'<p class="empty">No payments recorded yet.</p>'
@@ -990,30 +1032,59 @@ async function demo(){
   await saveLoan(old,l,{date:today(),label:'Payment',amount:50000})
 }
 // Customer copy uses A4 pages with the company letterhead and page numbers embedded in the PDF.
+function customerSummary(l,g){
+ return [['Product',productTitle(l.p)],['Period',dt(l.start)+' to '+dt(g.rows.at(-1).date)+' · '+termLine(l.p)],
+   ['Loan amount',money(l.p.principal)],['Disbursement date',dt(l.start)]];
+}
 async function customerPDF(l){
  const doc=await PDFLib.PDFDocument.create(),g=ledger(l),W=794,H=1123;
  doc.setTitle(companyName+' – Loan card '+l.id);doc.setAuthor(companyName);
- let canvas,ctx,y,pageNo=0;
- function font(size,bold=false){ctx.font=(bold?'600 ':'400 ')+size+'px "Segoe UI", Arial, sans-serif'}
- function write(value,x,baseline,size=13,bold=false,color='#203b39',width=690){
-   font(size,bold);ctx.fillStyle=color;ctx.fillText(String(value??''),x,baseline,width)
+ const RUPEE_PATH='M106 -1370 161 -1493H1199L1144 -1370H790Q869 -1292 890 -1163H1199L1144 -1040H898Q893 -914 832 -829Q767 -736 642 -700Q707 -678 768 -606Q827 -538 892 -408L1097 0H880L689 -383Q614 -534 546 -582Q476 -631 356 -631H136V-797H390Q536 -797 610 -864Q678 -926 684 -1040H106L161 -1163H673Q655 -1230 610 -1282Q536 -1370 390 -1370Z',RUPEE_EM=2048;
+ const {rgb,StandardFonts}=PDFLib;
+ const fonts=await Promise.all([doc.embedFont(StandardFonts.Helvetica),doc.embedFont(StandardFonts.HelveticaBold)]);
+ const scale=595.28/W, pageHeight=841.89,measure=document.createElement('canvas').getContext('2d');
+ let page,y,pageNo=0,pending=[];
+ const colour=hex=>rgb(...[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255));
+ function rect(x,top,w,h,fill,stroke){
+   page.drawRectangle({x:x*scale,y:pageHeight-(top+h)*scale,width:w*scale,height:h*scale,
+     color:colour(fill),...(stroke?{borderColor:colour(stroke),borderWidth:.4}:{})});
+ }
+ function write(value,x,baseline,size=13,bold=false,color='#1c304d',width=690){
+   const str=String(value??''),font=fonts[Number(bold)];
+   if(!str)return;
+   const runs=str.split(/(₹)/).filter(Boolean);
+   let lengths;
+   try{lengths=runs.map(t=>t==='₹'?size*.66:font.widthOfTextAtSize(t,size))}
+   catch{
+     // Browser shaping preserves customer names and addresses in regional scripts.
+     measure.font=(bold?'bold ':'')+size+'px Arial,sans-serif';
+     const ink=measure.measureText(str),w=Math.min(width,Math.ceil(ink.width)+4),h=size*1.8;
+     const cv=document.createElement('canvas');cv.width=Math.ceil(w*4);cv.height=Math.ceil(h*4);
+     const cx=cv.getContext('2d');cx.scale(4,4);cx.font=measure.font;cx.fillStyle=color;cx.fillText(str,1,size*1.25,w-2);
+     const dest=page;pending.push(doc.embedPng(cv.toDataURL('image/png')).then(img=>dest.drawImage(img,{x:x*scale,y:pageHeight-(baseline+h-size*1.25)*scale,width:w*scale,height:h*scale})));return;
+   }
+   const fit=Math.min(1,width/Math.max(1,lengths.reduce((a,b)=>a+b,0))),fontSize=size*fit*scale;
+   runs.forEach((t,i)=>{
+     const origin={x:x*scale,y:pageHeight-baseline*scale,color:colour(color)};
+     if(t==='₹')page.drawSvgPath(RUPEE_PATH,{...origin,scale:fontSize/RUPEE_EM});
+     else page.drawText(t,{...origin,font,size:fontSize});
+     x+=lengths[i]*fit;
+   });
  }
  function wrap(value,width,size){
-   font(size);const lines=[];let buf='';
-   for(const c of String(value||'—')){if(c==='\n'){lines.push(buf);buf='';continue}
-     if(buf&&ctx.measureText(buf+c).width>width){lines.push(buf);buf=''}buf+=c}
+   measure.font=size+'px Arial,sans-serif';const lines=[];let buf='';
+   for(const c of String(value??'')){if(c==='\n'){lines.push(buf);buf='';continue}
+     if(buf&&measure.measureText(buf+c).width>width){lines.push(buf);buf=''}buf+=c}
    lines.push(buf);return lines
  }
  function begin(){
-   canvas=document.createElement('canvas');canvas.width=W*2;canvas.height=H*2;ctx=canvas.getContext('2d');ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,W,H);pageNo++;
-   ctx.fillStyle='#143a36';ctx.fillRect(0,0,W,9);write(companyName,44,57,22,true,'#143a36',525);
-   write('LOAN ACCOUNT CARD',553,55,13,true,'#427668',195);write(l.name+'   /   '+l.id,44,83,14,false,'#526860');
-   y=105;
+   page=doc.addPage([595.28,pageHeight]);pageNo++;rect(0,0,W,8,'#18457d');
+   write(companyName,44,57,23,true,'#163459',490);write('LOAN ACCOUNT CARD',548,55,13,true,'#325f96',204);
+   write(l.name+'   /   '+l.id,44,83,14,false,'#465e79');y=105;
  }
  async function end(){
-   ctx.fillStyle='#ceddd4';ctx.fillRect(44,H-61,W-88,1);write(l.id,44,H-36,11);write('Page '+pageNo,W-101,H-36,11);
-   const bytes=await new Promise((ok,no)=>canvas.toBlob(async blob=>{try{ok(await blob.arrayBuffer())}catch(e){no(e)}},'image/jpeg',0.91));
-   const img=await doc.embedJpg(bytes);doc.addPage([595.28,841.89]).drawImage(img,{x:0,y:0,width:595.28,height:841.89});canvas.width=1;
+   rect(44,H-61,W-88,1,'#d7e2ef');write(l.id,44,H-36,11);write('Page '+pageNo,W-101,H-36,11);
+   await Promise.all(pending);pending=[];
  }
  async function room(height,repeat){if(y+height>H-78){await end();begin();if(repeat)repeat()}}
  function title(t){write(t,44,y+17,17,true);y+=33}
@@ -1023,14 +1094,14 @@ async function customerPDF(l){
  }
  const widths=[36,66,85,173,99,111,136];
  function row(cells,head=false){
-   let x=44;const h=head?28:32;
-   ctx.fillStyle=head?'#dfebe2':'#ffffff';ctx.fillRect(x,y,706,h);ctx.strokeStyle='#d4ded9';ctx.lineWidth=.7;
-   cells.forEach((v,i)=>{ctx.strokeRect(x,y,widths[i],h);write(v,x+4,y+16,head?11:12,head,'#243e38',widths[i]-8);x+=widths[i]});y+=h
+   let x=44;const h=Math.max(head?28:32,...cells.map((v,i)=>8+12*wrap(String(v??''),widths[i]-8,head?11:12).length));
+   cells.forEach((v,i)=>{rect(x,y,widths[i],h,head?'#e2ebf8':'#ffffff','#c9d6e6');
+     const lines=wrap(String(v??''),widths[i]-8,head?11:12);
+     lines.forEach((line,n)=>write(line,x+4,y+(lines.length===1?17:12)+n*12,head?11:12,head,'#223c59',widths[i]-8));x+=widths[i]});y+=h
  }
  const heading=()=>{title('Instalment schedule');row(['No.','EMI','Due date','Received / receipt','Applied','Status','Signature'],true)};
  begin();title('Account summary');
- await line('Product',productTitle(l.p));await line('Period',dt(l.start)+' to '+dt(g.rows.at(-1).date)+'   ·   '+termLine(l.p));
- await line('Disbursed / repayable',money(l.p.net)+' / '+money(l.p.total));await line('Outstanding / due today',money(g.balance)+' / '+money(dueThroughToday(l,g))+'   ·   '+dt(today()));
+ for(const [label,value] of customerSummary(l,g))await line(label,value);
  for(const [group,fields] of contactGroups){await room(64);title(group+' details');for(const [k,label] of fields){if(l[k])await line(label,l[k])}}
  if(l.close){await room(60);title('Account closure');await line('Closure date',dt(l.close.date));await line('Final interest / charges',money(l.close.fee)+' / '+money(l.close.extra||0));await line('Waiver / refund',money(l.close.waiver||0)+' / '+money(l.close.refund||0))}
  await room(100);heading();
@@ -1050,7 +1121,8 @@ async function customerPDF(l){
 
 function printCard(l){
   const g=ledger(l);
-  $('#print').innerHTML=cardIdentity(l,g)+contactDetails(l)+'<p>Net disbursement '+money(l.p.net)+' · Total repayable '+money(l.p.total)+' · Outstanding '+money(g.balance)+' · Due through '+dt(today())+' '+money(dueThroughToday(l,g))+'</p>'+(l.close?closingInfo(l.close):'')+schedule(l,g)+'<h3>Payment register</h3>'+receipts(l);
+  const summary=customerSummary(l,g).map(([label,value])=>'<div class="summaryline"><span>'+esc(label)+'</span><b>'+esc(value)+'</b></div>').join('');
+  $('#print').innerHTML='<header class="document-title"><strong>'+esc(companyName)+'</strong><h1>Loan account card</h1>'+esc(l.name)+' · '+esc(l.id)+'</header><h2>Account summary</h2>'+summary+contactDetails(l)+(l.close?closingInfo(l.close):'')+schedule(l,g)+'<h3>Payment register</h3>'+receipts(l);
   window.print()
 }
 async function backup(){
